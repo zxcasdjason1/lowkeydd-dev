@@ -1,27 +1,29 @@
-import React, { Component } from "react";
-import { HashRouter, Route, Switch } from "react-router-dom";
+import { Component } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
-//import Navibar from "./components/Navibar";
-import Chat from "./pages/Chat/";
-import Home from "./pages/Home/";
-import Letsdd from "./pages/Letsdd/";
-import Theater from "./pages/Theater/";
-import UserSetting from "./pages/UserSetting/";
+
+import ChannelsStage from "./pages/ChannelsStage";
+import Theater from "./pages/Theater";
+import VisitPage from "./pages/VisitPage";
+import { Login, Register } from "./features/user";
+import HomePage from "./pages/HomePage";
+
 
 export default class App extends Component {
+  state = {};
+
   render() {
     return (
       <div>
-        <HashRouter>
           <Navbar />
           <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/letsdd/" component={Letsdd} />
+            <Route exact path="/" component={HomePage} />
+            <Route path="/channels/" component={ChannelsStage} />
             <Route path="/theater/" component={Theater} />
-            <Route path="/chat/" component={Chat} />
-            <Route path="/usersetting/" component={UserSetting} />
+            <Route path="/visit/" component={VisitPage} />
+            <Route path="/login/" component={Login} />
+            <Route path="/register/" component={Register} />
           </Switch>
-        </HashRouter>
       </div>
     );
   }

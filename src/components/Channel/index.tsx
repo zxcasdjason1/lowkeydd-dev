@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import "./index.css";
+import {ChannelProps} from '../../types'
 
 export default function ChannelItem(props: ChannelProps) {
   const {
@@ -12,6 +13,8 @@ export default function ChannelItem(props: ChannelProps) {
     title,
     viewcount,
     starttime,
+    method,
+    updatetime,
   } = props;
 
   const getChannelTheme = (): ChannelThemeProps => {
@@ -63,19 +66,6 @@ export default function ChannelItem(props: ChannelProps) {
     </Container>
   );
 }
-
-export type ChannelProps = {
-  avatar: string;
-  cid: string;
-  owner: string;
-  rendertype: string;
-  starttime: string;
-  status: string;
-  streamurl: string;
-  thumbnail: string;
-  title: string;
-  viewcount: string;
-};
 
 type ChannelThemeProps = {
   fontcolor: string;

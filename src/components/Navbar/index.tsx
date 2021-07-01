@@ -17,9 +17,7 @@ function Navbar() {
           <ai.AiOutlineMenu onClick={showMenu} />
         </Link>
       </div>
-
       <div className={styled.logo}>LowkeyDD</div>
-
       <nav className={isEnable ? `${styled.menu} ${styled.active}` : `${styled.menu}`} >
         <ul onClick={showMenu}> 
           <li className={styled.navbar}>
@@ -32,8 +30,6 @@ function Navbar() {
           })}
         </ul>
       </nav>
-
-  
     </div>
   );
 }
@@ -60,13 +56,8 @@ type MenuItemProps = {
 
 const SiderbarArray: MenuItemProps[] = [
   {
-    title: "首頁",
-    path: "/",
-    icon: <ai.AiOutlineHome />,
-  },
-  {
-    title: "Let's dd",
-    path: "/letsdd/",
+    title: "瀏覽",
+    path: "/channels/",
     icon: <ai.AiOutlineHeart />,
   },
   {
@@ -75,13 +66,13 @@ const SiderbarArray: MenuItemProps[] = [
     icon: <ai.AiOutlineVideoCamera />,
   },
   {
-    title: "聊天",
-    path: "/chat/",
-    icon: <ai.AiOutlineMessage />,
+    title: "收藏",
+    path: "/visit/",
+    icon: <ai.AiOutlineBook />,
   },
   {
     title: "會員",
-    path: "/usersetting/",
+    path: "/login/",
     icon: <ai.AiOutlineUser />,
   },
 ];

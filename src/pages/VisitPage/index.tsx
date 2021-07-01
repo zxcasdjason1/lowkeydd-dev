@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function UserSetting() {
+export default function VisitPage() {
     return (
         <div>
-            User Setting
+            VisitPage
         </div>
     )
 }
