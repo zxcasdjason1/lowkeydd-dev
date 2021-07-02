@@ -47,9 +47,10 @@ export default function SearchBox(props: SearchBoxProps) {
   };
 
   const commit = () => {
-    const value = searchInput.current?.value + "";
-    if (value !== "") {
-      props.onSubmit(value);
+    if (searchInput.current != null) {
+      props.onSubmit(searchInput.current.value);
+    } else {
+      console.error("searchInput 不存在");
     }
   };
 

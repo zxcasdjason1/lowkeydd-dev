@@ -9,7 +9,7 @@ export default function ChannelsStage() {
   return (
     <Container>
       <ChannelsSearch />
-      {user.ssid !== "" ? <FavoredChannels/> : <ResidentChannels/>}
+      <FavoredChannels/> 
     </Container>
   );
 }

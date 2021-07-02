@@ -1,24 +1,22 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import VisitEditorItem from "../VisitEditorItem";
 import VisitEditorHeader from "../VisitEditorHeader";
 import styled from "styled-components";
-import { VisitItem } from "../../../types";
-import { reqEditVisit, reqUpdateVisit, reqSearchChannel } from "../api";
+import { reqEditVisit, reqUpdateVisit } from "../api";
 import { useDispatch, useSelector } from "../../../app/hooks";
-import { setVisitList } from "../slice";
+import { useGrouped } from "../../../app/share";
 
 export function VisitEditor() {
   const user = useSelector((state) => state.user);
   const visit = useSelector((state) => state.visit);
+  const newVisitList = useGrouped(visit.list, visit.list);
+  console.log({newVisitList})
+
   const dispatch = useDispatch();
 
-  const editItem = (newItem: VisitItem) => {
-    const newList = visit.list.filter((item) => item.cid !== newItem.cid);
-    dispatch(setVisitList([newItem, ...newList]));
-  };
-  const deleteItem = (cid: string) => {
-    const newList = visit.list.filter((item) => item.cid !== cid);
-    dispatch(setVisitList([...newList]));
+  const onUpdate = () => {
+    console.log("onUpdate", { visit });
+    dispatch(reqUpdateVisit(user.username, visit));
   };
 
   useEffect(() => {
@@ -29,30 +27,53 @@ export function VisitEditor() {
     };
   }, []);
 
-  const onUpdate = () => {
-    console.log("onUpdate", {visit});
-    dispatch(reqUpdateVisit(user.username, visit));
-  };
-
   return (
     <div>
-      <VisitEditorHeader/>
+      <VisitEditorHeader />
 
-      <ul>
-        {visit.list.map((item) => (
-          <VisitEditorItem
-            key={item.cid}
-            item={item}
-            editItem={editItem}
-            deleteItem={deleteItem}
-          />
-        ))}
-      </ul>
-
+      {Object.keys(newVisitList).map((groupName, i) => (
+        <>
+          <p>{groupName}</p>
+          <ul key={groupName + "_" + i}>
+            {newVisitList[groupName].map((item) => 
+              <VisitEditorItem key={item.cid} item={item} />
+            )}
+          </ul>
+        </>
+      ))}
       <UpdateBtn onClick={onUpdate}>Save</UpdateBtn>
     </div>
   );
 }
+
+// const getGroupedVisitList = (list:VisitItem[]): { [key: string]: VisitItem[] } =>{
+//   if (!list){
+//     return {};
+//   }
+//   const mp = new Map<string, VisitItem>();
+//   list.forEach((item) => {
+//     mp.set(item.cid, item);
+//   });
+//   const result: { [key: string]: VisitItem[] } = {};
+//   const resident:VisitItem[] = [];
+
+//   list.forEach((item) => {
+//     const { cid } = item;
+
+//     if (mp.has(cid)) {
+//       const groupName = mp.get(cid)?.group || "undefined";
+//       if (!result[groupName]) {
+//         result[groupName] = [item];
+//       } else {
+//         result[groupName].push(item);
+//       }
+//     } else {
+//       resident.push(item);
+//     }
+//   });
+
+//   return {...result, resident}
+// }
 
 const UpdateBtn = styled.div`
   background: #333;

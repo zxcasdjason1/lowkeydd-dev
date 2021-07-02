@@ -10,9 +10,9 @@ const slice = createSlice({
   name: "visitlist",
   initialState,
   reducers: {
-    setWholeVisit:(state,  action:{type:string, payload:VisitList})=>{
-      state.group = action.payload.group
-      state.list = action.payload.list
+    setWholeVisit: (state, action: { type: string; payload: VisitList }) => {
+      state.group = action.payload.group;
+      state.list = action.payload.list;
     },
     setVisitList: (state, action: { type: string; payload: VisitItem[] }) => {
       state.list = action.payload;
@@ -23,5 +23,6 @@ const slice = createSlice({
   },
 });
 
-export const { setWholeVisit, setVisitList, addVisitItem } = slice.actions;
+export const { setWholeVisit, setVisitList, addVisitItem } =
+  slice.actions;
 export default slice.reducer;

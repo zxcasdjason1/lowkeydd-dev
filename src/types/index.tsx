@@ -28,8 +28,9 @@ export type ChannelProps = {
 };
 
 export type ChannelGroupsType = {
-  [key: string]: ChannelProps[];
-};
+  group:string[]
+  value:Array<ChannelProps[]>
+}
 
 export type UserSession = {
   ssid: string;

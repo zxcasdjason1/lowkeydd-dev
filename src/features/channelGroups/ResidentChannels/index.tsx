@@ -7,7 +7,7 @@ import { getResidentChannels } from "../api";
 
 export function ResidentChannels() {
   
-  const channels = useSelector((state) => state.channelgroups.resident);
+  const channels = useSelector((state) => state.channelgroups.value[0]);
   const dispatch = useDispatch();
 
   useEffect(() => {
