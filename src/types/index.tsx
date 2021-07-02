@@ -7,6 +7,7 @@ export type VisitItem = {
 };
 
 export type VisitList = {
+  group:string[],
   list: Array<VisitItem>;
 };
 

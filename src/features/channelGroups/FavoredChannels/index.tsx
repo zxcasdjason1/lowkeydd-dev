@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "../../app/hooks";
-import Channel from "../../components/Channel";
-import { ChannelProps } from "../../types";
+import { useSelector, useDispatch } from "../../../app/hooks";
+import Channel from "../../../components/Channel";
+import { ChannelProps } from "../../../types";
 import styled from "styled-components";
-import { getFavoredChannels } from "./api";
+import { getFavoredChannels } from "../api";
 
 export function FavoredChannels() {
   const channelGroups = useSelector((state) => state.channelgroups);

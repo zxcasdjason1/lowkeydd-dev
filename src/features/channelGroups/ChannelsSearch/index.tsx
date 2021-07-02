@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import SwitchBtn from "../../components/SwitchBtn";
-import SearchBox from "../../components/SearchBox";
-import SearchSwitchers from "../../components/SearchSwitchers";
-import { useDispatch } from "../../app/hooks";
-import { getResidentChannels } from "./api";
+import SwitchBtn from "../../../components/SwitchBtn";
+import SearchBox from "../../../components/SearchBox";
+import SearchSwitchers from "../../../components/SearchSwitchers";
+import { useDispatch } from "../../../app/hooks";
+import { getResidentChannels } from "../api";
 
 export function ChannelsSearch() {
   const dispatch = useDispatch();

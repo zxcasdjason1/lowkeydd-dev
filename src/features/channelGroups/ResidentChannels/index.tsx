@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import Channel  from "../../components/Channel";
-import { ChannelProps }  from "../../types";
+import Channel  from "../../../components/Channel";
+import { ChannelProps }  from "../../../types";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "../../app/hooks";
-import { getResidentChannels } from "./api";
+import { useDispatch, useSelector } from "../../../app/hooks";
+import { getResidentChannels } from "../api";
 
 export function ResidentChannels() {
   

@@ -2,7 +2,7 @@ import axios from "axios";
 import { addVisitItem, setVisitList } from "./slice";
 import { VisitList, VisitItem, ChannelProps } from "../../types";
 
-export const editVisit = (username: string) => (dispatch: any) => {
+export const reqEditVisit = (username: string) => (dispatch: any) => {
   const postform = new FormData();
   postform.append("username", username);
   axios.post("http://localhost:8002/visit/edit", postform).then(
@@ -22,7 +22,7 @@ export const editVisit = (username: string) => (dispatch: any) => {
   );
 };
 
-export const updateVisit =
+export const reqUpdateVisit =
   (username: string, visit: VisitList) => (dispatch: any) => {
     const postform = new FormData();
     postform.append("username", username);
@@ -44,7 +44,7 @@ export const updateVisit =
     );
   };
 
-export const getVisitItem = (url: string) => (dispatch: any) => {
+export const reqSearchChannel = (url: string) => (dispatch: any) => {
   const postform = new FormData();
   postform.append("url", url);
   axios.post("http://localhost:8002/channels/search", postform).then(

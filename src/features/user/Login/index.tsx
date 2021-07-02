@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { useRef } from "react";
-import { reqLogin } from "./api";
-import { useDispatch } from "../../app/hooks";
-import { history } from "../../index";
+import { reqLogin } from "../api";
+import { useDispatch } from "../../../app/hooks";
+import { history } from "../../../index";
 
 
 export function Login() {

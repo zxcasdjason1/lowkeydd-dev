@@ -31,30 +31,27 @@ export const getFavoredChannels =
           visitMap.set(item.cid, item);
         });
 
-        const favored: {
+        const newChannels: {
           [key: string]: ChannelProps[];
-        } = {};
-
-        const resident: ChannelProps[] = [];
+        } = {
+          resident: [], //常駐的頻道
+        };
 
         channels.forEach((ch) => {
           const { cid } = ch;
+
           if (visitMap.has(cid)) {
-            const item = visitMap.get(cid);
-            let groupName = item?.group || "undefined";
-            if (!favored[groupName]) {
-              favored[groupName] = [ch];
+            const groupName = visitMap.get(cid)?.group || "undefined";
+            if (!newChannels[groupName]) {
+              newChannels[groupName] = [ch];
             } else {
-              favored[groupName].push(ch);
+              newChannels[groupName].push(ch);
             }
           } else {
-            resident.push(ch);
+            newChannels["resident"].push(ch);
           }
         });
-        const newChannels = {
-          resident,
-          ...favored,
-        }
+
         console.log({ newChannels });
         dispatch(setFavored(newChannels));
       },

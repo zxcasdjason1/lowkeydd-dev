@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as ai from "react-icons/ai";
-import { VisitItem, VisitList } from "../../types";
+import { VisitItem } from "../../../types";
 
 type VisitEditorItemProps = {
   item: VisitItem;

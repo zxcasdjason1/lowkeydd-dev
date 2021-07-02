@@ -1,14 +1,13 @@
 import { useRef } from "react";
 import styles from "./index.module.css";
-import { VisitItem, VisitList } from "../../types";
 import styled from "styled-components";
+import { useDispatch } from "../../../app/hooks";
+import { reqSearchChannel } from "../api";
 
-type VisitEditorHeaderProps = {
-  addNewItem: (url: string) => void;
-};
 
-export default function VisitEditorHeader(props: VisitEditorHeaderProps) {
+export default function VisitEditorHeader() {
   const searchInput = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch()
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
@@ -29,7 +28,7 @@ export default function VisitEditorHeader(props: VisitEditorHeaderProps) {
     const value = searchInput.current?.value + "";
     if (value !== "") {
       // 提交數據
-      props.addNewItem(value);
+      dispatch(reqSearchChannel(value))
     }
   };
   return (

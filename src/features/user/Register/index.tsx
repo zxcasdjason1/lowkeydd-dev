@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { reqRegister } from "./api";
-import { history } from "../../index";
+import { reqRegister } from "../api";
+import { history } from "../../../index";
 
 export function Register() {
   const dispatch = useDispatch();
