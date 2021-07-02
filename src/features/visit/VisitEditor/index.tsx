@@ -10,7 +10,6 @@ import { setVisitList } from "../slice";
 export function VisitEditor() {
   const user = useSelector((state) => state.user);
   const visit = useSelector((state) => state.visit);
-
   const dispatch = useDispatch();
 
   const editItem = (newItem: VisitItem) => {
@@ -31,12 +30,13 @@ export function VisitEditor() {
   }, []);
 
   const onUpdate = () => {
+    console.log("onUpdate", {visit});
     dispatch(reqUpdateVisit(user.username, visit));
   };
 
   return (
     <div>
-      <VisitEditorHeader></VisitEditorHeader>
+      <VisitEditorHeader/>
 
       <ul>
         {visit.list.map((item) => (

@@ -1,9 +1,10 @@
 import axios from "axios";
 import { ChannelProps, VisitItem, VisitList } from "../../types";
 import { setResident, setFavored } from "./slice";
+import { API_SERVER_URL } from "../../app/config";
 
 export const getResidentChannels = (keyword: string) => (dispatch: any) => {
-  axios.get(`http://localhost:8002/channels/${keyword}`).then(
+  axios.get(`${API_SERVER_URL}/channels/${keyword}`).then(
     (response) => {
       console.log("成功了, 回應如下:\n", response.data);
       const { channels } = response.data;
@@ -20,7 +21,7 @@ export const getFavoredChannels =
     const postform = new FormData();
     postform.append("username", username);
     postform.append("ssid", ssid);
-    axios.post("http://localhost:8002/letsdd", postform).then(
+    axios.post(`${API_SERVER_URL}/letsdd`, postform).then(
       (response) => {
         console.log("成功了, 回應如下:\n", response.data);
         const channels: ChannelProps[] = response.data["channels"];

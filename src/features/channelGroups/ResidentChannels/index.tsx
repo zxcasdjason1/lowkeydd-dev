@@ -13,13 +13,13 @@ export function ResidentChannels() {
   useEffect(() => {
     //componentDidMount
     // 透過當前路徑去解析，取得要獲取的資源標籤
-    dispatch(getResidentChannels("live")) ;
+    dispatch(getResidentChannels("all")) ;
     return () => {
       // componentWillUnmount
     };
   }, [dispatch]);
 
-  console.log("new Render")
+  console.log("new Render: " , channels)
   return (
     <>
       <ChannelGridCantainer>

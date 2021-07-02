@@ -1,19 +1,19 @@
 import axios from "axios";
-import { addVisitItem, setVisitList } from "./slice";
+import { addVisitItem,  setWholeVisit} from "./slice";
 import { VisitList, VisitItem, ChannelProps } from "../../types";
+import { API_SERVER_URL } from "../../app/config";
 
 export const reqEditVisit = (username: string) => (dispatch: any) => {
   const postform = new FormData();
   postform.append("username", username);
-  axios.post("http://localhost:8002/visit/edit", postform).then(
+  axios.post(`${API_SERVER_URL}/visit/edit`, postform).then(
     (resp) => {
       console.log("開啟VisitList成功了, 回應如下:\n", resp.data);
 
       const code: string = resp.data["code"];
       const visit: VisitList = resp.data["visit"];
       if (code === "success") {
-        console.log("資料OK");
-        dispatch(setVisitList(visit.list));
+        dispatch(setWholeVisit(visit));
       }
     },
     (err) => {
@@ -26,16 +26,15 @@ export const reqUpdateVisit =
   (username: string, visit: VisitList) => (dispatch: any) => {
     const postform = new FormData();
     postform.append("username", username);
-    postform.append("visit", JSON.stringify({ visit }));
-    axios.post("http://localhost:8002/visit/update", postform).then(
+    postform.append("visit", JSON.stringify({ ...visit }));
+    axios.post(`${API_SERVER_URL}/visit/update`, postform).then(
       (resp) => {
         console.log("更新VisitList成功了, 回應如下:\n", resp.data);
 
         const code: string = resp.data["code"];
         const visit: VisitList = resp.data["visit"];
         if (code === "success") {
-          console.log("資料OK");
-          dispatch(setVisitList(visit.list));
+          dispatch(setWholeVisit(visit));
         }
       },
       (err) => {
@@ -47,7 +46,7 @@ export const reqUpdateVisit =
 export const reqSearchChannel = (url: string) => (dispatch: any) => {
   const postform = new FormData();
   postform.append("url", url);
-  axios.post("http://localhost:8002/channels/search", postform).then(
+  axios.post(`${API_SERVER_URL}/channels/search`, postform).then(
     (resp) => {
       console.log("[ChanelSearch]成功了, 回應如下:\n", resp.data);
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { setUserSession } from "./slice";
 import { history } from "../../index";
+import { API_SERVER_URL } from "../../app/config";
 
 export const reqLogin =
   (username: string, password: string) => (dispatch: any) => {
@@ -8,7 +9,7 @@ export const reqLogin =
     postform.append("username", username);
     postform.append("password", password);
 
-    axios.post("http://localhost:8002/login", postform).then(
+    axios.post(`${API_SERVER_URL}/login`, postform).then(
       (resp) => {
         console.log("成功了, 回應如下:\n", resp.data);
         const code: string = resp.data["code"];
@@ -36,7 +37,7 @@ export const reqRegister =
     const postform = new FormData();
     postform.append("username", username);
     postform.append("password", password);
-    axios.post("http://localhost:8002/register", postform).then(
+    axios.post(`${API_SERVER_URL}/register`, postform).then(
       (resp) => {
         console.log("成功了, 回應如下:\n", resp.data);
         const code: string = resp.data["code"];
