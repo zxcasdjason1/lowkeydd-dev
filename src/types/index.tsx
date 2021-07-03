@@ -7,8 +7,15 @@ export type VisitItem = {
 };
 
 export type VisitList = {
-  group:string[],
+  group: string[];
   list: Array<VisitItem>;
+};
+
+export type GroupedVisitItemsType = {
+  group: string[];
+  list: Array<VisitItem>;
+  groupMap: { [key: string]: string };
+  view: Array<VisitItem[]>;
 };
 
 export type ChannelProps = {
@@ -27,19 +34,20 @@ export type ChannelProps = {
   updatetime: string;
 };
 
-export type ChannelGroupsType = {
-  group:string[]
-  value:Array<ChannelProps[]>
-}
+export type GroupedChannelsType = {
+  visitMap: { [key: string]: string };
+  visitGroup: string[];
+  view: Array<ChannelProps[]>;
+  resident: ChannelProps[];
+};
 
 export type UserSession = {
   ssid: string;
   username: string;
   expiration: number;
-}
+};
 
 export type UserState = {
   username: string;
   ssid: string;
 };
-

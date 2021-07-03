@@ -9,18 +9,18 @@ type VisitEditorItemProps = {
 };
 
 export default function VisitEditorItem(props: VisitEditorItemProps) {
+  const {list, group} = useSelector((state) => state.groupedVisitItems);
   const { item } = props;
 
-  const visit = useSelector((state) => state.visit);
   const dispatch = useDispatch();
 
   const getEditedList = (newItem: VisitItem): VisitItem[] => {
-    const newList = visit.list.filter((item) => item.cid !== newItem.cid);
+    const newList = list.filter((item) => item.cid !== newItem.cid);
     return [newItem, ...newList];
   };
 
   const getDeletedList = (cid: string): VisitItem[] => {
-    const newList = visit.list.filter((item) => item.cid !== cid);
+    const newList = list.filter((item) => item.cid !== cid);
     return [...newList];
   };
 
@@ -44,11 +44,11 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
         group: newGroupName,
       });
 
-      if (visit.group.includes(newGroupName)) {
+      if (group.includes(newGroupName)) {
         dispatch(setVisitList(newList));
       } else {
         // 加入此創建的群組名
-        const newGroup = [newGroupName, ...visit.group];
+        const newGroup = [newGroupName, ...group];
         dispatch(setWholeVisit({ group: newGroup, list: newList }));
       }
     }

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import SwitchBtn from "../../../components/SwitchBtn";
 import SearchBox from "../../../components/SearchBox";
 import SearchSwitchers from "../../../components/SearchSwitchers";
 import { useDispatch } from "../../../app/hooks";

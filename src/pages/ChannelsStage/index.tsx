@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { ChannelsSearch } from "../../features/channelGroups/ChannelsSearch";
-import { ResidentChannels, FavoredChannels } from "../../features/channelGroups";
+import { ChannelsSearch } from "../../features/groupedChannels/ChannelsSearch";
+import { FavoredChannels } from "../../features/groupedChannels";
 import { useSelector } from "../../app/hooks";
 
 export default function ChannelsStage() {
