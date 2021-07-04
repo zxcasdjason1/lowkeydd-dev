@@ -1,8 +1,18 @@
+import { useState } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
+import { ChannelProps } from "../../types";
 import "./index.css";
-import {ChannelProps} from '../../types'
 
-export default function ChannelItem(props: ChannelProps) {
+interface ChannelItemPorps extends ChannelProps {
+  // 配合lazyload；初始預設都為不可視
+  handleObserve: (
+    entries: IntersectionObserverEntry[],
+    setVisible: Function
+  ) => void;
+}
+
+export default function ChannelItem(props: ChannelItemPorps) {
   const {
     avatar,
     cid,
@@ -17,55 +27,62 @@ export default function ChannelItem(props: ChannelProps) {
     updatetime,
   } = props;
 
-  const getChannelTheme = (): ChannelThemeProps => {
-    switch (status) {
-      case "live":
-        return {
-          fontcolor: "#fff",
-          fontbgcolor: "#f00",
-          bordercolor: "#f00",
-        };
-      case "wait":
-        return {
-          fontcolor: "#fff",
-          fontbgcolor: "#34afeb",
-          bordercolor: "#6a97ad",
-        };
-      case "off":
-        return {
-          fontcolor: "#f9fae6",
-          fontbgcolor: "#616161",
-          bordercolor: "#616161",
-        };
-      default:
-        return {
-          fontcolor: "#f0d8e2",
-          fontbgcolor: "#cb4ede",
-          bordercolor: "#6c3075",
-        };
+  const channelItem_Ref = useRef<HTMLDivElement>(null);
+  const statusImg_Ref = useRef<HTMLImageElement>(null);
+  const previewImg_Ref = useRef<HTMLImageElement>(null);
+
+  // lazyloading
+  // 1) 影藏整個區塊
+  // 2) 讓img src 不獲取圖片
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (e: IntersectionObserverEntry[]) => props.handleObserve(e, setVisible)
+    );
+    if (channelItem_Ref.current) {
+      observer.observe(channelItem_Ref.current);
     }
-  };
+    return () => {
+      if (channelItem_Ref.current) {
+        observer.unobserve(channelItem_Ref.current);
+      }
+    };
+  }, [statusImg_Ref,previewImg_Ref]);
 
   return (
-    <Container {...getChannelTheme()}>
-      <ChannelStatus className="avatarbox">
-        <img src={avatar} alt={'avatar_'+cid}></img>
-        <p>{status}</p>
-      </ChannelStatus>
-      <PreviewLink href={streamurl}>
-        <img src={thumbnail} alt={'thumbnail_'+cid} />
-      </PreviewLink>
-      <div className="channel_Description">
-        <div className="channel_Title">
-          <p>{title}</p>
+    <Visible visible={true} ref={channelItem_Ref}>
+      <Container {...getChannelTheme(status)}>
+        <ChannelStatus className="avatarbox">
+          <img
+            src={visible ? avatar : ""}
+            alt={"avatar_" + cid}
+            ref={statusImg_Ref}
+          />
+          <p>{status}</p>
+        </ChannelStatus>
+        <PreviewLink href={visible ? streamurl : ""}>
+          <img
+            src={visible ? thumbnail : ""}
+            alt={"thumbnail_" + cid}
+            ref={previewImg_Ref}
+          />
+        </PreviewLink>
+        <div className="channel_Description">
+          <div className="channel_Title">
+            <p>{title}</p>
+          </div>
+          <div className="channel_Owner">{owner}</div>
+          <div className="channel_Views">{viewcount}</div>
+          <div className="channel_Time">{starttime}</div>
         </div>
-        <div className="channel_Owner">{owner}</div>
-        <div className="channel_Views">{viewcount}</div>
-        <div className="channel_Time">{starttime}</div>
-      </div>
-    </Container>
+      </Container>
+    </Visible>
   );
 }
+const Visible = styled.div<{ visible: boolean }>`
+  display: ${(props) => (props.visible ? "block" : "none")};
+`;
 
 type ChannelThemeProps = {
   fontcolor: string;
@@ -82,6 +99,35 @@ const Container = styled.div<ChannelThemeProps>`
   border: solid 2px var(--bordercolor);
   border-radius: 5px;
 `;
+
+const getChannelTheme = (channelstatus: string): ChannelThemeProps => {
+  switch (channelstatus) {
+    case "live":
+      return {
+        fontcolor: "#fff",
+        fontbgcolor: "#f00",
+        bordercolor: "#f00",
+      };
+    case "wait":
+      return {
+        fontcolor: "#fff",
+        fontbgcolor: "#34afeb",
+        bordercolor: "#6a97ad",
+      };
+    case "off":
+      return {
+        fontcolor: "#f9fae6",
+        fontbgcolor: "#616161",
+        bordercolor: "#616161",
+      };
+    default:
+      return {
+        fontcolor: "#f0d8e2",
+        fontbgcolor: "#cb4ede",
+        bordercolor: "#6c3075",
+      };
+  }
+};
 
 const ChannelStatus = styled.div`
   position: absolute;

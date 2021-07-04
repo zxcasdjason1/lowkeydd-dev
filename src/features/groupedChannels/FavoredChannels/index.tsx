@@ -7,6 +7,7 @@ import { getFavoredChannels, getResidentChannels } from "../api";
 import { Fragment } from "react";
 
 export function FavoredChannels() {
+
   const { view, visitGroup } = useSelector((state) => state.groupedChannels);
   const { username, ssid } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ export function FavoredChannels() {
 
   useEffect(() => {
     if (ssid == "") {
-      dispatch(getResidentChannels("all"));
+      dispatch(getResidentChannels("live"));
       return;
     }
     // 透過當前路徑去解析，取得要獲取的資源標籤
@@ -42,14 +43,29 @@ export function FavoredChannels() {
   );
 }
 
-function GroupChannels(props: { channels: ChannelProps[]; groupName: string }) {
+function GroupChannels(props: { channels: ChannelProps[]; groupName: string}) {
   const { channels, groupName } = props;
+
+  const handleObserve = (entries:IntersectionObserverEntry[],setVisible:Function) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        // be seen
+        // console.log("被看見了")
+        setVisible(true);
+      }else{
+        // not be seen
+        // console.log("沒被看見了")
+        setVisible(false);
+      }
+    });
+  };
+
   return (
     <>
       <p>{groupName || "resident"}</p>
       <ChannelGridCantainer>
         {channels.map((ch: ChannelProps) => (
-          <Channel key={ch.cid} {...ch} />
+          <Channel key={ch.cid} {...ch} handleObserve = {handleObserve}/>
         ))}
       </ChannelGridCantainer>
     </>

@@ -4,7 +4,6 @@ import {
   ChannelProps,
   GroupedChannelsType,
   VisitList,
-  VisitItem,
 } from "../../types/index";
 
 const initialState: GroupedChannelsType = {
