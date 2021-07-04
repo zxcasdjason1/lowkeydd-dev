@@ -1,26 +1,21 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "../../../app/hooks";
-import Channel from "../../../components/Channel";
+import { ChannelItem } from "../../../components/ChannelItem";
 import { ChannelProps } from "../../../types";
 import styled from "styled-components";
-import { getFavoredChannels, getResidentChannels } from "../api";
+import { getLetsddV2Channels } from "../api";
 import { Fragment } from "react";
 
 export function FavoredChannels() {
-
-  const { view, visitGroup } = useSelector((state) => state.groupedChannels);
+  const { view, visitGroup, tags } = useSelector((state) => state.groupedChannels);
   const { username, ssid } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   console.log("view: ", { view });
   console.log("visitGroup: ", { visitGroup });
 
   useEffect(() => {
-    if (ssid == "") {
-      dispatch(getResidentChannels("live"));
-      return;
-    }
     // 透過當前路徑去解析，取得要獲取的資源標籤
-    dispatch(getFavoredChannels(username, ssid));
+    dispatch(getLetsddV2Channels(username, ssid, tags));
     return () => {
       // componentWillUnmount
     };
@@ -29,43 +24,29 @@ export function FavoredChannels() {
   return (
     <>
       {view.map((channels, i) =>
-        channels.length > 0 ? (
+        channels !== null ? (
           <GroupChannels
             key={"GroupChannels_" + visitGroup[i]}
             channels={channels}
             groupName={visitGroup[i]}
           />
         ) : (
-          <Fragment />
+          <Fragment key={"Fragment_" + visitGroup[i]}/>
         )
       )}
     </>
   );
 }
 
-function GroupChannels(props: { channels: ChannelProps[]; groupName: string}) {
+function GroupChannels(props: { channels: ChannelProps[]; groupName: string }) {
   const { channels, groupName } = props;
-
-  const handleObserve = (entries:IntersectionObserverEntry[],setVisible:Function) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting){
-        // be seen
-        // console.log("被看見了")
-        setVisible(true);
-      }else{
-        // not be seen
-        // console.log("沒被看見了")
-        setVisible(false);
-      }
-    });
-  };
 
   return (
     <>
       <p>{groupName || "resident"}</p>
-      <ChannelGridCantainer>
+      <ChannelGridCantainer key={"ChannelGridCantainer_" + groupName}>
         {channels.map((ch: ChannelProps) => (
-          <Channel key={ch.cid} {...ch} handleObserve = {handleObserve}/>
+          <ChannelItem key={ch.cid} {...ch} />
         ))}
       </ChannelGridCantainer>
     </>

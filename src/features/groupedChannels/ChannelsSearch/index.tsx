@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import SearchBox from "../../../components/SearchBox";
-import SearchSwitchers from "../../../components/SearchSwitchers";
-import { useDispatch } from "../../../app/hooks";
-import { getResidentChannels } from "../api";
+import SearchSwitchers from "../SearchSwitchers";
+import { useDispatch, useSelector } from "../../../app/hooks";
+import { getLetsddV2Channels } from "../api";
 
 export function ChannelsSearch() {
+  const { username, ssid } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const onSubmit = (keyword: string) => {
-    dispatch(getResidentChannels(keyword));
+    dispatch(getLetsddV2Channels(username, ssid, [keyword]));
   };
 
   return (

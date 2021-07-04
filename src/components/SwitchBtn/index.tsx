@@ -4,10 +4,10 @@ import styled from "styled-components";
 export default function SwitchBtn(props: SwitchButtonProps) {
   const { checked, htmlFor, theme } = props;
 
-  const [isChecked, setIsChecked] = useState(checked);
+  // const [isChecked, setIsChecked] = useState(checked);
 
   const handleClick = () => {
-    setIsChecked(!isChecked);
+    props.handleSwitchClick({tag:htmlFor, isChecked:!checked})
   };
   return (
     <Container {...theme}>
@@ -16,7 +16,7 @@ export default function SwitchBtn(props: SwitchButtonProps) {
         id={htmlFor || ""}
         onClick={handleClick}
       />
-      <ToogleFill checked={isChecked} />
+      <ToogleFill checked={checked} />
     </Container>
   );
 }
@@ -25,6 +25,7 @@ type SwitchButtonProps = {
   htmlFor: string;
   checked: boolean;
   theme?: SwitchButtonThemeProps;
+  handleSwitchClick: (action:{tag:string, isChecked:boolean})=>void
 };
 
 type SwitchButtonThemeProps = {

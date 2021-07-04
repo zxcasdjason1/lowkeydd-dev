@@ -6,13 +6,9 @@ import "./index.css";
 
 interface ChannelItemPorps extends ChannelProps {
   // 配合lazyload；初始預設都為不可視
-  handleObserve: (
-    entries: IntersectionObserverEntry[],
-    setVisible: Function
-  ) => void;
 }
 
-export default function ChannelItem(props: ChannelItemPorps) {
+export function ChannelItem(props: ChannelItemPorps) {
   const {
     avatar,
     cid,
@@ -28,18 +24,21 @@ export default function ChannelItem(props: ChannelItemPorps) {
   } = props;
 
   const channelItem_Ref = useRef<HTMLDivElement>(null);
-  const statusImg_Ref = useRef<HTMLImageElement>(null);
-  const previewImg_Ref = useRef<HTMLImageElement>(null);
+  // const statusImg_Ref = useRef<HTMLImageElement>(null);
+  // const previewImg_Ref = useRef<HTMLImageElement>(null);
 
   // lazyloading
   // 1) 影藏整個區塊
   // 2) 讓img src 不獲取圖片
-  const [visible, setVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const handleObserve = (entries: IntersectionObserverEntry[]) => {
+    const [entry] = entries;
+    setIsVisible(entry.isIntersecting);
+  };
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (e: IntersectionObserverEntry[]) => props.handleObserve(e, setVisible)
-    );
+    const observer = new IntersectionObserver(handleObserve);
     if (channelItem_Ref.current) {
       observer.observe(channelItem_Ref.current);
     }
@@ -48,24 +47,24 @@ export default function ChannelItem(props: ChannelItemPorps) {
         observer.unobserve(channelItem_Ref.current);
       }
     };
-  }, [statusImg_Ref,previewImg_Ref]);
+  }, [channelItem_Ref]);
 
   return (
     <Visible visible={true} ref={channelItem_Ref}>
       <Container {...getChannelTheme(status)}>
         <ChannelStatus className="avatarbox">
           <img
-            src={visible ? avatar : ""}
+            src={isVisible ? avatar : undefined}
             alt={"avatar_" + cid}
-            ref={statusImg_Ref}
+            // ref={statusImg_Ref}
           />
           <p>{status}</p>
         </ChannelStatus>
-        <PreviewLink href={visible ? streamurl : ""}>
+        <PreviewLink href={isVisible ? streamurl : undefined}>
           <img
-            src={visible ? thumbnail : ""}
+            src={isVisible ? thumbnail : undefined}
             alt={"thumbnail_" + cid}
-            ref={previewImg_Ref}
+            // ref={previewImg_Ref}
           />
         </PreviewLink>
         <div className="channel_Description">

@@ -6,11 +6,12 @@ import {
   VisitList,
 } from "../../types/index";
 
+const TAG_ALL = ["live","wait","off"]
+
 const initialState: GroupedChannelsType = {
-  visitMap: {},
   visitGroup: [],
   view: [],
-  resident: [],
+  tags: ["off"],
 };
 
 const slice = createSlice({
@@ -28,32 +29,26 @@ const slice = createSlice({
       const len = visit.group.length;
       if (len === 0) {
         state.view = [channels];
-        state.resident = channels;
+        // state.resident = channels;
         return;
       }
       const mp = getGroupMap(visit.list);
       const group = visit.group;
       const view = getView(mp, group, channels, true);
-      state.visitMap = mp;
+      // state.visitMap = mp;
       state.visitGroup = visit.group;
       state.view = view;
-      state.resident = view[len];
+      // state.resident = view[len];
     },
-    setResident: (state, action: { type: string; payload: ChannelProps[] }) => {
-      const channels = action.payload;
-      const { visitGroup, visitMap } = state;
-      const len = visitGroup.length;
-      if (len === 0) {
-        state.view = [channels];
-        state.resident = channels;
-        return;
-      }
-      const view = getView(visitMap, visitGroup, channels, true);
-      state.view = view;
-      state.resident = view[len];
+    setLetddV2: (state, action: { type: string; payload: {channels: ChannelProps[][], group: string[], tags:string[]} }) => {
+      const {channels, group,tags} = action.payload
+      state.view = channels
+      state.visitGroup = group
+      state.tags = tags[0] == "all" ? ["live","wait","off"]
+      : tags
     },
   },
 });
 
-export const { setFavored, setResident } = slice.actions;
+export const { setFavored, setLetddV2} = slice.actions;
 export default slice.reducer;

@@ -35,10 +35,9 @@ export type ChannelProps = {
 };
 
 export type GroupedChannelsType = {
-  visitMap: { [key: string]: string };
   visitGroup: string[];
   view: Array<ChannelProps[]>;
-  resident: ChannelProps[];
+  tags: string[];
 };
 
 export type UserSession = {

@@ -1,20 +1,7 @@
 import axios from "axios";
 import { ChannelProps, VisitList } from "../../types";
-import { setResident, setFavored } from "./slice";
+import { setFavored, setLetddV2 } from "./slice";
 import { API_SERVER_URL } from "../../app/config";
-
-export const getResidentChannels = (keyword: string) => (dispatch: any) => {
-  axios.get(`${API_SERVER_URL}/channels/${keyword}`).then(
-    (response) => {
-      console.log("成功了, 回應如下:\n", response.data);
-      const { channels } = response.data;
-      dispatch(setResident(channels));
-    },
-    (error) => {
-      console.log("失敗了, 錯誤如下:\n", error);
-    }
-  );
-};
 
 export const getFavoredChannels =
   (username: string, ssid: string) => (dispatch: any) => {
@@ -27,6 +14,40 @@ export const getFavoredChannels =
         const channels: ChannelProps[] = response.data["channels"];
         const visit: VisitList = response.data["visit"];
         dispatch(setFavored({visit, channels}));
+      },
+      (error) => {
+        console.log("失敗了, 錯誤如下:\n", error);
+      }
+    );
+  };
+
+  export const getLetsddV2Channels =
+  (username: string, ssid: string, tags:string[]) => (dispatch: any) => {
+    const request = {
+      username,
+      ssid,
+      tags,
+    }
+
+    // 避免tags為空
+    if (tags.length === 0) {
+      console.error("tags不可為空，此動作已被撤回");
+      return;
+    }
+    
+    // 搜尋內容為空時會被撤回
+    if (tags[0] == ""){
+      console.error("搜尋內容不可為空，此動作已被撤回");
+      return;
+    }
+
+    console.log("getLetsddV2Channels, tags: ",[tags])
+    axios.post(`${API_SERVER_URL}/letsddv2`, request).then(
+      (response) => {
+        console.log("成功了, 回應如下:\n", response.data);
+        const channels: ChannelProps[][] = response.data["channels"];
+        const group: string[] = response.data["group"];
+        dispatch(setLetddV2({channels, group, tags}));
       },
       (error) => {
         console.log("失敗了, 錯誤如下:\n", error);
