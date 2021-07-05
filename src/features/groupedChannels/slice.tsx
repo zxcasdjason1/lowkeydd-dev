@@ -11,7 +11,7 @@ const TAG_ALL = ["live","wait","off"]
 const initialState: GroupedChannelsType = {
   visitGroup: [],
   view: [],
-  tags: ["off"],
+  tags: ["live"],
 };
 
 const slice = createSlice({

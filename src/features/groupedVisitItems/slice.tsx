@@ -27,17 +27,10 @@ const slice = createSlice({
       state.list = list;
       state.groupMap = mp;
       state.view = getView(mp, state.group, list, false);
-    },
-    addVisitItem: (state, action: { type: string; payload: VisitItem }) => {
-      const list = [action.payload, ...state.list];
-      const mp = getGroupMap(list)
-      state.list = list;
-      state.groupMap = mp;
-      state.view = getView(mp, state.group, list, false);
-    },
+    }
   },
 });
 
-export const { setWholeVisit, setVisitList, addVisitItem } =
+export const { setWholeVisit, setVisitList } =
   slice.actions;
 export default slice.reducer;

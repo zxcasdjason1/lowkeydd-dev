@@ -1,7 +1,9 @@
 import axios from "axios";
-import { addVisitItem, setWholeVisit } from "./slice";
+import { setWholeVisit } from "./slice";
 import { VisitList, VisitItem, ChannelProps } from "../../types";
 import { API_SERVER_URL } from "../../app/config";
+
+const Default_GroupName = "Favorite";
 
 export const reqEditVisit =
   (username: string, ssid: string) => (dispatch: any) => {
@@ -14,7 +16,9 @@ export const reqEditVisit =
         const code: string = resp.data["code"];
         const visit: VisitList = resp.data["visit"];
         if (code === "success") {
-          dispatch(setWholeVisit(visit));
+          const newList = visit.list || [];
+          const newGroup = visit.group || []
+          dispatch(setWholeVisit({ list: newList, group: newGroup }));
         }
       },
       (err) => {
@@ -35,7 +39,9 @@ export const reqUpdateVisit =
         const code: string = resp.data["code"];
         const visit: VisitList = resp.data["visit"];
         if (code === "success") {
-          dispatch(setWholeVisit(visit));
+          const newList = visit.list || [];
+          const newGroup = visit.group || []
+          dispatch(setWholeVisit({ list: newList, group: newGroup }));
         }
       },
       (err) => {
@@ -44,27 +50,39 @@ export const reqUpdateVisit =
     );
   };
 
-export const reqSearchChannel = (url: string) => (dispatch: any) => {
-  const postform = new FormData();
-  postform.append("url", url);
-  axios.post(`${API_SERVER_URL}/channels/search`, postform).then(
-    (resp) => {
-      console.log("[ChanelSearch]成功了, 回應如下:\n", resp.data);
-      const code: string = resp.data["code"];
-      const ch: ChannelProps = resp.data["channels"][0];
-      if (code === "success") {
-        const newItem: VisitItem = {
-          cid: ch.cid,
-          cname: ch.cname,
-          owner: ch.owner,
-          group: "main",
-          method: ch.method,
-        };
-        dispatch(addVisitItem(newItem));
+export const reqSearchChannel =
+  (url: string, visit: VisitList) => (dispatch: any) => {
+    const postform = new FormData();
+    postform.append("url", url);
+    axios.post(`${API_SERVER_URL}/channels/search`, postform).then(
+      (resp) => {
+        console.log("[ChanelSearch]成功了, 回應如下:\n", resp.data);
+        const code: string = resp.data["code"];
+        const ch: ChannelProps = resp.data["channels"][0];
+        if (code === "success") {
+          const newItem: VisitItem = {
+            cid: ch.cid,
+            cname: ch.cname,
+            owner: ch.owner,
+            method: ch.method,
+            group: Default_GroupName,
+          };
+
+          const newList =
+            visit.list === null
+              ? [newItem]
+              : [newItem, ...visit.list.filter((o) => o.cid != ch.cid)];
+
+          const newGroup =
+            visit.group === null
+              ? [Default_GroupName]
+              : [Default_GroupName, ...visit.group];
+
+          dispatch(setWholeVisit({ list: newList, group: newGroup }));
+        }
+      },
+      (err) => {
+        console.log("失敗了, 錯誤如下:\n", err);
       }
-    },
-    (err) => {
-      console.log("失敗了, 錯誤如下:\n", err);
-    }
-  );
-};
+    );
+  };

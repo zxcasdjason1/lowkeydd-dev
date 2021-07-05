@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "../../../app/hooks";
-import { ChannelItem } from "../../../components/ChannelItem";
+import  SympleChannelCard  from "../../../components/SympleChannelCard";
 import { ChannelProps } from "../../../types";
 import styled from "styled-components";
 import { getLetsddV2Channels } from "../api";
@@ -46,7 +46,7 @@ function GroupChannels(props: { channels: ChannelProps[]; groupName: string }) {
       <p>{groupName || "resident"}</p>
       <ChannelGridCantainer key={"ChannelGridCantainer_" + groupName}>
         {channels.map((ch: ChannelProps) => (
-          <ChannelItem key={ch.cid} {...ch} />
+          <SympleChannelCard key={ch.cid} {...ch} />
         ))}
       </ChannelGridCantainer>
     </>
@@ -56,6 +56,6 @@ function GroupChannels(props: { channels: ChannelProps[]; groupName: string }) {
 const ChannelGridCantainer = styled.div`
   display: grid;
   grid-gap: 6px;
-  grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
   align-items: center;
 `;

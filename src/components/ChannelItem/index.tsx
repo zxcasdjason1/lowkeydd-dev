@@ -133,10 +133,10 @@ const ChannelStatus = styled.div`
 
   img {
     position: relative;
-    top: -1.1rem;
-    left: -1.2rem;
-    width: 5rem;
-    height: 5rem;
+    top: -1.1em;
+    left: -1.2em;
+    width: 5em;
+    height: 5em;
     border-radius: 50%;
     border: 3px solid var(--bordercolor);
     background: var(--fontcolor);
@@ -159,13 +159,12 @@ const ChannelStatus = styled.div`
 
 const PreviewLink = styled.a`
   display: block;
-  height: 8rem;
+  height: 12em;
   background-color: #000;
   display: flex;
   align-items: center;
 
   img {
     width: 100%;
-    vertical-align: middle;
   }
 `;

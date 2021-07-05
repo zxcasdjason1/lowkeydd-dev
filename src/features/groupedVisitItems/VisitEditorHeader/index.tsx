@@ -1,11 +1,12 @@
 import { useRef } from "react";
 import styles from "./index.module.css";
 import styled from "styled-components";
-import { useDispatch } from "../../../app/hooks";
+import { useDispatch, useSelector } from "../../../app/hooks";
 import { reqSearchChannel } from "../api";
 
 export default function VisitEditorHeader() {
   const searchInput = useRef<HTMLInputElement>(null);
+  const groupedVisitItems = useSelector((state) => state.groupedVisitItems);
   const dispatch = useDispatch();
 
   const handleSubmit = (e: any) => {
@@ -23,7 +24,7 @@ export default function VisitEditorHeader() {
   // };
   const commit = () => {
     if (searchInput.current != null) {
-      dispatch(reqSearchChannel(searchInput.current.value));
+      dispatch(reqSearchChannel(searchInput.current.value, groupedVisitItems));
     }else{
       console.error("searchInput 不存在");
     }
