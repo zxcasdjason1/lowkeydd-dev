@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import SearchBox from "../../../components/SearchBox";
-import SearchSwitchers from "../SearchSwitchers";
+
 import { useDispatch, useSelector } from "../../../app/hooks";
 import { getLetsddV2Channels } from "../api";
+import SearchSwitchers from "../SearchSwitchers";
 
 export function ChannelsSearch() {
   const { username, ssid } = useSelector((state) => state.user);
@@ -24,11 +25,7 @@ export function ChannelsSearch() {
 }
 
 const SearchContainer = styled.div`
-  width: 100%;
-  margin: 0 0 2rem;
-  padding: 5px 5px;
   background-color: #666;
-
   display: flex;
   flex-wrap: wrap;
   justify-content: start;

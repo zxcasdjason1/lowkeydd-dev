@@ -55,7 +55,7 @@ function GroupChannels(props: { channels: ChannelProps[]; groupName: string }) {
 
 const ChannelGridCantainer = styled.div`
   display: grid;
-  grid-gap: 6px;
+  grid-gap: 4px;
   grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
   align-items: center;
 `;
