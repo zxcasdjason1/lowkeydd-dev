@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setWholeVisit } from "./slice";
+import { setWholeVisit,setSearchResult } from "./slice";
 import { VisitList, VisitItem, ChannelProps } from "../../types";
 import { API_SERVER_URL } from "../../app/config";
 
@@ -78,7 +78,7 @@ export const reqSearchChannel =
               ? [Default_GroupName]
               : [Default_GroupName, ...visit.group];
 
-          dispatch(setWholeVisit({ list: newList, group: newGroup }));
+          dispatch(setSearchResult({list: newList, group: newGroup , current: ch}));
         }
       },
       (err) => {

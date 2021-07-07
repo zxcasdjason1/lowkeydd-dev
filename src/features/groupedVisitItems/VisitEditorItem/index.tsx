@@ -9,7 +9,7 @@ type VisitEditorItemProps = {
 };
 
 export default function VisitEditorItem(props: VisitEditorItemProps) {
-  const {list, group} = useSelector((state) => state.groupedVisitItems);
+  const { list, group } = useSelector((state) => state.groupedVisitItems);
   const { item } = props;
 
   const dispatch = useDispatch();
@@ -83,55 +83,73 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
   return (
     <Container>
       <OwnerText>
-        {/* <input type="checkbox" checked={checked} onChange={handleChecked} /> */}
         <label htmlFor={item.cid}>{item.owner}</label>
       </OwnerText>
       <ButtonGroup>
         <Button onClick={handleGroupEdit}>
           <ai.AiOutlineGroup />
-          <span>{item.owner}</span>
+          <p>{item.owner}</p>
         </Button>
         <Button onClick={handleItemEdit}>
           <ai.AiOutlineEdit />
-          <span>{item.owner}</span>
+          <p>{item.owner}</p>
         </Button>
         <Button onClick={handleItemDelete}>
           <ai.AiTwotoneDelete />
-          <span>{item.owner}</span>
+          <p>{item.owner}</p>
         </Button>
       </ButtonGroup>
     </Container>
   );
 }
 const Container = styled.div`
+  --navColor: #4c4a46;
+  --btnHoverColor: rgb(25, 133, 161);
+  /* --btnHoverBgColor: rgba(25, 133, 161, 0.5);
+  --toogleColor: #fff;
+  --bkgColor: #999; */
+
+  box-sizing: border-box;
+
   display: flex;
   justify-content: space-between;
 
   align-items: center;
   background-color: #c5c3c6;
-  padding: 18px;
+  padding: 16px;
   margin: 6px auto;
-  border-radius: 5px;
-  width: 80%;
+  border-radius: 10px;
+
+  // 最大寬度
+  /* max-width: 480px; */
 `;
 const OwnerText = styled.div`
+  width: 100%;
+  padding: 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #fff;
   label {
-    color: #fff;
     font-size: 18px;
-    overflow: hidden;
   }
 `;
 const ButtonGroup = styled.div`
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
 `;
 const Button = styled.div`
-  margin-left: 20px;
-  font-size: 25px;
-
-  color: #fff;
+  margin-left: 12px;
+  padding: 5px 5px;
   cursor: pointer;
-  span {
+  font-size: 22px;
+  border-radius: 50%;
+  color: #fff;
+  p {
     display: none;
+  }
+  :hover {
+    color: var(--btnHoverColor);
+    background-color: #fff;
   }
 `;

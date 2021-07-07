@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "../../../app/hooks";
-import  SympleChannelCard  from "../../../components/SympleChannelCard";
+import SympleChannelCard from "../../../components/SympleChannelCard";
 import { ChannelProps } from "../../../types";
 import styled from "styled-components";
 import { getLetsddV2Channels } from "../api";
 import { Fragment } from "react";
 
 export function FavoredChannels() {
-  const { view, visitGroup, tags } = useSelector((state) => state.groupedChannels);
+  const { view, visitGroup, tags } = useSelector(
+    (state) => state.groupedChannels
+  );
   const { username, ssid } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   console.log("view: ", { view });
@@ -31,7 +33,7 @@ export function FavoredChannels() {
             groupName={visitGroup[i]}
           />
         ) : (
-          <Fragment key={"Fragment_" + visitGroup[i]}/>
+          <Fragment key={"Fragment_" + visitGroup[i]} />
         )
       )}
     </>
@@ -54,8 +56,11 @@ function GroupChannels(props: { channels: ChannelProps[]; groupName: string }) {
 }
 
 const ChannelGridCantainer = styled.div`
-  display: grid;
-  grid-gap: 4px;
-  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
-  align-items: center;
+  @media (min-width: 360px) {
+    display: grid;
+    grid-gap: 4px;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    justify-content: center;
+    align-items: center;
+  }
 `;

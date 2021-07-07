@@ -16,6 +16,7 @@ export type GroupedVisitItemsType = {
   list: Array<VisitItem>;
   groupMap: { [key: string]: string };
   view: Array<VisitItem[]>;
+  current:ChannelProps|null;
 };
 
 export type ChannelProps = {

@@ -75,33 +75,20 @@ const Container = styled.div`
   background-color: aqua;
   position: relative;
   margin: 20px auto;
+  width: 100%;
+  height: 100%;
 `;
 
 const AvatarBox = styled.div`
-  position: relative;
-  left: 0;
-  top: 0;
-  background-color: #333;
 
   img {
-    width: 20%;
-    position: relative;
-    left: 0;
-    top: 0;
+    width: 5em;
   }
 `;
 
 const PreviewBox = styled.a`
-  position: relative;
-  left: 0;
-  top: 0;
-  background-color: #93af16;
-  width: 100%;
 
   img {
     width: 100%;
-    position: relative;
-    left: 0;
-    top: 0;
   }
 `;

@@ -9,7 +9,7 @@ export default function ChannelsStage() {
   return (
     <Container>
       <ChannelsSearch />
-      <FavoredChannels/> 
+      <FavoredChannels />
     </Container>
   );
 }
