@@ -51,3 +51,9 @@ export type UserState = {
   username: string;
   ssid: string;
 };
+
+export type NavItemProps = {
+  title: string;
+  path: string;
+  icon: any;
+};

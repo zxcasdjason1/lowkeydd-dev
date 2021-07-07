@@ -50,7 +50,7 @@ export function ChannelItem(props: ChannelItemPorps) {
   }, [channelItem_Ref]);
 
   return (
-    <Visible visible={true} ref={channelItem_Ref}>
+    <Wrap visible={true} ref={channelItem_Ref}>
       <Container {...getChannelTheme(status)}>
         <ChannelStatus className="avatarbox">
           <img
@@ -76,11 +76,18 @@ export function ChannelItem(props: ChannelItemPorps) {
           <div className="channel_Time">{starttime}</div>
         </div>
       </Container>
-    </Visible>
+    </Wrap>
   );
 }
-const Visible = styled.div<{ visible: boolean }>`
+const Wrap = styled.div<{ visible: boolean }>`
   display: ${(props) => (props.visible ? "block" : "none")};
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: none;
 `;
 
 type ChannelThemeProps = {
@@ -93,10 +100,25 @@ const Container = styled.div<ChannelThemeProps>`
   --fontcolor: ${(props) => props.fontcolor};
   --fontbgcolor: ${(props) => props.fontbgcolor};
   --bordercolor: ${(props) => props.bordercolor};
-  margin: 0px 10px 20px 10px;
+  /* margin: 0px 10px 20px 10px;
   padding: 10px;
   border: solid 2px var(--bordercolor);
-  border-radius: 5px;
+  border-radius: 5px; */
+
+  position: relative;
+  margin: 0 auto;
+  top: 56px;
+
+  transform: translateY(0%);
+
+  box-sizing: border-box;
+  border: 5px solid;
+  border-radius: 0 0 1.5em 1.5em;
+  border-color: var(--navColor);
+  background-color: var(--bkgColor);
+
+  max-width: 480px;
+  min-width: 250px;
 `;
 
 const getChannelTheme = (channelstatus: string): ChannelThemeProps => {
@@ -127,6 +149,7 @@ const getChannelTheme = (channelstatus: string): ChannelThemeProps => {
       };
   }
 };
+
 
 const ChannelStatus = styled.div`
   position: absolute;

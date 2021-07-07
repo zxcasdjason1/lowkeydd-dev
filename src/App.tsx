@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
 import ChannelsStage from "./pages/ChannelsStage";
@@ -7,21 +7,14 @@ import Theater from "./pages/Theater";
 import VisitPage from "./pages/VisitPage";
 import { Login, Register } from "./features/user";
 import HomePage from "./pages/HomePage";
-import styled from "styled-components";
+import * as ai from "react-icons/ai";
+import { NavItemProps } from "./types";
 
 export default class App extends Component {
-  state = {};
-
   render() {
     return (
       <div>
-        <Navbar />
-        {/* <Test>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet repellendus aspernatur quasi distinctio fugiat odit autem et ad modi cupiditate commodi, ducimus est dolorem praesentium explicabo enim deleniti impedit illo.
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eum id culpa eos ipsam! Itaque placeat, voluptatum mollitia quos, possimus voluptate omnis voluptas vitae maiores voluptatem fugiat. Saepe dolor asperiores quae.lo
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque ut facere blanditiis non dolorem reiciendis explicabo totam, doloribus temporibus facilis animi a aliquid, quo itaque, quis distinctio esse possimus? Nihil!
-          </Test> */}
-
+        <Navbar items={NavItemsArray}/>
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/channels/" component={ChannelsStage} />
@@ -35,8 +28,25 @@ export default class App extends Component {
   }
 }
 
-const Container = styled.div`
-  position: absolute;
-  top: 65px; // nav 的固定高度
-  margin: auto;
-`;
+const NavItemsArray: NavItemProps[] = [
+  {
+    title: "瀏覽",
+    path: "/channels/",
+    icon: <ai.AiOutlineHeart />,
+  },
+  {
+    title: "影院",
+    path: "/theater/",
+    icon: <ai.AiOutlineVideoCamera />,
+  },
+  {
+    title: "收藏",
+    path: "/visit/",
+    icon: <ai.AiOutlineBook />,
+  },
+  {
+    title: "會員",
+    path: "/login/",
+    icon: <ai.AiOutlineUser />,
+  },
+];
