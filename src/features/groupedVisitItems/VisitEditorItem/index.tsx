@@ -44,13 +44,8 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
         group: newGroupName,
       });
 
-      if (group.includes(newGroupName)) {
-        dispatch(setVisitList(newList));
-      } else {
-        // 加入此創建的群組名
-        const newGroup = [newGroupName, ...group];
-        dispatch(setWholeVisit({ group: newGroup, list: newList }));
-      }
+      const newGroup = [newGroupName, ...group.filter(g=>g!==newGroupName)];
+      dispatch(setWholeVisit({ group: newGroup, list: newList }));
     }
   };
 

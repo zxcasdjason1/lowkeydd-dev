@@ -1,12 +1,18 @@
+import { type } from "os";
 import styled from "styled-components";
 import { history } from "../../index";
 import { NavItemProps } from "../../types";
 
-export function NavItem(props: NavItemProps) {
-  const { title, path, icon } = props;
+interface Props extends NavItemProps{
+  showMenu:Function
+}
+
+export function NavItem(props: Props) {
+  const { title, path, icon, showMenu } = props;
 
   const onClick = () => {
     history.push({ pathname: `${path}` });
+    showMenu();
   };
 
   return (

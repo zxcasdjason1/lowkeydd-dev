@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setWholeVisit,setSearchResult } from "./slice";
+import { setWholeVisit, setSearchResult } from "./slice";
 import { VisitList, VisitItem, ChannelProps } from "../../types";
 import { API_SERVER_URL } from "../../app/config";
 
@@ -17,7 +17,7 @@ export const reqEditVisit =
         const visit: VisitList = resp.data["visit"];
         if (code === "success") {
           const newList = visit.list || [];
-          const newGroup = visit.group || []
+          const newGroup = visit.group || [];
           dispatch(setWholeVisit({ list: newList, group: newGroup }));
         }
       },
@@ -40,7 +40,7 @@ export const reqUpdateVisit =
         const visit: VisitList = resp.data["visit"];
         if (code === "success") {
           const newList = visit.list || [];
-          const newGroup = visit.group || []
+          const newGroup = visit.group || [];
           dispatch(setWholeVisit({ list: newList, group: newGroup }));
         }
       },
@@ -60,6 +60,13 @@ export const reqSearchChannel =
         const code: string = resp.data["code"];
         const ch: ChannelProps = resp.data["channels"][0];
         if (code === "success") {
+
+          if (ch.status == "failure" || !ch.cid) {
+            console.error("獲取的訊息無法解析或內容有誤:\n");
+            dispatch(setSearchResult({ ...visit, current: ch }));
+            return;
+          }
+
           const newItem: VisitItem = {
             cid: ch.cid,
             cname: ch.cname,
@@ -76,9 +83,11 @@ export const reqSearchChannel =
           const newGroup =
             visit.group === null
               ? [Default_GroupName]
-              : [Default_GroupName, ...visit.group];
+              : [Default_GroupName, ...visit.group.filter(g=>g != Default_GroupName)];
 
-          dispatch(setSearchResult({list: newList, group: newGroup , current: ch}));
+          dispatch(
+            setSearchResult({ list: newList, group: newGroup, current: ch })
+          );
         }
       },
       (err) => {

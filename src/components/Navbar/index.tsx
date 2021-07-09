@@ -18,7 +18,6 @@ function Navbar(props:NavbarProps) {
   return (
     <Container>
       <Nav>
-        {/* <Bottom></Bottom> */}
         <Logo>
           <p>LowkeyDD</p>
         </Logo>
@@ -29,14 +28,13 @@ function Navbar(props:NavbarProps) {
             </div>
           </Toogle_NavBkg>
           <ul>
-            {/* <Bottom></Bottom> */}
             <Toogle_NavBkg onClick={showMenu}>
               <div>
                 <ai.AiOutlineClose />
               </div>
             </Toogle_NavBkg>
             {props.items.map((item) => (
-              <NavItem key={`MenuItem_${item.title}`} {...item} />
+              <NavItem key={`MenuItem_${item.title}`} {...item} showMenu={showMenu}/>
             ))}
           </ul>
         </Menu>

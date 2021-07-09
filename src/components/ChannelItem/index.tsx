@@ -6,6 +6,7 @@ import "./index.css";
 
 interface ChannelItemPorps extends ChannelProps {
   // 配合lazyload；初始預設都為不可視
+  
 }
 
 export function ChannelItem(props: ChannelItemPorps) {
@@ -50,7 +51,7 @@ export function ChannelItem(props: ChannelItemPorps) {
   }, [channelItem_Ref]);
 
   return (
-    <Wrap visible={true} ref={channelItem_Ref}>
+    <Wrap ref={channelItem_Ref}>
       <Container {...getChannelTheme(status)}>
         <ChannelStatus className="avatarbox">
           <img
@@ -79,9 +80,7 @@ export function ChannelItem(props: ChannelItemPorps) {
     </Wrap>
   );
 }
-const Wrap = styled.div<{ visible: boolean }>`
-  display: ${(props) => (props.visible ? "block" : "none")};
-
+const Wrap = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -95,15 +94,10 @@ type ChannelThemeProps = {
   fontbgcolor: string;
   bordercolor: string;
 };
-
 const Container = styled.div<ChannelThemeProps>`
   --fontcolor: ${(props) => props.fontcolor};
   --fontbgcolor: ${(props) => props.fontbgcolor};
   --bordercolor: ${(props) => props.bordercolor};
-  /* margin: 0px 10px 20px 10px;
-  padding: 10px;
-  border: solid 2px var(--bordercolor);
-  border-radius: 5px; */
 
   position: relative;
   margin: 0 auto;

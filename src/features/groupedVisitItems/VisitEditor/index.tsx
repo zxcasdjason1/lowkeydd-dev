@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import VisitEditorItem from "../VisitEditorItem";
 import VisitEditorSearch from "../VisitEditorSearch";
 import styled from "styled-components";
 import { reqEditVisit, reqUpdateVisit } from "../api";
 import { useDispatch, useSelector } from "../../../app/hooks";
-import { VisitItem } from "../../../types";
+import { GroupVisitItems } from "../GroupVisitItem";
 import { Fragment } from "react";
 import * as ai from "react-icons/ai";
 
@@ -24,7 +24,7 @@ export function VisitEditor() {
     return () => {
       // componentWillUnmount
     };
-  }, [dispatch]);
+  }, []);
   
   console.log("view: ", { view });
   console.log("group: ", [group]);
@@ -42,13 +42,7 @@ export function VisitEditor() {
           <ai.AiOutlineDeliveredProcedure />
         </SaveBtn>
         <Preview>
-          {current == null ? (
-            <div>
-              <ai.AiOutlineFundView />
-            </div>
-          ) : (
-            <img src={current.thumbnail} alt="" />
-          )}
+          {GetImg(current)}
         </Preview>
         <VisitEditorSearch />
         {view.map((items, i) =>
@@ -67,20 +61,20 @@ export function VisitEditor() {
   );
 }
 
-function GroupVisitItems(props: { items: VisitItem[]; groupName: string }) {
-  const { items } = props;
-  const groupName = props.groupName || "resident";
-  return (
+const GetImg = (current: any): ReactElement=>
+  current === null ? (
     <div>
-      <GroupLine key={"GroupLine_" + groupName}>
-        <span>{groupName}</span>
-      </GroupLine>
-      {items.map((item: VisitItem) => (
-        <VisitEditorItem key={item.cid} item={item} />
-      ))}
+      <ai.AiOutlineFundView />
+      <p>一緒にddしましょう o(*￣▽￣*)ブ</p>
     </div>
+  ) : current.thumbnail == "" ? (
+    <div>
+      <ai.AiFillFrown />
+      <p>獲取頻道訊息發生錯誤</p>
+    </div>
+  ) : (
+    <img src={current.thumbnail} alt="" />
   );
-}
 
 const Wrap = styled.div`
   position: absolute;
@@ -173,10 +167,18 @@ const Preview = styled.div`
     background-color: var(--bkgColor);
     color: var(--navColor);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 150px;
     border-radius: 0px 0px 15px 15px;
+
+    svg {
+      font-size: 150px;
+    }
+
+    p{
+      font-size: 20px;
+    }
   }
 `;
 
