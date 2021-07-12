@@ -2,7 +2,7 @@ import styled from "styled-components";
 import SearchBox from "../../../components/SearchBox";
 
 import { useDispatch, useSelector } from "../../../app/hooks";
-import { getLetsddV2Channels } from "../api";
+import { fetchChannels } from "../api";
 import SearchSwitchers from "../SearchSwitchers";
 
 export function ChannelsSearch() {
@@ -10,7 +10,7 @@ export function ChannelsSearch() {
   const dispatch = useDispatch();
 
   const onSubmit = (keyword: string) => {
-    dispatch(getLetsddV2Channels(username, ssid, [keyword]));
+    dispatch(fetchChannels(username, ssid, [keyword]));
   };
 
   return (

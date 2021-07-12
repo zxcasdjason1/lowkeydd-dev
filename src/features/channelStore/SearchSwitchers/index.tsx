@@ -1,23 +1,26 @@
 import styled from "styled-components";
+import { SwitcherList } from "../../../app/config";
 import { useDispatch, useSelector } from "../../../app/hooks";
 import SwitchBtn from "../../../components/SwitchBtn";
-import { getLetsddV2Channels } from "../api";
+import { selectUser } from "../../user/slice";
+import { fetchChannels } from "../api";
+import { selectChannelTags } from "../slice";
 
 export default function SearchSwitchers() {
+  const { username, ssid } = useSelector(selectUser);
+  const tags = useSelector(selectChannelTags);
   const dispatch = useDispatch();
-  const { tags } = useSelector((state) => state.groupedChannels);
-  const { username, ssid } = useSelector((state) => state.user);
   console.log({ tags });
 
   const handleSwitchClick = (action:{tag:string, isChecked:boolean})=>{
     const { tag, isChecked } = action;
     if (isChecked) {
       if (!tags.includes(tag)){
-        dispatch(getLetsddV2Channels(username, ssid, [...tags, tag]));
+        dispatch(fetchChannels(username, ssid, [...tags, tag]));
       }
     } else {
       const newtags = tags.filter((_tag) => _tag !== tag);
-      dispatch(getLetsddV2Channels(username, ssid, newtags));
+      dispatch(fetchChannels(username, ssid, newtags));
     }
   };
 
@@ -41,18 +44,6 @@ export default function SearchSwitchers() {
     </>
   );
 }
-
-type Switcher = {
-  checked: boolean;
-  htmlFor: string;
-  afterColor: string;
-};
-
-const SwitcherList: Array<Switcher> = [
-  { checked: false, htmlFor: "live", afterColor: "#f00" },
-  { checked: false, htmlFor: "wait", afterColor: "#0ff" },
-  { checked: false, htmlFor: "off", afterColor: "#856" },
-];
 
 const SwitchBtnBox = styled.div`
   margin: 0 1rem;

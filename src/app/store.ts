@@ -3,14 +3,16 @@ import {
   configureStore,
   getDefaultMiddleware,
 } from "@reduxjs/toolkit";
-import groupedChannelsReducer from "../features/groupedChannels/slice";
-import groupedVisitItemsReducer from "../features/groupedVisitItems/slice";
+import channelStoreReducer from "../features/channelStore/slice";
+import visitStoreReducer from "../features/visitStore/slice";
 import userReducer from "../features/user/slice";
+import theaterReducer from "../features/theater/slice";
 
 const reducer = combineReducers({
-  groupedChannels: groupedChannelsReducer,
-  groupedVisitItems: groupedVisitItemsReducer,
+  channelStore: channelStoreReducer,
+  visitStore: visitStoreReducer,
   user: userReducer,
+  theater: theaterReducer,
 });
 
 const middleware = getDefaultMiddleware({

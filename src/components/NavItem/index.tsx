@@ -1,7 +1,7 @@
 import { type } from "os";
 import styled from "styled-components";
 import { history } from "../../index";
-import { NavItemProps } from "../../types";
+import { NavItemProps } from "../../app/types";
 
 interface Props extends NavItemProps{
   showMenu:Function

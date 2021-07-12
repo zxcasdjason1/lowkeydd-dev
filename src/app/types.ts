@@ -11,12 +11,10 @@ export type VisitList = {
   list: Array<VisitItem>;
 };
 
-export type GroupedVisitItemsType = {
+export type visitStoreState = {
   group: string[];
   list: Array<VisitItem>;
-  groupMap: { [key: string]: string };
-  view: Array<VisitItem[]>;
-  current:ChannelProps|null;
+  current: ChannelProps | null;
 };
 
 export type ChannelProps = {
@@ -35,10 +33,10 @@ export type ChannelProps = {
   updatetime: string;
 };
 
-export type GroupedChannelsType = {
-  visitGroup: string[];
-  view: Array<ChannelProps[]>;
+export type ChannelStoreState = {
+  group: string[];
   tags: string[];
+  view: Array<ChannelProps[]>;
 };
 
 export type UserSession = {
@@ -56,4 +54,41 @@ export type NavItemProps = {
   title: string;
   path: string;
   icon: any;
+};
+
+export type TheaterState = {
+  elements: IframeProps[];
+  playlist: IframeProps[];
+  //slider
+  slider:{
+    sliderIndex: number;
+    isTakenOverAnim: boolean;
+  },
+  //iframe
+  iframes:{
+    ratio: number;
+    size: IframeSizeProps;
+  }
+};
+
+export type IframeProps = {
+  src: string;
+  avatar: string;
+  cid: string;
+  cname: string;
+  preview: string;
+  checked:boolean;
+};
+
+export type IframeSizeProps = {
+  col: number;
+  row: number;
+  w: number;
+  h: number;
+};
+
+export type Switcher = {
+  checked: boolean;
+  htmlFor: string;
+  afterColor: string;
 };

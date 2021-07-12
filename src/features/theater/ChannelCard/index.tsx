@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { ChannelProps } from "../../types";
+import { ChannelProps, IframeProps } from "../../../app/types";
 import * as ai from "react-icons/ai";
+import { history } from "../../..";
+import { useDispatch, useSelector } from "../../../app/hooks";
+import { setFromChannel } from "../slice";
+import { createIframeProps_from_ChannelProps } from "../api";
+import { selectChannelTags } from "../../channelStore/slice";
 
-interface ChannelCardPorps extends ChannelProps {}
-
-export default function ChannelCard(props: ChannelCardPorps) {
+export default function ChannelCard(props: ChannelProps) {
   const {
     avatar,
     cid,
@@ -17,42 +20,50 @@ export default function ChannelCard(props: ChannelCardPorps) {
     title,
     viewcount,
     starttime,
-    method,
-    updatetime,
+    // method,
+    // updatetime,
   } = props;
 
-  const [isVisible, setIsVisible] = useState(false);
-  const channelItem_Ref = useRef<HTMLDivElement>(null);
-  const handleObserve = (entries: IntersectionObserverEntry[]) => {
-    const [entry] = entries;
-    setIsVisible(entry.isIntersecting);
+  const [isVisible, setIsVisible] = useState(true);
+  const ref = useRef<HTMLDivElement>(null);
+  const tags = useSelector(selectChannelTags);
+  const dispatch = useDispatch();
+  const handleOpenTheater = () => {
+    // 點選卡片後，進入Theater。
+    // 即使點了非直播的內容，也會進入
+    // 但是，Theater的Slider只會抓取正在直播的內容。
+    const item: IframeProps = createIframeProps_from_ChannelProps(props);
+    dispatch(setFromChannel({ item }));
   };
 
   useEffect(() => {
-    const observer = new IntersectionObserver(handleObserve);
-    if (channelItem_Ref.current) {
-      observer.observe(channelItem_Ref.current);
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    });
+    if (ref.current) {
+      observer.observe(ref.current);
     }
     return () => {
-      if (channelItem_Ref.current) {
-        observer.unobserve(channelItem_Ref.current);
+      if (ref.current) {
+        observer.unobserve(ref.current);
       }
+      observer.disconnect();
     };
-  }, [channelItem_Ref]);
+  }, [ref, isVisible]);
 
   return (
-    <Container ref={channelItem_Ref}>
+    <Container ref={ref}>
       <AvatarBox>
-        <img
-          src={isVisible ? avatar : undefined}
-          alt={"avatar_" + cid}
-        />
+        <img src={isVisible ? avatar : undefined} alt={"avatar_" + cid} />
         <div>
           <p>{status}</p>
         </div>
       </AvatarBox>
       <CardBody>
-        <PreviewBox href={isVisible ? streamurl : undefined}>
+        <PreviewBox
+          // href={isVisible ? streamurl : undefined}
+          onClick={handleOpenTheater}
+        >
           <div>
             <img
               src={isVisible ? thumbnail : undefined}
@@ -62,9 +73,7 @@ export default function ChannelCard(props: ChannelCardPorps) {
         </PreviewBox>
         <Description>
           <Owner>
-            <h1>
-              {owner}
-            </h1>
+            <h1>{owner}</h1>
           </Owner>
           <ChTitle>
             <p>{title}</p>
@@ -141,24 +150,25 @@ const CardBody = styled.div`
 
 const PreviewBox = styled.a`
   display: block;
-  
+
   padding: 10px;
   display: flex;
   align-items: center;
 
-  /* background-color: #fff; */
+  //點擊後將跳轉到Theater
+  cursor: pointer;
 
   div {
     background-color: #000;
     position: relative;
     width: 100%;
-    
+
     display: flex;
     align-items: center;
     justify-content: center;
     height: 15rem;
     // 透過hidden把超出範圍的圖片直接剪裁掉
-    overflow:hidden;
+    overflow: hidden;
     border-radius: 1.2em;
 
     img {

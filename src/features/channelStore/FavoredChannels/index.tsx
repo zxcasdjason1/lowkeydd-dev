@@ -1,39 +1,30 @@
-import { useEffect } from "react";
 import { useSelector, useDispatch } from "../../../app/hooks";
-import ChannelCard from "../../../components/ChannelCard";
-import { ChannelProps } from "../../../types";
+import ChannelCard from "../../theater/ChannelCard";
+import { ChannelProps } from "../../../app/types";
 import styled from "styled-components";
-import { getLetsddV2Channels } from "../api";
 import { Fragment } from "react";
+import { selectUser } from "../../user/slice";
+import { selectChannelGroupedView, selectChannelStore } from "../slice";
 
 export function FavoredChannels() {
-  const { view, visitGroup, tags } = useSelector(
-    (state) => state.groupedChannels
-  );
-  const { username, ssid } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  console.log("view: ", { view });
-  console.log("visitGroup: ", { visitGroup });
+  const { group, tags, view } = useSelector(selectChannelStore);
 
-  useEffect(() => {
-    // 透過當前路徑去解析，取得要獲取的資源標籤
-    dispatch(getLetsddV2Channels(username, ssid, tags));
-    return () => {
-      // componentWillUnmount
-    };
-  }, [dispatch]);
+  const dispatch = useDispatch();
+  console.log("group: ", { group });
+  console.log("tags: ", { tags });
+  console.log("view: ", { view });
 
   return (
     <>
       {view.map((channels, i) =>
         channels !== null ? (
           <GroupChannels
-            key={"GroupChannels_" + visitGroup[i]}
+            key={"GroupChannels_" + group[i]}
             channels={channels}
-            groupName={visitGroup[i]}
+            groupName={group[i]}
           />
         ) : (
-          <Fragment key={"Fragment_" + visitGroup[i]} />
+          <Fragment key={"Fragment_" + group[i]} />
         )
       )}
     </>
@@ -48,7 +39,8 @@ function GroupChannels(props: { channels: ChannelProps[]; groupName: string }) {
       <GroupLine><span>{groupName || "resident"}</span></GroupLine>
       <ChannelGridCantainer key={"ChannelGridCantainer_" + groupName}>
         {channels.map((ch: ChannelProps) => (
-          <ChannelCard key={ch.cid} {...ch} />
+          <ChannelCard key={`ChannelCard_${ch.cid}`} {...ch} />
+          // <div key={`ChannelCard_${ch.cid}`} >{ch.cid}</div>
         ))}
       </ChannelGridCantainer>
     </>

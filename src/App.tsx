@@ -6,7 +6,7 @@ import VisitPage from "./pages/VisitPage";
 import { Login, Register } from "./features/user";
 import HomePage from "./pages/HomePage";
 import * as ai from "react-icons/ai";
-import { NavItemProps } from "./types";
+import { NavItemProps } from "./app/types";
 
 export default function App() {
   return (

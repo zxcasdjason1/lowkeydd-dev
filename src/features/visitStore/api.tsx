@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setWholeVisit, setSearchResult } from "./slice";
-import { VisitList, VisitItem, ChannelProps } from "../../types";
+import { VisitList, VisitItem, ChannelProps } from "../../app/types";
 import { API_SERVER_URL } from "../../app/config";
 
 const Default_GroupName = "Favorite";

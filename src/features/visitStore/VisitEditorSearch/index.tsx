@@ -3,10 +3,11 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "../../../app/hooks";
 import { reqSearchChannel } from "../api";
 import * as ai from "react-icons/ai";
+import { selectVisitStore } from "../slice";
 
 export default function VisitEditorSearch() {
   const searchInput = useRef<HTMLInputElement>(null);
-  const groupedVisitItems = useSelector((state) => state.groupedVisitItems);
+  const visitStore = useSelector(selectVisitStore);
   const dispatch = useDispatch();
 
   const handleClick = (e: any) => {
@@ -24,7 +25,7 @@ export default function VisitEditorSearch() {
         console.log("輸入不可為空，動作撤回");
         return;
       }
-      dispatch(reqSearchChannel(searchInput.current.value, groupedVisitItems));
+      dispatch(reqSearchChannel(searchInput.current.value, visitStore));
     } else {
       console.error("searchInput 不存在");
     }

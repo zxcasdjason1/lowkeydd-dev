@@ -1,26 +1,26 @@
 import styled from "styled-components";
 import * as ai from "react-icons/ai";
-import { VisitItem } from "../../../types";
+import { VisitItem } from "../../../app/types";
 import { useDispatch, useSelector } from "../../../app/hooks";
-import { setVisitList, setWholeVisit } from "../slice";
+import { selectVisitStore, setVisitList, setWholeVisit } from "../slice";
 
 type VisitEditorItemProps = {
   item: VisitItem;
 };
 
 export default function VisitEditorItem(props: VisitEditorItemProps) {
-  const { list, group } = useSelector((state) => state.groupedVisitItems);
+  const { list, group } = useSelector(selectVisitStore);
   const { item } = props;
 
   const dispatch = useDispatch();
 
   const getEditedList = (newItem: VisitItem): VisitItem[] => {
-    const newList = list.filter((item) => item.cid !== newItem.cid);
+    const newList = list.filter((item: VisitItem) => item.cid !== newItem.cid);
     return [newItem, ...newList];
   };
 
   const getDeletedList = (cid: string): VisitItem[] => {
-    const newList = list.filter((item) => item.cid !== cid);
+    const newList = list.filter((item: VisitItem) => item.cid !== cid);
     return [...newList];
   };
 
@@ -39,12 +39,15 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
     // 加入到新的群組
     if (newGroupName !== item.group) {
       // 修改該元素的群組屬性
-      const newList = getEditedList({
+      const newList: VisitItem[] = getEditedList({
         ...item,
         group: newGroupName,
       });
 
-      const newGroup = [newGroupName, ...group.filter(g=>g!==newGroupName)];
+      const newGroup: string[] = [
+        newGroupName,
+        ...group.filter((g: string) => g !== newGroupName),
+      ];
       dispatch(setWholeVisit({ group: newGroup, list: newList }));
     }
   };

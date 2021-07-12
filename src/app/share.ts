@@ -38,7 +38,7 @@ export const getGroupMap = <T extends { cid: string; group: string }>(
   return mp;
 };
 
-export const getView = <T extends { cid: string }>(
+export const getGroupedView = <T extends { cid: string }>(
   mp: { [key: string]: string },
   group: string[],
   items: T[],

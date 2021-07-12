@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { VisitItem } from "../../../types";
+import { VisitItem } from "../../../app/types";
 import VisitEditorItem from "../VisitEditorItem";
 
 export function GroupVisitItems(props: {

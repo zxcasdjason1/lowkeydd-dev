@@ -1,31 +1,28 @@
 import { ReactElement, useEffect, useRef, useState } from "react";
-import VisitEditorItem from "../VisitEditorItem";
 import VisitEditorSearch from "../VisitEditorSearch";
 import styled from "styled-components";
-import { reqEditVisit, reqUpdateVisit } from "../api";
+import { reqUpdateVisit } from "../api";
 import { useDispatch, useSelector } from "../../../app/hooks";
 import { GroupVisitItems } from "../GroupVisitItem";
 import { Fragment } from "react";
 import * as ai from "react-icons/ai";
+import { VisitItem } from "../../../app/types";
+import { selectVisitGroupedView, selectVisitStore } from "../slice";
+import { selectUser } from "../../user/slice";
 
 export function VisitEditor() {
-  const { username, ssid } = useSelector((state) => state.user);
-  const groupedVisitItems = useSelector((state) => state.groupedVisitItems);
-  const { view, group, current } = groupedVisitItems;
+  const { username, ssid } = useSelector(selectUser);
+  const visitStore = useSelector(selectVisitStore);
+  const { group, current } = visitStore;
+  const view = useSelector(selectVisitGroupedView)
+
   const dispatch = useDispatch();
+
   const onUpdate = () => {
-    console.log("onUpdate", { groupedVisitItems });
-    dispatch(reqUpdateVisit(username, ssid, groupedVisitItems));
+    console.log("onUpdate", { visitStore });
+    dispatch(reqUpdateVisit(username, ssid, visitStore));
   };
-  
-  useEffect(() => {
-    dispatch(reqEditVisit(username, ssid));
-    
-    return () => {
-      // componentWillUnmount
-    };
-  }, []);
-  
+
   console.log("view: ", { view });
   console.log("group: ", [group]);
 
@@ -41,11 +38,9 @@ export function VisitEditor() {
         <SaveBtn onClick={onUpdate}>
           <ai.AiOutlineDeliveredProcedure />
         </SaveBtn>
-        <Preview>
-          {GetImg(current)}
-        </Preview>
+        <Preview>{GetImg(current)}</Preview>
         <VisitEditorSearch />
-        {view.map((items, i) =>
+        {view.map((items: VisitItem[], i: number) =>
           items.length > 0 ? (
             <GroupVisitItems
               key={"GroupVisitItems_" + group[i]}
@@ -61,7 +56,7 @@ export function VisitEditor() {
   );
 }
 
-const GetImg = (current: any): ReactElement=>
+const GetImg = (current: any): ReactElement =>
   current === null ? (
     <div>
       <ai.AiOutlineFundView />
@@ -104,7 +99,7 @@ const Container = styled.div`
   border-color: var(--navColor);
   background-color: var(--bkgColor);
 
-  max-width: 480px;
+  max-width: 960px;
   min-width: 250px;
 `;
 
@@ -176,7 +171,7 @@ const Preview = styled.div`
       font-size: 150px;
     }
 
-    p{
+    p {
       font-size: 20px;
     }
   }

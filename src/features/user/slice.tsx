@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { UserSession, UserState } from "../../types";
+import { RootState } from "../../app/store";
+import { UserSession, UserState } from "../../app/types";
 
 const initialState: UserState = {
   username: getCookie("username"),
@@ -25,7 +26,7 @@ export default slice.reducer;
 
 // expiration 會乘上1000倍，所以單位是秒
 function setCookie(ssid: string, username: string, expiration: number) {
-  var expires = (new Date(Date.now()+ expiration*1000)).toUTCString();
+  var expires = new Date(Date.now() + expiration * 1000).toUTCString();
   document.cookie = `ssid=${ssid}; expires=${expires}; path=/`;
   document.cookie = `username=${username}; expires=${expires}; path=/`;
 }
@@ -44,3 +45,5 @@ function getCookie(c_name: string): string {
   }
   return "";
 }
+
+export const selectUser = (state: RootState) => state.user;

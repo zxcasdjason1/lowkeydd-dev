@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as ai from "react-icons/ai";
 import styled from "styled-components";
-import { NavItemProps } from "../../types";
+import { NavItemProps } from "../../app/types";
 import { NavItem } from "../NavItem";
 
 type NavbarProps ={
