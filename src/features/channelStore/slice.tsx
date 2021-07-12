@@ -13,28 +13,6 @@ const slice = createSlice({
   name: "channels",
   initialState,
   reducers: {
-    // setFavored: (
-    //   state,
-    //   action: {
-    //     type: string;
-    //     payload: { visit: VisitList; channels: ChannelProps[] };
-    //   }
-    // ) => {
-    //   const { visit, channels } = action.payload;
-    //   const len = visit.group.length;
-    //   if (len === 0) {
-    //     state.view = [channels];
-    //     // state.resident = channels;
-    //     return;
-    //   }
-    //   const mp = getGroupMap(visit.list);
-    //   const group = visit.group;
-    //   const view = getView(mp, group, channels, true);
-    //   // state.visitMap = mp;
-    //   state.group = visit.group;
-    //   state.view = view;
-    //   // state.resident = view[len];
-    // },
     setChannelStore: (
       state,
       action: {

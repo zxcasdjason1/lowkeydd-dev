@@ -9,6 +9,7 @@ const initialState: TheaterState = {
   slider: {
     sliderIndex: 1,
     isTakenOverAnim: false,
+    isFolded: false,
   },
   iframes: {
     ratio: 0.565,
@@ -50,6 +51,16 @@ const slice = createSlice({
       state.slider.sliderIndex = next;
       state.slider.isTakenOverAnim = isTakenOverAnim;
     },
+    setSliderFolded: (
+      state,
+      action: {
+        type: string;
+        payload:boolean;
+      }
+    ) => {
+      state.slider.isFolded = action.payload;
+      console.log(`slider isFolded : ${action.payload}`);
+    },
     setTheater: (
       state,
       action: {
@@ -83,6 +94,7 @@ const slice = createSlice({
 export const {
   setElements,
   setSlider,
+  setSliderFolded,
   setTheater,
   setIframeSize,
   setFromChannel,

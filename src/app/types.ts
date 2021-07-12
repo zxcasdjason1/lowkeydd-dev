@@ -63,6 +63,7 @@ export type TheaterState = {
   slider:{
     sliderIndex: number;
     isTakenOverAnim: boolean;
+    isFolded:boolean;
   },
   //iframe
   iframes:{

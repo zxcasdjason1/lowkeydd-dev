@@ -6,12 +6,13 @@ import {
   selectNumOfElements,
   selectSliderElements,
   selectSlider,
+  setSliderFolded,
 } from "../slice";
 import * as ai from "react-icons/ai";
-import { TheaterSliderItem } from "../TheaterSliderItem"; 
+import { TheaterSliderItem } from "../TheaterSliderItem";
 
 export function TheaterSlider() {
-  const { sliderIndex, isTakenOverAnim } = useSelector(selectSlider);
+  const { sliderIndex, isTakenOverAnim, isFolded } = useSelector(selectSlider);
   const numOfElements = useSelector(selectNumOfElements);
   const sliderElements = useSelector(selectSliderElements);
   const dispatch = useDispatch();
@@ -40,7 +41,9 @@ export function TheaterSlider() {
     }
   };
 
-  console.log(`[TheaterSlider] render, numOfElements: ${numOfElements}, sliderIndex: ${sliderIndex}`)
+  console.log(
+    `[TheaterSlider] render, numOfElements: ${numOfElements}, sliderIndex: ${sliderIndex}`
+  );
   return (
     <SliderWrap>
       <SliderContainer>
@@ -81,8 +84,11 @@ const SliderContainer = styled.div`
 
   margin: 0 auto;
   overflow: hidden;
-  background-color: greenyellow;
+  /* background-color: greenyellow; */
   box-sizing: border-box;
+
+  display: flex;
+  flex-direction: row;
 `;
 
 const Content = styled.div`
@@ -101,7 +107,6 @@ const Control = styled.span`
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
-  left: 30px;
 
   font-size: 50px;
   background-color: none;
@@ -111,13 +116,31 @@ const Control = styled.span`
   cursor: pointer;
   z-index: 1;
   border-radius: 50%;
+  :nth-of-type(1) {
+    left: 30px;
+    text-align: right;
+  }
   :nth-of-type(2) {
-    left: calc(100% - 30px);
+    left: calc(100% - 100px);
     text-align: right;
   }
   :hover {
     background-color: hotpink;
     color: gray;
     transition: 0.3s;
+  }
+`;
+
+const Panel = styled.div`
+  background-color: var(--navColor);
+  display: flex;
+  align-items: center;
+  div {
+    position: relative;
+    margin: auto;
+    width: 60px;
+    height: 60px;
+    border-radius: 25px;
+    background-color: #555;
   }
 `;
