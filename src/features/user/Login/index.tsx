@@ -18,11 +18,11 @@ export function Login() {
     const username = usernameInput.current?.value + "";
     const password = passwordInput.current?.value + "";
 
-    if (username == "") {
+    if (username === "") {
       console.log("用戶名不可為空");
       return;
     }
-    if (password == "") {
+    if (password === "") {
       console.log("密碼不可為空");
       return;
     }
@@ -37,7 +37,7 @@ export function Login() {
           <h1>會員登入</h1>
         </Title>
         <Content>
-          <Username_Field>
+          <UsernameField>
             <input
               type="text"
               // placeholder="請輸入用戶名?"
@@ -45,8 +45,8 @@ export function Login() {
             />
             <span />
             <label>{"用戶名稱"}</label>
-          </Username_Field>
-          <Password_Field>
+          </UsernameField>
+          <PasswordField>
             <input
               type="password"
               // placeholder="請輸入密碼?"
@@ -54,14 +54,14 @@ export function Login() {
             />
             <span />
             <label>{"用戶密碼"}</label>
-          </Password_Field>
-          <Login_Field onClick={onLogin}>
+          </PasswordField>
+          <LoginField onClick={onLogin}>
             <p>登 入</p>
-          </Login_Field>{" "}
-          <Register_Field>
+          </LoginField>{" "}
+          <RegisterField>
             <p>還不是會員?</p>
             <div onClick={routeToRegister}>註冊</div>
-          </Register_Field>
+          </RegisterField>
         </Content>
       </Container>
     </Wrap>
@@ -172,17 +172,17 @@ const Content = styled.div`
   }
 `;
 
-const Username_Field = styled.div`
+const UsernameField = styled.div`
   position: relative;
   border-bottom: 2px solid #adadad;
   margin: 30px 0;
 `;
-const Password_Field = styled.div`
+const PasswordField = styled.div`
   position: relative;
   border-bottom: 2px solid #adadad;
   margin: 30px 0;
 `;
-const Login_Field = styled.div`
+const LoginField = styled.div`
   width: 100%;
   padding: 10px 0;
   border-radius: 25px;
@@ -207,7 +207,7 @@ const Login_Field = styled.div`
   }
 `;
 
-const Register_Field = styled.div`
+const RegisterField = styled.div`
   position: relative;
   margin: 30px 0;
 

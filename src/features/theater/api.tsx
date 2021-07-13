@@ -4,7 +4,7 @@ import { ChannelProps, IframeProps } from "../../app/types";
 import { API_SERVER_URL } from "../../app/config";
 
 export const reqTheaterChannels =
-  (tag: string, playlistMap: Map<string, IframeProps>) => (dispatch: any) => {
+  (tag: string, playlist:IframeProps[]) => (dispatch: any) => {
     axios.get(`${API_SERVER_URL}/channels/${tag}`).then(
       (resp) => {
         console.log("Theater請求成功了, 回應如下:\n", resp.data);
@@ -14,9 +14,12 @@ export const reqTheaterChannels =
 
           let sliderIndex: number = 1;
 
+          const mp = new Map<string, boolean>();
+          playlist.forEach(x=>mp.set(x.cid, true));
+
           // 透過playlist中的元素，對應elements進行修改
           const elements: IframeProps[] = channels.map((ch, i) => {
-            if (playlistMap.get(ch.cid)) {
+            if (mp.get(ch.cid)) {
               sliderIndex = (i+1);
               return {
                 ...createIframeProps_from_ChannelProps(ch),
@@ -50,7 +53,7 @@ export const createIframeProps_from_ChannelProps = (
   switch (ch.method) {
     case "youtube":
       let sub = ch.streamurl.match(
-        /https?\:\/\/www.youtube.com\/watch\?v=(\S*)/
+/https?:\/\/www.youtube.com\/watch\?v=(\S*)/
       );
       let channelid = sub ? sub[1] : "";
       src = `https://www.youtube.com/embed/${channelid}`;

@@ -5,13 +5,12 @@ import { TheaterSlider, TheaterIframes } from "../../features/theater";
 import { reqTheaterChannels } from "../../features/theater/api";
 import {
   selectPlaylist,
-  selectPlaylistMap,
   selectSlider,
   setSliderFolded,
 } from "../../features/theater/slice";
 import * as ai from "react-icons/ai";
 export default function Theater() {
-  const playlistMap = useSelector(selectPlaylistMap);
+
   const playlist = useSelector(selectPlaylist);
   const dispatch = useDispatch();
   const { isFolded } = useSelector(selectSlider);
@@ -20,16 +19,18 @@ export default function Theater() {
     dispatch(setSliderFolded(!isFolded));
 
     // 主動觸發一次resize
-    if (playlist.length >  0 ){
-      console.log("resize on after sliderFold")
+    if (playlist.length > 0) {
+      console.log("resize on after sliderFold");
       window.dispatchEvent(new Event("resize"));
     }
   };
+  
 
   useEffect(() => {
-    dispatch(reqTheaterChannels("live", playlistMap));
+
+    dispatch(reqTheaterChannels("live", playlist));
     return () => {};
-  }, []);
+  }, [dispatch, playlist]);
 
   return (
     <>

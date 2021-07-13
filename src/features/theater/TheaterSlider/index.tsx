@@ -6,13 +6,12 @@ import {
   selectNumOfElements,
   selectSliderElements,
   selectSlider,
-  setSliderFolded,
 } from "../slice";
 import * as ai from "react-icons/ai";
 import { TheaterSliderItem } from "../TheaterSliderItem";
 
 export function TheaterSlider() {
-  const { sliderIndex, isTakenOverAnim, isFolded } = useSelector(selectSlider);
+  const { sliderIndex, isTakenOverAnim } = useSelector(selectSlider);
   const numOfElements = useSelector(selectNumOfElements);
   const sliderElements = useSelector(selectSliderElements);
   const dispatch = useDispatch();
@@ -128,19 +127,5 @@ const Control = styled.span`
     background-color: hotpink;
     color: gray;
     transition: 0.3s;
-  }
-`;
-
-const Panel = styled.div`
-  background-color: var(--navColor);
-  display: flex;
-  align-items: center;
-  div {
-    position: relative;
-    margin: auto;
-    width: 60px;
-    height: 60px;
-    border-radius: 25px;
-    background-color: #555;
   }
 `;

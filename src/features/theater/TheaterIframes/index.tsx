@@ -5,7 +5,7 @@ import {
   setIframeSize,
   selectIframeRatio,
 } from "../slice";
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useCallback } from "react";
 import styled from "styled-components";
 import { IframeProps } from "../../../app/types";
 
@@ -17,7 +17,7 @@ export function TheaterIframes() {
   const numOfIframes = playlist.length;
   const dispatch = useDispatch();
 
-  const resizeIframes = () => {
+  const resizeIframes = useCallback(() => {
     if (numOfIframes === 0 || dom.current === null) {
       return;
     }
@@ -33,8 +33,7 @@ export function TheaterIframes() {
     );
 
     dispatch(setIframeSize(newIframeSize));
-
-  };
+  }, [dispatch, dom, iframeRatio, numOfIframes]);
 
   useLayoutEffect(() => {
     // 添加新的Iframe元素時，要先執行一次
@@ -56,14 +55,18 @@ export function TheaterIframes() {
       }
       window.removeEventListener("resize", resize);
     };
-  }, [dom.current, numOfIframes]);
+  }, [resizeIframes]);
 
   console.log(`[TheaterIframes] render, numOfIframes: ${numOfIframes}`);
   return (
     <Container ref={dom} {...iframeSize}>
       {playlist.map((ifr: IframeProps) => (
         <div key={"iframesContainer_" + ifr.cid}>
-          <iframe key={"iframes_" + ifr.cid} src={ifr.src}></iframe>
+          <iframe
+            key={"iframes_" + ifr.cid}
+            src={ifr.src}
+            title={`${ifr.cname}'s channel`}
+          ></iframe>
         </div>
       ))}
     </Container>
@@ -110,8 +113,7 @@ const calcNewIframeSize = (
   cH: number,
   ratio: number,
   size: number
-):IframeSizeProps => {
-
+): IframeSizeProps => {
   let maxArea = 0;
   let col = 0;
   let row = 0;
@@ -139,6 +141,6 @@ const calcNewIframeSize = (
       `[TheaterIframes] \n col: ${i}, row: ${curRow}, w: ${curW}, h: ${curH}, area: ${curArea}, max: ${maxArea}`
     );
   }
-  
-  return { col, row, w, h }
+
+  return { col, row, w, h };
 };

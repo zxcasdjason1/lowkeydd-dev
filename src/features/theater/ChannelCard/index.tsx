@@ -1,32 +1,36 @@
 import { useState } from "react";
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { ChannelProps, IframeProps } from "../../../app/types";
+import { ChannelProps, IframeProps, VisitItem } from "../../../app/types";
 import * as ai from "react-icons/ai";
-import { history } from "../../..";
-import { useDispatch, useSelector } from "../../../app/hooks";
+import { useDispatch } from "../../../app/hooks";
 import { setFromChannel } from "../slice";
 import { createIframeProps_from_ChannelProps } from "../api";
-import { selectChannelTags } from "../../channelStore/slice";
+import { setFavored } from "../../channelStore/slice";
+import { createVisitItem_from_ChannelProps } from "../../channelStore/api";
+import { getApprovedGroupName } from "../../../app/share";
 
-export default function ChannelCard(props: ChannelProps) {
+interface ChannelCardProps extends ChannelProps {
+  group: string;
+}
+export default function ChannelCard(props: ChannelCardProps) {
   const {
     avatar,
     cid,
     owner,
     status,
-    streamurl,
+    // streamurl,
     thumbnail,
     title,
     viewcount,
     starttime,
     // method,
     // updatetime,
+    group,
   } = props;
 
   const [isVisible, setIsVisible] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
-  const tags = useSelector(selectChannelTags);
   const dispatch = useDispatch();
   const handleOpenTheater = () => {
     // 點選卡片後，進入Theater。
@@ -35,17 +39,23 @@ export default function ChannelCard(props: ChannelProps) {
     const item: IframeProps = createIframeProps_from_ChannelProps(props);
     dispatch(setFromChannel({ item }));
   };
+  const addToFavored = () => {
+    const groupName = getApprovedGroupName(group)
+    const item: VisitItem = createVisitItem_from_ChannelProps(props, groupName);
+    dispatch(setFavored({ item }));
+  };
 
   useEffect(() => {
+    const parentDom = ref.current;
     const observer = new IntersectionObserver(([entry]) => {
       setIsVisible(entry.isIntersecting);
     });
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (parentDom) {
+      observer.observe(parentDom);
     }
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (parentDom) {
+        observer.unobserve(parentDom);
       }
       observer.disconnect();
     };
@@ -59,6 +69,9 @@ export default function ChannelCard(props: ChannelProps) {
           <p>{status}</p>
         </div>
       </AvatarBox>
+      <FavoredBtn onClick={addToFavored}>
+        <ai.AiFillHeart />
+      </FavoredBtn>
       <CardBody>
         <PreviewBox
           // href={isVisible ? streamurl : undefined}
@@ -138,6 +151,34 @@ const AvatarBox = styled.div`
       text-transform: uppercase;
       color: #fff;
       border-radius: 4px;
+    }
+  }
+`;
+
+const FavoredBtn = styled.div`
+  position: absolute;
+  transform: translate(-50%, -50%);
+  right: 0.5em;
+  top: 2.5em;
+  z-index: 1;
+
+  text-align: center;
+  cursor: pointer;
+
+  width: 40px;
+  height: 40px;
+  background-color: none;
+
+  svg {
+    font-size: 35px;
+    color: gray;
+    transition: 0.1s;
+  }
+
+  :hover {
+    svg {
+      font-size: 38px;
+      color: #ee5253;
     }
   }
 `;

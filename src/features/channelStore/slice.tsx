@@ -1,12 +1,14 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
-import { getGroupMap, getGroupedView } from "../../app/share";
 import { RootState } from "../../app/store";
-import { ChannelProps, ChannelStoreState, VisitList } from "../../app/types";
+import { ChannelProps, ChannelStoreState, VisitItem } from "../../app/types";
 
 const initialState: ChannelStoreState = {
+  current: null,
   group: [],
+  favored: [], // 保存獲取到的頻道
   tags: ["live"],
-  view: [0].map((x) => []), //產生二維陣列
+  view: [[]], //產生二維陣列,
+  list: [],
 };
 
 const slice = createSlice({
@@ -29,10 +31,23 @@ const slice = createSlice({
       state.group = group;
       state.tags = tags[0] === "all" ? ["live", "wait", "off"] : tags;
     },
+    setFavored: (
+      state,
+      action: {
+        type: string;
+        payload: {
+          item: VisitItem;
+        };
+      }
+    ) => {
+      const { item } = action.payload;
+      const favored = state.favored;
+      state.favored = [item, ...favored.filter((f) => f.cid !== item.cid)];
+    }
   },
 });
 
-export const { setChannelStore } = slice.actions;
+export const { setChannelStore, setFavored } = slice.actions;
 export default slice.reducer;
 
 export const selectChannelStore = (state: RootState) => state.channelStore;
@@ -47,6 +62,10 @@ export const selectChannelTags = createSelector(
 export const selectChannelGroup = createSelector(
   [selectChannelStore],
   (store) => store.group
+);
+export const selectFavoredChannels = createSelector(
+  [selectChannelStore],
+  (store) => store.favored
 );
 export const selectChannels = createSelector(
   [selectChannelGroupedView],

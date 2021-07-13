@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement } from "react";
 import VisitEditorSearch from "../VisitEditorSearch";
 import styled from "styled-components";
 import { reqUpdateVisit } from "../api";
@@ -62,7 +62,7 @@ const GetImg = (current: any): ReactElement =>
       <ai.AiOutlineFundView />
       <p>一緒にddしましょう o(*￣▽￣*)ブ</p>
     </div>
-  ) : current.thumbnail == "" ? (
+  ) : current.thumbnail === "" ? (
     <div>
       <ai.AiFillFrown />
       <p>獲取頻道訊息發生錯誤</p>
@@ -173,43 +173,6 @@ const Preview = styled.div`
 
     p {
       font-size: 20px;
-    }
-  }
-`;
-
-const GroupLine = styled.h1`
-  margin: 10px 0 10px 0;
-  position: relative;
-  text-align: center;
-  font-size: 20px;
-  letter-spacing: 2px;
-  z-index: 1;
-  ::before {
-    content: "";
-    display: block;
-    width: 50%;
-    height: 2px;
-    background-color: var(--btnHoverColor);
-    position: absolute;
-    left: 0;
-    top: 50%;
-    z-index: -1;
-  }
-  ::after {
-    content: "";
-    display: block;
-    width: 50%;
-    height: 2px;
-    background-color: var(--btnHoverColor);
-    position: absolute;
-    right: 0;
-    top: 50%;
-    z-index: -1;
-  }
-  span {
-    padding: 0 10px;
-    color: var(--btnHoverColor);
-    background-color: var(--bkgColor);
-    border-radius: 5px;
+    } 
   }
 `;

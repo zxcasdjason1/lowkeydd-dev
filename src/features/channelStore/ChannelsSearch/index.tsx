@@ -1,9 +1,6 @@
-import styled from "styled-components";
 import SearchBox from "../../../components/SearchBox";
-
 import { useDispatch, useSelector } from "../../../app/hooks";
 import { fetchChannels } from "../api";
-import SearchSwitchers from "../SearchSwitchers";
 
 export function ChannelsSearch() {
   const { username, ssid } = useSelector((state) => state.user);
@@ -14,21 +11,9 @@ export function ChannelsSearch() {
   };
 
   return (
-    <SearchContainer>
-      <SearchBox
-        onSubmit={onSubmit}
-        theme={{ focusColor: "#1985a1", iconColor: "#c5c3c6" }}
-      />
-      <SearchSwitchers />
-    </SearchContainer>
+    <SearchBox
+      onSubmit={onSubmit}
+      theme={{ focusColor: "#1985a1", iconColor: "#c5c3c6" }}
+    />
   );
 }
-
-const SearchContainer = styled.div`
-  background-color: #666;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: start;
-  align-content: center;
-  align-items: center;
-`;

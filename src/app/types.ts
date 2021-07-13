@@ -1,4 +1,5 @@
 export type VisitItem = {
+  avatar:string;
   cid: string;
   cname: string;
   owner: string;
@@ -34,9 +35,12 @@ export type ChannelProps = {
 };
 
 export type ChannelStoreState = {
+  current: ChannelProps | null;
   group: string[];
+  favored: Array<VisitItem>;
   tags: string[];
   view: Array<ChannelProps[]>;
+  list:VisitItem[];
 };
 
 export type UserSession = {
@@ -48,6 +52,7 @@ export type UserSession = {
 export type UserState = {
   username: string;
   ssid: string;
+  msg:string;
 };
 
 export type NavItemProps = {

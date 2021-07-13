@@ -6,7 +6,7 @@ import { selectUser } from "../../user/slice";
 import { fetchChannels } from "../api";
 import { selectChannelTags } from "../slice";
 
-export default function SearchSwitchers() {
+export function SearchSwitchers() {
   const { username, ssid } = useSelector(selectUser);
   const tags = useSelector(selectChannelTags);
   const dispatch = useDispatch();

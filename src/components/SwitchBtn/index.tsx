@@ -1,14 +1,12 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 export default function SwitchBtn(props: SwitchButtonProps) {
   const { checked, htmlFor, theme } = props;
 
-  // const [isChecked, setIsChecked] = useState(checked);
-
   const handleClick = () => {
-    props.handleSwitchClick({tag:htmlFor, isChecked:!checked})
+    props.handleSwitchClick({ tag: htmlFor, isChecked: !checked });
   };
+  
   return (
     <Container {...theme}>
       <HiddenCheckedInput
@@ -25,14 +23,14 @@ type SwitchButtonProps = {
   htmlFor: string;
   checked: boolean;
   theme?: SwitchButtonThemeProps;
-  handleSwitchClick: (action:{tag:string, isChecked:boolean})=>void
+  handleSwitchClick: (action: { tag: string; isChecked: boolean }) => void;
 };
 
 type SwitchButtonThemeProps = {
   beforeColor?: string;
   afterColor?: string;
   ballColor?: string;
-}
+};
 
 const Container = styled.label<SwitchButtonThemeProps>`
   --width: 40px;
@@ -43,7 +41,6 @@ const Container = styled.label<SwitchButtonThemeProps>`
   --ballColor: ${(props) => props.ballColor || "#fff"};
   display: inline-block;
   cursor: pointer;
-
 `;
 
 const ToogleFill = styled.div<{ checked: boolean }>`

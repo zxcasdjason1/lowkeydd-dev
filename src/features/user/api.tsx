@@ -20,6 +20,7 @@ export const reqLogin =
             username,
             ssid,
             expiration,
+            msg,
           };
           dispatch(setUserSession(user));
           history.push({ pathname: "/channels" });
@@ -48,6 +49,7 @@ export const reqRegister =
             username,
             ssid,
             expiration,
+            msg,
           };
           dispatch(setUserSession(user));
           history.push({ pathname: "/channels" });

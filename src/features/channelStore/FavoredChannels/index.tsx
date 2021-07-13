@@ -1,32 +1,33 @@
-import { useSelector, useDispatch } from "../../../app/hooks";
+import { useSelector } from "../../../app/hooks";
 import ChannelCard from "../../theater/ChannelCard";
 import { ChannelProps } from "../../../app/types";
 import styled from "styled-components";
 import { Fragment } from "react";
-import { selectUser } from "../../user/slice";
-import { selectChannelGroupedView, selectChannelStore } from "../slice";
+import { selectChannelStore } from "../slice";
+import { getApprovedGroupName } from "../../../app/share";
 
 export function FavoredChannels() {
-  const { group, tags, view } = useSelector(selectChannelStore);
-
-  const dispatch = useDispatch();
+  const { group, tags, view, favored } = useSelector(selectChannelStore);
   console.log("group: ", { group });
   console.log("tags: ", { tags });
   console.log("view: ", { view });
+  console.log("favored: ", { favored });
 
   return (
     <>
-      {view.map((channels, i) =>
-        channels !== null ? (
+      {view.map((channels, i) => {
+        const groupName = getApprovedGroupName(group[i]);
+
+        return channels !== null ? (
           <GroupChannels
-            key={"GroupChannels_" + group[i]}
+            key={"GroupChannels_" + groupName}
             channels={channels}
-            groupName={group[i]}
+            groupName={groupName}
           />
         ) : (
-          <Fragment key={"Fragment_" + group[i]} />
-        )
-      )}
+          <Fragment key={"Fragment_" + groupName} />
+        );
+      })}
     </>
   );
 }
@@ -36,11 +37,16 @@ function GroupChannels(props: { channels: ChannelProps[]; groupName: string }) {
 
   return (
     <>
-      <GroupLine><span>{groupName || "resident"}</span></GroupLine>
+      <GroupLine>
+        <span>{groupName}</span>
+      </GroupLine>
       <ChannelGridCantainer key={"ChannelGridCantainer_" + groupName}>
         {channels.map((ch: ChannelProps) => (
-          <ChannelCard key={`ChannelCard_${ch.cid}`} {...ch} />
-          // <div key={`ChannelCard_${ch.cid}`} >{ch.cid}</div>
+          <ChannelCard
+            key={`ChannelCard_${ch.cid}`}
+            {...ch}
+            group={groupName}
+          />
         ))}
       </ChannelGridCantainer>
     </>
@@ -58,7 +64,6 @@ const ChannelGridCantainer = styled.div`
 `;
 
 const GroupLine = styled.h1`
-
   --navColor: #4c4a46;
   --btnHoverColor: rgb(25, 133, 161);
   --btnHoverBgColor: rgba(25, 133, 161, 0.5);
@@ -70,7 +75,7 @@ const GroupLine = styled.h1`
   text-align: center;
   font-size: 22px;
   letter-spacing: 2px;
-  text-transform:uppercase;
+  text-transform: uppercase;
   z-index: 1;
   ::before {
     content: "";

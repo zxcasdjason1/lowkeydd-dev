@@ -18,7 +18,7 @@ export default function HomePage() {
 
     }
     return () => {};
-  }, []);
+  }, [user]);
 
     return (
         <div>

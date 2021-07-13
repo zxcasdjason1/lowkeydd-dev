@@ -111,9 +111,9 @@ export const selectPlaylist = createSelector(
   (theater) => theater.playlist
 );
 export const selectPlaylistMap = createSelector([selectTheater], (theater) => {
-  let mp = new Map<string, IframeProps>();
+  let mp = new Map<string, boolean>();
   theater.playlist.forEach((p) => {
-    mp.set(p.cid, p);
+    mp.set(p.cid, true);
   });
   return mp;
 });

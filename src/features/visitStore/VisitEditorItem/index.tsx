@@ -31,7 +31,7 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
     if (newGroupName == null) {
       return;
     }
-    if (newGroupName == "") {
+    if (newGroupName === "") {
       alert("不可以為空白");
       return;
     }
@@ -57,7 +57,7 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
     if (newOwner == null) {
       return;
     }
-    if (newOwner == "") {
+    if (newOwner === "") {
       alert("不可以為空白");
       return;
     }
@@ -80,6 +80,9 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
 
   return (
     <Container>
+      <Avatar>
+        <img src={item.avatar} alt={`${item.cname}'s avator`} />
+      </Avatar>
       <OwnerText>
         <label htmlFor={item.cid}>{item.owner}</label>
       </OwnerText>
@@ -121,6 +124,17 @@ const Container = styled.div`
   // 最大寬度
   /* max-width: 480px; */
 `;
+
+const Avatar = styled.div`
+  padding-right: 10px;
+  img {
+    min-width: 50px;
+    border-radius: 15px;
+    width: 100%;
+    height: auto;
+  }
+`;
+
 const OwnerText = styled.div`
   width: 100%;
   padding: 0 0;

@@ -6,38 +6,62 @@ import { useEffect } from "react";
 import { fetchChannels } from "../../features/channelStore/api";
 import { selectUser } from "../../features/user/slice";
 import { selectChannelTags } from "../../features/channelStore/slice";
+import { ChannelsCollector } from "../../features/channelStore/ChannelsCollector";
+import { SearchSwitchers } from "../../features/channelStore/SearchSwitchers";
+import { Fragment } from "react";
+import { RouteComponentProps } from "react-router-dom";
 
-export default function ChannelsStage() {
+interface MatchParams {
+  form: string;
+}
 
-  const { username, ssid } = useSelector(selectUser);
+interface ChannelsStageProps extends RouteComponentProps<MatchParams> {}
+
+export default function ChannelsStage(props: ChannelsStageProps) {
+  const isEnabled = props.match.params.form === "visit";
+  const user = useSelector(selectUser);
   const tags = useSelector(selectChannelTags);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    const { username, ssid } = user;
     // 透過當前路徑去解析，取得要獲取的資源標籤
     dispatch(fetchChannels(username, ssid, tags));
     return () => {
       // componentWillUnmount
     };
-  }, [dispatch]);
+  }, [dispatch, user, tags]);
 
   return (
     <Container>
-      <ChannelsSearch />
+      <ControlPanel>
+        <ChannelsSearch />
+        <SearchSwitchers />
+      </ControlPanel>
       <FavoredChannels />
+      {isEnabled ? <ChannelsCollector /> : <Fragment />}
     </Container>
   );
 }
 
 const Container = styled.div`
-
   position: absolute;
   top: 65px;
   left: 0;
 
   width: 100%;
-  height: calc( 100vh - 65px);
+  height: calc(100vh - 65px);
 
   display: flex;
   flex-direction: column;
+`;
+
+const ControlPanel = styled.div`
+  position: relative;
+  background-color: #666;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-content: center;
+  align-items: center;
 `;

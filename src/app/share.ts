@@ -1,3 +1,5 @@
+import { DEFAULT_GROUPNAME } from "./config";
+
 export const useGrouped = function <
   V extends { cid: string; group: string },
   S extends { cid: string }
@@ -38,29 +40,38 @@ export const getGroupMap = <T extends { cid: string; group: string }>(
   return mp;
 };
 
-export const getGroupedView = <T extends { cid: string }>(
-  mp: { [key: string]: string },
-  group: string[],
-  items: T[],
-  isResident: boolean
-) => {
-  const len = group.length;
-  const view = Array(isResident ? len+1 : len)
-    .fill(0)
-    .map(() => Array());
+// export const getGroupedView = <T extends { cid: string }>(
+//   mp: { [key: string]: string },
+//   group: string[],
+//   items: T[],
+//   isResident: boolean
+// ):T[][] => {
+//   const len = group.length;
+//   const view = Array(isResident ? len+1 : len)
+//     .fill(0)
+//     .map(x=>Array<T>());
 
-  if (isResident) {
-    view[len] = [];
+//   items.forEach((o) => {
+//     const groupName = mp[o.cid];
+//     const ix = groupName ? group.indexOf(groupName) : -1;
+//     if (ix > -1) {
+//       view[ix].push(o);
+//     } else {
+//       view[len].push(o);
+//     }
+//   });
+//   return view;
+// };
+
+export const getApprovedGroupName = (groupName: string) => {
+  if (
+    groupName === undefined ||
+    groupName === null ||
+    groupName === "null" ||
+    groupName === "undefined"
+  ) {
+    return DEFAULT_GROUPNAME;
+  } else {
+    return groupName;
   }
-
-  items.forEach((o) => {
-    const groupName = mp[o.cid];
-    const ix = groupName ? group.indexOf(groupName) : -1;
-    if (ix > -1) {
-      view[ix].push(o);
-    } else {
-      view[len].push(o);
-    }
-  });
-  return view;
 };

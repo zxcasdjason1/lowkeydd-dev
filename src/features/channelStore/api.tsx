@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ChannelProps } from "../../app/types";
+import { ChannelProps, VisitItem } from "../../app/types";
 import { setChannelStore } from "./slice";
 import { API_SERVER_URL } from "../../app/config";
 
@@ -18,7 +18,7 @@ export const fetchChannels =
     }
 
     // 搜尋內容為空時會被撤回
-    if (tags[0] == "") {
+    if (tags[0] === "") {
       console.error("搜尋內容不可為空，此動作已被撤回");
       return;
     }
@@ -36,3 +36,10 @@ export const fetchChannels =
       }
     );
   };
+
+export const createVisitItem_from_ChannelProps = (
+  ch: ChannelProps, group:string
+): VisitItem => {
+  const { cid, cname, avatar, owner, method } = ch;
+  return { avatar, cid, cname, owner, group, method };
+};

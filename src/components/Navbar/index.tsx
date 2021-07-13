@@ -1,14 +1,16 @@
-import { useState } from "react";
 import * as ai from "react-icons/ai";
 import styled from "styled-components";
+import { useState } from "react";
 import { NavItemProps } from "../../app/types";
 import { NavItem } from "../NavItem";
+import { CollectionNavItem } from "../../features/channelStore/ChannelsCollector/CollectionNavItem";
 
-type NavbarProps ={
-  items: NavItemProps[]
-}
+type NavbarProps = {
+  items: NavItemProps[];
 
-function Navbar(props:NavbarProps) {
+};
+
+function Navbar(props: NavbarProps) {
   const [isEnable, setIsEnable] = useState(false);
 
   const showMenu = () => {
@@ -22,20 +24,26 @@ function Navbar(props:NavbarProps) {
           <p>LowkeyDD</p>
         </Logo>
         <Menu isEnable={isEnable}>
-          <Toogle_NavBkg onClick={showMenu}>
+          <ToogleNavBkg onClick={showMenu}>
             <div>
               <ai.AiOutlineMenu />
             </div>
-          </Toogle_NavBkg>
+          </ToogleNavBkg>
           <ul>
-            <Toogle_NavBkg onClick={showMenu}>
+            <ToogleNavBkg onClick={showMenu}>
               <div>
                 <ai.AiOutlineClose />
               </div>
-            </Toogle_NavBkg>
+            </ToogleNavBkg>
+
             {props.items.map((item) => (
-              <NavItem key={`MenuItem_${item.title}`} {...item} showMenu={showMenu}/>
+              <NavItem
+                key={`MenuItem_${item.title}`}
+                {...item}
+                showMenu={showMenu}
+              />
             ))}
+            <CollectionNavItem showMenu={showMenu}/>
           </ul>
         </Menu>
       </Nav>
@@ -124,7 +132,7 @@ const Menu = styled.ul<{ isEnable: boolean }>`
   }
 `;
 
-const Toogle_NavBkg = styled.div`
+const ToogleNavBkg = styled.div`
   position: absolute;
   background-color: var(--navColor);
   color: var(--toogleColor);
@@ -150,3 +158,4 @@ const Toogle_NavBkg = styled.div`
     }
   }
 `;
+
