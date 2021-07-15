@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setUserSession } from "./slice";
+import { setMsg, setUserSession } from "./slice";
 import { history } from "../../index";
 import { API_SERVER_URL } from "../../app/config";
 
@@ -23,8 +23,13 @@ export const reqLogin =
             msg,
           };
           dispatch(setUserSession(user));
-          history.push({ pathname: "/channels" });
-          console.log("註冊成功，直接跳轉到 channels");
+          dispatch(setMsg(msg));
+          setTimeout(() => {
+            history.push({ pathname: "/channels" });
+            console.log("登入成功，直接跳轉到 channels");
+          }, 1000);
+        } else {
+          dispatch(setMsg(msg));
         }
       },
       (err) => {
@@ -52,8 +57,13 @@ export const reqRegister =
             msg,
           };
           dispatch(setUserSession(user));
-          history.push({ pathname: "/channels" });
-          console.log("註冊成功，直接跳轉到 channels");
+          dispatch(setMsg(msg));
+          setTimeout(() => {
+            history.push({ pathname: "/channels" });
+            console.log("註冊成功，直接跳轉到 channels");
+          }, 1000);
+        } else {
+          dispatch(setMsg(msg));
         }
       },
       (err) => {

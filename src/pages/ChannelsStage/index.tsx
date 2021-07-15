@@ -12,6 +12,7 @@ import { Fragment } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { reqEditVisit } from "../../features/visitStore/api";
 import { selectFavoredList } from "../../features/visitStore/slice";
+import { useLayoutEffect } from "react";
 
 interface MatchParams {
   form: string;
@@ -26,7 +27,7 @@ export default function ChannelsStage(props: ChannelsStageProps) {
   const favored = useSelector(selectFavoredList);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const { username, ssid } = user;
     // 透過當前路徑去解析，取得要獲取的資源標籤
     dispatch(fetchChannels(username, ssid, tags));
@@ -34,7 +35,7 @@ export default function ChannelsStage(props: ChannelsStageProps) {
     return () => {
       // componentWillUnmount
     };
-  }, [dispatch, user, tags]);
+  }, [dispatch, user, tags, favored]);
 
   return (
     <Container>

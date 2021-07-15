@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { UserSession, UserState } from "../../app/types";
 
 const initialState: UserState = {
   username: getCookie("username"),
   ssid: getCookie("ssid"),
-  msg:"",
+  msg: "",
 };
 
 const slice = createSlice({
@@ -19,10 +19,13 @@ const slice = createSlice({
       state.ssid = ssid;
       setCookie(ssid, username, expiration);
     },
+    setMsg: (state, action: { type: string; payload: string }) => {
+      state.msg = action.payload;
+    },
   },
 });
 
-export const { setUserSession } = slice.actions;
+export const { setUserSession , setMsg} = slice.actions;
 export default slice.reducer;
 
 // expiration 會乘上1000倍，所以單位是秒
@@ -48,3 +51,6 @@ function getCookie(c_name: string): string {
 }
 
 export const selectUser = (state: RootState) => state.user;
+export const selectMsg = createSelector([selectUser], (user) => {
+  return user.msg;
+});

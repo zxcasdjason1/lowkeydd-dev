@@ -7,7 +7,6 @@ export default function HomePage() {
 
     const user = useSelector((state) => state.user);
 
-
     useEffect(() => {
     const { ssid, username } = user;
     console.log({ ssid });
@@ -15,7 +14,6 @@ export default function HomePage() {
         history.push({ pathname: "/channels" });
     } else{
         history.push({ pathname: "/login" });
-
     }
     return () => {};
   }, [user]);
