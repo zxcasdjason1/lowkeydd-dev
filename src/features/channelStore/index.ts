@@ -1,2 +1,2 @@
 // export { ResidentChannels } from "./ResidentChannels";
-export { FavoredChannels } from "./FavoredChannels";
+export { ChannelsBrowser } from "./ChannelsBrowser";

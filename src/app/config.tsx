@@ -5,7 +5,9 @@ export const API_SERVER_URL = "http://localhost:8002";
 
 export const LOCAL_URL = "http://localhost/";
 
-export const DEFAULT_GROUPNAME = "Favorite";
+export const VISITS_DEFAULT_GROUPNAME = "Favorite";
+
+export const CHANNELS_DEFAULT_GROUPNAME = "Resident";
 
 export const SwitcherList: Array<Switcher> = [
   { checked: false, htmlFor: "live", afterColor: "#f00" },

@@ -2,14 +2,14 @@ import styled from "styled-components";
 import { AiOutlineBook } from "react-icons/ai";
 import { useSelector } from "../../../app/hooks";
 import { NavItem } from "../../../components/NavItem";
-import { selectFavoredChannels } from "../slice";
+import { selectFavoredList } from "../../visitStore/slice";
 
 type Props = {
   showMenu: () => void;
 };
 
 export function CollectionNavItem(props: Props) {
-  const favored = useSelector(selectFavoredChannels);
+  const favored = useSelector(selectFavoredList);
   const numOfFavoredChannels = favored.length;
   const isVisible = favored.length > 0;
 

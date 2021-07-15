@@ -2,7 +2,7 @@ import styled from "styled-components";
 import * as ai from "react-icons/ai";
 import { VisitItem } from "../../../app/types";
 import { useDispatch, useSelector } from "../../../app/hooks";
-import { selectVisitStore, setVisitList, setWholeVisit } from "../slice";
+import { selectVisitStore, editVisitList } from "../slice";
 
 type VisitEditorItemProps = {
   item: VisitItem;
@@ -48,12 +48,12 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
         newGroupName,
         ...group.filter((g: string) => g !== newGroupName),
       ];
-      dispatch(setWholeVisit({ group: newGroup, list: newList }));
+      dispatch(editVisitList({ group: newGroup, list: newList }));
     }
   };
 
   const handleItemEdit = () => {
-    var newOwner = window.prompt("輸入新的頻道名稱? ", item.cname);
+    var newOwner = window.prompt("輸入新的頻道名稱 ? ", item.owner);
     if (newOwner == null) {
       return;
     }
@@ -65,14 +65,14 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
       ...item,
       owner: newOwner,
     });
-    dispatch(setVisitList(newList));
+    dispatch(editVisitList({list:newList, group:null}));
   };
 
   const handleItemDelete = () => {
-    var ok = window.confirm(`確定要刪掉 ${item.cname} 嗎?`);
+    var ok = window.confirm(`確定要停止追隨 ${item.owner} 嗎 ?`);
     if (ok) {
       const newList = getDeletedList(item.cid);
-      dispatch(setVisitList(newList));
+      dispatch(editVisitList({list:newList, group:null}));
     } else {
       return;
     }
@@ -81,7 +81,7 @@ export default function VisitEditorItem(props: VisitEditorItemProps) {
   return (
     <Container>
       <Avatar>
-        <img src={item.avatar} alt={`${item.cname}'s avator`} />
+        <img src={item.avatar} alt={`${item.cname}'s avatar`} />
       </Avatar>
       <OwnerText>
         <label htmlFor={item.cid}>{item.owner}</label>

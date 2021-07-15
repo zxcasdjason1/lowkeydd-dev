@@ -1,5 +1,3 @@
-import { DEFAULT_GROUPNAME } from "./config";
-
 export const useGrouped = function <
   V extends { cid: string; group: string },
   S extends { cid: string }
@@ -62,16 +60,3 @@ export const getGroupMap = <T extends { cid: string; group: string }>(
 //   });
 //   return view;
 // };
-
-export const getApprovedGroupName = (groupName: string) => {
-  if (
-    groupName === undefined ||
-    groupName === null ||
-    groupName === "null" ||
-    groupName === "undefined"
-  ) {
-    return DEFAULT_GROUPNAME;
-  } else {
-    return groupName;
-  }
-};

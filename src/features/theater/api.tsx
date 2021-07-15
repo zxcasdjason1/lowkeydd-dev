@@ -22,11 +22,11 @@ export const reqTheaterChannels =
             if (mp.get(ch.cid)) {
               sliderIndex = (i+1);
               return {
-                ...createIframeProps_from_ChannelProps(ch),
+                ...convertToIframeProps(ch),
                 checked: true,
               };
             } else {
-              return createIframeProps_from_ChannelProps(ch);
+              return convertToIframeProps(ch);
             }
             // playlistMap.get(ch.cid)
             //   ? {
@@ -45,7 +45,7 @@ export const reqTheaterChannels =
     );
   };
 
-export const createIframeProps_from_ChannelProps = (
+export const convertToIframeProps = (
   ch: ChannelProps
 ): IframeProps => {
   const { cid, cname, avatar, thumbnail } = ch;

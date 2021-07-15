@@ -1,7 +1,11 @@
 import axios from "axios";
 import { ChannelProps, VisitItem } from "../../app/types";
 import { setChannelStore } from "./slice";
-import { API_SERVER_URL } from "../../app/config";
+import {
+  API_SERVER_URL,
+  CHANNELS_DEFAULT_GROUPNAME,
+  VISITS_DEFAULT_GROUPNAME,
+} from "../../app/config";
 
 export const fetchChannels =
   (username: string, ssid: string, tags: string[]) => (dispatch: any) => {
@@ -29,7 +33,28 @@ export const fetchChannels =
         console.log("成功了, 回應如下:\n", response.data);
         const channels: Array<ChannelProps[]> = response.data["channels"];
         const group: string[] = response.data["group"];
-        dispatch(setChannelStore({ channels, group, tags }));
+
+        // 檢驗收到的資料，如果沒有傳送AUTH或驗證失敗，會收到空的group清單。
+
+        if (group.length === 0 && channels.length === 1) {
+          // 使用預設的群組名稱為此頻道來命名。
+          dispatch(
+            setChannelStore({
+              channels,
+              group: [CHANNELS_DEFAULT_GROUPNAME],
+              tags,
+            })
+          );
+        } else {
+          // 使用收到的group清單。
+          dispatch(
+            setChannelStore({
+              channels,
+              group: group.concat(CHANNELS_DEFAULT_GROUPNAME),
+              tags,
+            })
+          );
+        }
       },
       (error) => {
         console.log("失敗了, 錯誤如下:\n", error);
@@ -37,9 +62,24 @@ export const fetchChannels =
     );
   };
 
-export const createVisitItem_from_ChannelProps = (
-  ch: ChannelProps, group:string
-): VisitItem => {
-  const { cid, cname, avatar, owner, method } = ch;
-  return { avatar, cid, cname, owner, group, method };
+// 透過頻道入口點選"最愛"，放入收藏庫時，其群組名修改為收藏庫的預設名。
+export const convertToVisitItem = (
+  ch: ChannelProps,
+  group: string
+): VisitItem | null => {
+  // 過濾掉群組名非預設的資料；因為其他群組名表示為使用者自行定義
+
+  if (group !== CHANNELS_DEFAULT_GROUPNAME) {
+    return null;
+  } else {
+    const { cid, cname, owner, avatar, method } = ch;
+    return {
+      cid,
+      cname,
+      owner,
+      avatar,
+      method,
+      group: VISITS_DEFAULT_GROUPNAME,
+    };
+  }
 };

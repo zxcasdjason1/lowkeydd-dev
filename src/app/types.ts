@@ -16,6 +16,8 @@ export type visitStoreState = {
   group: string[];
   list: Array<VisitItem>;
   current: ChannelProps | null;
+  favored: Array<VisitItem>;
+  isListChanged: boolean;
 };
 
 export type ChannelProps = {
@@ -37,7 +39,6 @@ export type ChannelProps = {
 export type ChannelStoreState = {
   current: ChannelProps | null;
   group: string[];
-  favored: Array<VisitItem>;
   tags: string[];
   view: Array<ChannelProps[]>;
   list:VisitItem[];
@@ -78,9 +79,9 @@ export type TheaterState = {
 };
 
 export type IframeProps = {
+  cid: string;
   src: string;
   avatar: string;
-  cid: string;
   cname: string;
   preview: string;
   checked:boolean;

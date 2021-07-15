@@ -1,27 +1,38 @@
 import * as ai from "react-icons/ai";
 import styled from "styled-components";
-import { history } from "../../..";
 import { useDispatch, useSelector } from "../../../app/hooks";
-import { selectVisitStore } from "../../visitStore/slice";
+import { selectFavoredList, selectVisitStore } from "../../visitStore/slice";
 import { selectUser } from "../../user/slice";
-import { selectChannelStore } from "../slice";
 import { reqEditVisit, reqUpdateVisit } from "../../visitStore/api";
 import { useLayoutEffect } from "react";
 import { ChannelsCollections } from "./Collections";
+import { selectChannelTags } from "../slice";
+import { history } from "../../..";
 
 export function ChannelsCollector() {
   const user = useSelector(selectUser);
   const visitStore = useSelector(selectVisitStore);
-  const { favored } = useSelector(selectChannelStore);
+  const favored = useSelector(selectFavoredList);
+  const tags = useSelector(selectChannelTags);
+
+  const isLogin = user.ssid !== "";
+  const isEdited = visitStore.isListChanged || favored.length > 0;
+  const headerTheme = getHeaderIcon(isLogin, isEdited);
+
   const dispatch = useDispatch();
 
-  const handleClick = () => {
-    history.push({ pathname: "/channels/" });
-  };
-
-  const onUpdate = () => {
-    const { username, ssid } = user;
-    dispatch(reqUpdateVisit(username, ssid, visitStore));
+  const onUpdateClick = () => {
+    if (isLogin) {
+      if  (isEdited){
+        const { username, ssid } = user;
+        dispatch(reqUpdateVisit(username, ssid, visitStore, tags));
+      }else{
+        history.push({ pathname: "/channels/" });
+        return
+      }
+    } else {
+      history.push({ pathname: "/login/" });
+    }
   };
 
   useLayoutEffect(() => {
@@ -32,8 +43,9 @@ export function ChannelsCollector() {
 
   return (
     <Container>
-      <Header onClick={handleClick}>
-        <ai.AiOutlineUpload />
+      <Header onClick={onUpdateClick} {...headerTheme}>
+        <p>{headerTheme.text}</p>
+        {headerTheme.icon}
       </Header>
       <Content>
         <ChannelsCollections />
@@ -67,7 +79,46 @@ const Container = styled.div`
   }
 `;
 
-const Header = styled.div`
+type HeaderThemeType = {
+  color: string;
+  hoverColor: string;
+  icon: any;
+  text: string;
+};
+const getHeaderIcon = (
+  isLogin: boolean,
+  isEdited: boolean
+): HeaderThemeType => {
+  // debugger
+  if (!isLogin) {
+    // login first
+    return {
+      text: "請先登入唷o(*￣▽￣*)ブ",
+      color: "#1985a1",
+      hoverColor: "#fff",
+      icon: <ai.AiOutlineUser />,
+    };
+  }
+  if (isEdited) {
+    // should update
+    return {
+      text: "上傳檔案",
+      color: "#1985a1",
+      hoverColor: "#fff",
+      icon: <ai.AiOutlineCloudUpload />,
+    };
+  } else {
+    // colsed
+    return {
+      text: "直接關閉",
+      color: "#1985a1",
+      hoverColor: "#fff",
+      icon: <ai.AiOutlineClose />,
+    };
+  }
+};
+
+const Header = styled.div<HeaderThemeType>`
   position: relative;
   background-color: var(--navColor);
   width: 100%;
@@ -81,13 +132,13 @@ const Header = styled.div`
   font-size: 50px;
   svg {
     padding-right: 5px;
-    color: var(--toogleColor);
+    color: ${(p) => p.color};
   }
 
   :hover {
     background-color: var(--menuText_Hover);
     svg {
-      color: #fff;
+      color: ${(p) => p.hoverColor};
     }
   }
 `;

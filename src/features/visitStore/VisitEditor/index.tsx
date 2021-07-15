@@ -20,7 +20,7 @@ export function VisitEditor() {
 
   const onUpdate = () => {
     console.log("onUpdate", { visitStore });
-    dispatch(reqUpdateVisit(username, ssid, visitStore));
+    dispatch(reqUpdateVisit(username, ssid, visitStore, []));
   };
 
   console.log("view: ", { view });

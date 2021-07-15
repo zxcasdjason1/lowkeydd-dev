@@ -1,7 +1,9 @@
 import axios from "axios";
-import { setWholeVisit, setSearchResult } from "./slice";
+import { setSearchResult, editList, updateList } from "./slice";
 import { VisitList, VisitItem, ChannelProps } from "../../app/types";
-import { API_SERVER_URL, DEFAULT_GROUPNAME } from "../../app/config";
+import { API_SERVER_URL, VISITS_DEFAULT_GROUPNAME } from "../../app/config";
+import { history } from "../..";
+import { fetchChannels } from "../channelStore/api";
 
 export const reqEditVisit =
   (username: string, ssid: string, already: VisitItem[]) => (dispatch: any) => {
@@ -16,16 +18,38 @@ export const reqEditVisit =
 
         // 即使success，也可能使用者為初始建立，導致清單為空。
         // already 是已經存在的表單，例如我的最愛。
-        if (code === "success"){
-          const newList = already.concat(visit.list || []);
-          const newGroup = visit.group || [DEFAULT_GROUPNAME];
-          dispatch(setWholeVisit({ list: newList, group: newGroup }));
-        }else{
-          const newList = already;
-          const newGroup = [DEFAULT_GROUPNAME];
-          dispatch(setWholeVisit({ list: newList, group: newGroup }));
-        }
+        if (code === "success") {
+          if (visit.list) {
+            const group = visit.group || [VISITS_DEFAULT_GROUPNAME];
+            const list: VisitItem[] = visit.list;
 
+            let mp = new Map<string, boolean>();
+            list.forEach((l) => {
+              mp.set(l.cid, true);
+            });
+
+            const nonRedundant: VisitItem[] = [];
+            already.forEach((al: VisitItem) => {
+              if (!mp.has(al.cid)) {
+                nonRedundant.push(al);
+              }
+            });
+
+            const newList = nonRedundant.concat(list);
+            dispatch(editList({ list: newList, group }));
+          } else {
+            dispatch(
+              editList({
+                list: already,
+                group: [VISITS_DEFAULT_GROUPNAME],
+              })
+            );
+          }
+        } else {
+          dispatch(
+            editList({ list: already, group: [VISITS_DEFAULT_GROUPNAME] })
+          );
+        }
       },
       (err) => {
         console.log("開啟VisitList 失敗了, 錯誤如下:\n", err);
@@ -34,7 +58,7 @@ export const reqEditVisit =
   };
 
 export const reqUpdateVisit =
-  (username: string, ssid: string, visit: VisitList) => (dispatch: any) => {
+  (username: string, ssid: string, visit: VisitList, tags:string[]) => (dispatch: any) => {
     const postform = new FormData();
     postform.append("username", username);
     postform.append("ssid", ssid);
@@ -47,8 +71,15 @@ export const reqUpdateVisit =
         if (code === "success") {
           const newList = visit.list || [];
           const newGroup = visit.group || [];
-          dispatch(setWholeVisit({ list: newList, group: newGroup }));
+
+          // 更新並清除Favored；重置List狀態
+          dispatch(updateList({ list: newList, group: newGroup }));
         }
+
+        setTimeout(() => {
+          dispatch(fetchChannels(username, ssid, tags));
+          history.push({ pathname: "/channels/" });
+        }, 100);
       },
       (err) => {
         console.log("更新VisitList失敗了, 錯誤如下:\n", err);
@@ -71,14 +102,13 @@ export const reqSearchChannel =
             dispatch(setSearchResult({ ...visit, current: ch }));
             return;
           }
-
           const newItem: VisitItem = {
             avatar: ch.avatar,
             cid: ch.cid,
             cname: ch.cname,
             owner: ch.owner,
             method: ch.method,
-            group: DEFAULT_GROUPNAME,
+            group: VISITS_DEFAULT_GROUPNAME,
           };
 
           const newList =
@@ -88,10 +118,10 @@ export const reqSearchChannel =
 
           const newGroup =
             visit.group === null
-              ? [DEFAULT_GROUPNAME]
+              ? [VISITS_DEFAULT_GROUPNAME]
               : [
-                DEFAULT_GROUPNAME,
-                  ...visit.group.filter((g) => g !== DEFAULT_GROUPNAME),
+                  VISITS_DEFAULT_GROUPNAME,
+                  ...visit.group.filter((g) => g !== VISITS_DEFAULT_GROUPNAME),
                 ];
 
           dispatch(

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { ChannelsSearch } from "../../features/channelStore/ChannelsSearch";
-import { FavoredChannels } from "../../features/channelStore";
+import { ChannelsBrowser } from "../../features/channelStore";
 import { useSelector, useDispatch } from "../../app/hooks";
 import { useEffect } from "react";
 import { fetchChannels } from "../../features/channelStore/api";
@@ -10,6 +10,8 @@ import { ChannelsCollector } from "../../features/channelStore/ChannelsCollector
 import { SearchSwitchers } from "../../features/channelStore/SearchSwitchers";
 import { Fragment } from "react";
 import { RouteComponentProps } from "react-router-dom";
+import { reqEditVisit } from "../../features/visitStore/api";
+import { selectFavoredList } from "../../features/visitStore/slice";
 
 interface MatchParams {
   form: string;
@@ -21,12 +23,14 @@ export default function ChannelsStage(props: ChannelsStageProps) {
   const isEnabled = props.match.params.form === "visit";
   const user = useSelector(selectUser);
   const tags = useSelector(selectChannelTags);
+  const favored = useSelector(selectFavoredList);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const { username, ssid } = user;
     // 透過當前路徑去解析，取得要獲取的資源標籤
     dispatch(fetchChannels(username, ssid, tags));
+    dispatch(reqEditVisit(username, ssid, favored))
     return () => {
       // componentWillUnmount
     };
@@ -38,7 +42,7 @@ export default function ChannelsStage(props: ChannelsStageProps) {
         <ChannelsSearch />
         <SearchSwitchers />
       </ControlPanel>
-      <FavoredChannels />
+      <ChannelsBrowser />
       {isEnabled ? <ChannelsCollector /> : <Fragment />}
     </Container>
   );

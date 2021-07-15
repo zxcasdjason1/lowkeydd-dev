@@ -3,19 +3,30 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { ChannelProps, IframeProps, VisitItem } from "../../../app/types";
 import * as ai from "react-icons/ai";
-import { useDispatch } from "../../../app/hooks";
-import { setFromChannel } from "../slice";
-import { createIframeProps_from_ChannelProps } from "../api";
-import { setFavored } from "../../channelStore/slice";
-import { createVisitItem_from_ChannelProps } from "../../channelStore/api";
-import { getApprovedGroupName } from "../../../app/share";
+import { useDispatch, useSelector } from "../../../app/hooks";
+import { setFromChannel } from "../../theater/slice";
+import { convertToIframeProps } from "../../theater/api";
+import {
+  editVisitList,
+  removeFavored,
+  selectFavoredListMap,
+  selectListMap,
+  selectVisitStore,
+  setFavored,
+} from "../../visitStore/slice";
+import { convertToVisitItem } from "../api";
+import { reqUpdateVisit } from "../../visitStore/api";
+import { selectUser } from "../../user/slice";
+import { selectChannelTags } from "../slice";
 
 interface ChannelCardProps extends ChannelProps {
   group: string;
 }
-export default function ChannelCard(props: ChannelCardProps) {
+
+export function ChannelCard(props: ChannelCardProps) {
   const {
     avatar,
+    // cname,
     cid,
     owner,
     status,
@@ -26,23 +37,53 @@ export default function ChannelCard(props: ChannelCardProps) {
     starttime,
     // method,
     // updatetime,
-    group,
+    group:groupName,
   } = props;
 
   const [isVisible, setIsVisible] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
-  const handleOpenTheater = () => {
-    // 點選卡片後，進入Theater。
-    // 即使點了非直播的內容，也會進入
-    // 但是，Theater的Slider只會抓取正在直播的內容。
-    const item: IframeProps = createIframeProps_from_ChannelProps(props);
+  const handleEnterTheater = () => {
+    // 當點選頻道進入Theater。
+    const item: IframeProps = convertToIframeProps(props);
     dispatch(setFromChannel({ item }));
   };
-  const addToFavored = () => {
-    const groupName = getApprovedGroupName(group)
-    const item: VisitItem = createVisitItem_from_ChannelProps(props, groupName);
-    dispatch(setFavored({ item }));
+
+  const favoredMap = useSelector(selectFavoredListMap);
+  const listMap = useSelector(selectListMap);
+  const isList = listMap.has(cid);
+  const isFavored = favoredMap.has(cid);
+  const heartTheme = getHeartTheme(listMap.has(cid), favoredMap.has(cid));
+  const visit = useSelector(selectVisitStore);
+  const user = useSelector(selectUser);
+  const tags = useSelector(selectChannelTags);
+
+  const onFavoredHeartBtnClick = () => {
+    // debugger
+    console.log("onClickHeart:", isList , isFavored);
+    
+    if (isList) {
+      var ok = window.confirm(`確定要停止追隨 ${owner} 嗎 ?`);
+      if (ok) {
+        const newList = visit.list.filter((item: VisitItem) => item.cid !== cid);
+        dispatch(editVisitList({ list: newList, group: null }));
+        const {username, ssid} = user;
+        dispatch(reqUpdateVisit(username, ssid, {list:newList, group:visit.group}, tags));
+      } 
+
+      return;
+    }
+
+    if (isFavored) {
+      // cancelFavored
+      dispatch(removeFavored(cid));
+    } else {
+      // addToFavored
+      const item: VisitItem | null = convertToVisitItem(props, groupName);
+      if (item !== null) {
+        dispatch(setFavored({ item }));
+      }
+    }
   };
 
   useEffect(() => {
@@ -69,14 +110,11 @@ export default function ChannelCard(props: ChannelCardProps) {
           <p>{status}</p>
         </div>
       </AvatarBox>
-      <FavoredBtn onClick={addToFavored}>
-        <ai.AiFillHeart />
-      </FavoredBtn>
+      <FavoredHeartBtn onClick={onFavoredHeartBtnClick} {...heartTheme}>
+        {heartTheme.icon}
+      </FavoredHeartBtn>
       <CardBody>
-        <PreviewBox
-          // href={isVisible ? streamurl : undefined}
-          onClick={handleOpenTheater}
-        >
+        <PreviewBox onClick={handleEnterTheater}>
           <div>
             <img
               src={isVisible ? thumbnail : undefined}
@@ -154,8 +192,42 @@ const AvatarBox = styled.div`
     }
   }
 `;
+type HeartThemeType = {
+  color: string;
+  hoverColor: string;
+  icon: any;
+};
+const getHeartTheme = (
+  isLisit: boolean,
+  isFavored: boolean
+): HeartThemeType => {
+  if (isLisit) {
+    // 灰色實心
+    return {
+      color: "#1985a1;",
+      hoverColor: "#666;",
+      icon: <ai.AiFillHeart />,
+    };
+  } else {
+    if (isFavored) {
+      // 在favored中
+      return {
+        color: "#ee5253",
+        hoverColor: "#ee5253",
+        icon: <ai.AiFillHeart />,
+      };
+    } else {
+      // 不在favored中
+      return {
+        color: "#aaa",
+        hoverColor: "#ee5253",
+        icon: <ai.AiOutlineHeart />,
+      };
+    }
+  }
+};
 
-const FavoredBtn = styled.div`
+const FavoredHeartBtn = styled.div<HeartThemeType>`
   position: absolute;
   transform: translate(-50%, -50%);
   right: 0.5em;
@@ -171,14 +243,14 @@ const FavoredBtn = styled.div`
 
   svg {
     font-size: 35px;
-    color: gray;
+    color: ${(p) => p.color};
     transition: 0.1s;
   }
 
   :hover {
     svg {
       font-size: 38px;
-      color: #ee5253;
+      color: ${(p) => p.hoverColor};
     }
   }
 `;
