@@ -83,7 +83,7 @@ const SliderContainer = styled.div`
 
   margin: 0 auto;
   overflow: hidden;
-  /* background-color: greenyellow; */
+  background-color: var(--navColor);
   box-sizing: border-box;
 
   display: flex;

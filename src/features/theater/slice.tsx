@@ -12,7 +12,7 @@ const initialState: TheaterState = {
     isFolded: false,
   },
   iframes: {
-    ratio: 0.565,
+    ratio: 0.5625,
     size: {
       col: 0,
       row: 0,
@@ -55,7 +55,7 @@ const slice = createSlice({
       state,
       action: {
         type: string;
-        payload:boolean;
+        payload: boolean;
       }
     ) => {
       state.slider.isFolded = action.payload;
@@ -88,6 +88,52 @@ const slice = createSlice({
       state.playlist = [item];
       history.push({ pathname: "/theater" });
     },
+    appendIframeToPlaylist: (
+      state,
+      action: {
+        type: string;
+        payload: { item: IframeProps };
+      }
+    ) => {
+      const { item } = action.payload;
+      const newItem = {
+        ...item,
+        checked: true
+      }
+      const newElements: IframeProps[] = !state.elements
+        ? [newItem]
+        : state.elements.map((e) => (e.cid === newItem.cid ? newItem : e));
+
+      const newPlaylist = !state.playlist
+        ? [newItem]
+        : [newItem, ...state.playlist.filter((p) => p.cid !== newItem.cid)];
+
+      state.elements = newElements;
+      state.playlist = newPlaylist;
+    },
+    removeIframeFromPlaylist: (
+      state,
+      action: {
+        type: string;
+        payload: { item: IframeProps };
+      }
+    ) => {
+      const { item } = action.payload;
+      const newItem = {
+        ...item,
+        checked: false
+      }
+      const newElements: IframeProps[] = !state.elements
+        ? [newItem]
+        : state.elements.map((e) => (e.cid === newItem.cid ? newItem : e));
+
+      const newPlaylist = !state.playlist
+        ? [newItem]
+        : state.playlist.filter((p) => p.cid !== newItem.cid);
+
+      state.elements = newElements;
+      state.playlist = newPlaylist;
+    },
   },
 });
 
@@ -98,6 +144,8 @@ export const {
   setTheater,
   setIframeSize,
   setFromChannel,
+  appendIframeToPlaylist,
+  removeIframeFromPlaylist
 } = slice.actions;
 export default slice.reducer;
 
@@ -110,13 +158,6 @@ export const selectPlaylist = createSelector(
   [selectTheater],
   (theater) => theater.playlist
 );
-export const selectPlaylistMap = createSelector([selectTheater], (theater) => {
-  let mp = new Map<string, boolean>();
-  theater.playlist.forEach((p) => {
-    mp.set(p.cid, true);
-  });
-  return mp;
-});
 export const selectIframes = createSelector(
   [selectTheater],
   (theater) => theater.iframes

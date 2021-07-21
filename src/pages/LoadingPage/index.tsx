@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import {RocketLoading} from "../../app/anims/index"
+import RocketLoading from "../../components/RocketLoading"
 
 export default function LoadingPage() {
     return (

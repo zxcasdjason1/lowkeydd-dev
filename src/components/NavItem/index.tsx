@@ -6,11 +6,13 @@ interface Props extends NavItemProps{
   showMenu:Function
 }
 
-export function NavItem(props: Props) {
+export default function NavItem(props: Props) {
   const { title, path, icon, showMenu } = props;
 
   const onClick = () => {
-    history.push({ pathname: `${path}` });
+    if (path !== ""){
+      history.push({ pathname: `${path}` });
+    }
     showMenu();
   };
 

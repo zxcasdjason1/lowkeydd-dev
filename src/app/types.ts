@@ -1,8 +1,8 @@
 export type VisitItem = {
-  avatar:string;
   cid: string;
   cname: string;
   owner: string;
+  avatar:string;
   group: string;
   method: string;
 };
@@ -48,6 +48,20 @@ export type UserSession = {
   ssid: string;
   username: string;
   expiration: number;
+};
+
+export type UserLoginResponse = {
+  ssid: string;
+  username: string;
+  expiration: number;
+  msg:string;
+};
+
+export type UserRegisterResponse = {
+  ssid: string;
+  username: string;
+  expiration: number;
+  msg:string;
 };
 
 export type UserState = {
@@ -98,4 +112,40 @@ export type Switcher = {
   checked: boolean;
   htmlFor: string;
   afterColor: string;
+};
+
+export type ChannelCardProps = {
+  cid: string;
+  cname: string;
+  owner: string;
+  avatar: string;
+
+  // visit
+  group:string;
+
+  // channel
+  status: string;
+  rendertype: string;
+  streamurl: string;
+  thumbnail: string;
+  title: string;
+  viewcount: string;
+  starttime: string;
+  method: string;
+  updatetime: string;
+
+  // theme
+  heart:boolean;
+}
+
+export type FavoredItem = {
+  cid: string;
+  cname: string;
+  owner: string;
+  avatar:string;
+  group: string;
+  method: string;
+  isChanged:boolean;
+  isDeleted:boolean;
+  isNewAdded:boolean;
 };

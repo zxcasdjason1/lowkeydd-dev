@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { useDispatch, useSelector } from "../../../app/hooks";
+import { useDispatch } from "../../../app/hooks";
 import { IframeProps } from "../../../app/types";
-import { selectElements, selectPlaylist, setTheater } from "../slice";
+import { appendIframeToPlaylist, removeIframeFromPlaylist } from "../slice";
 
 type TheaterSliderItemProps = {
   item: IframeProps;
@@ -12,45 +12,15 @@ type TheaterSliderItemProps = {
 export function TheaterSliderItem(props: TheaterSliderItemProps) {
   const { index, isStopTrans, item } = props;
   const { preview, cname, avatar, checked } = item;
-  const playlist = useSelector(selectPlaylist);
-  const elements = useSelector(selectElements);
   const dispatch = useDispatch();
 
-  const handleClick = ()=>{
-    if (item.checked){
-      removeIframe()
-    }else{
-      addIframe()
+  const handleClick = () => {
+    if (item.checked) {
+      dispatch(removeIframeFromPlaylist({ item }));
+    } else {
+      dispatch(appendIframeToPlaylist({ item }));
     }
-  }
-  const addIframe = () => {
-    const newItem = { ...item, checked: true };
-
-    const newElements:IframeProps[] = !elements
-      ? [newItem]
-      : elements.map((e) => (e.cid === newItem.cid ? newItem : e));
-
-    const newPlaylist = !playlist
-      ? [newItem]
-      : [newItem, ...playlist.filter((p) => p.cid !== newItem.cid)];
-
-      dispatch(setTheater({ playlist: newPlaylist, elements: newElements }));
   };
-
-  const removeIframe = () => {
-    const newItem = { ...item, checked: false };
-
-    const newElements:IframeProps[] = !elements
-      ? [newItem]
-      : elements.map((e) => (e.cid === newItem.cid ? newItem : e));
-
-    const newPlaylist = !playlist
-      ? [newItem]
-      : playlist.filter((p) => p.cid !== newItem.cid);
-
-      dispatch(setTheater({ playlist: newPlaylist, elements: newElements }));
-  };
-
   // console.log("[TheaterSliderItem] render")
   return (
     <Section index={index} isStopTrans={isStopTrans}>

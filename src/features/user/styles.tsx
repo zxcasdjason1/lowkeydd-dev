@@ -175,7 +175,6 @@ export const MainButton = styled.div`
   letter-spacing: 2px;
   cursor: pointer;
   outline: none;
-  border: none;
   border: 2px solid;
   p {
     /* background-color: red; */

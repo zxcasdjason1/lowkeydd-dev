@@ -1,40 +1,12 @@
 import { useRef, useState } from "react";
-import { Container, SearchInput, SearchButton } from "./styles";
 import * as ai from "react-icons/ai";
+import styled from "styled-components";
 
 export default function SearchBox(props: SearchBoxProps) {
   // 取得樣式設定參數
   const { theme } = props;
-
-  // 管理畫面效果
-  const [isHover, setIsHover] = useState(false);
+  const [isEnable, setIsEnable] = useState(false);
   const searchInput = useRef<HTMLInputElement>(null);
-  let _isFocus = false;
-
-  // 僅用於pc,移入時展開
-  const handleOver = () => {
-    setIsHover(true);
-  };
-
-  // 僅用於pc,直到blur才會縮回去
-  const handleOut = () => {
-    if (_isFocus === false) {
-      setIsHover(false);
-    }
-  };
-
-  // blur縮回去
-  const handleBlur = () => {
-    _isFocus = false;
-    setIsHover(false);
-  };
-
-  const handleClick = () => {
-    // 管理畫面UI效果；主要支援手機(無over和out)，點去按鈕展開並focus
-    _isFocus = true;
-    setIsHover(true);
-    searchInput.current?.focus();
-  };
 
   // 輸入查詢功能
   const handleKeyUp = (e: any) => {
@@ -54,27 +26,28 @@ export default function SearchBox(props: SearchBoxProps) {
     }
   };
 
+  const onChange = () => {
+    if (searchInput.current && searchInput.current.value !== "") {
+      setIsEnable(true);
+    } else {
+      setIsEnable(false);
+    }
+  };
+
   return (
-    <Container
-      onMouseOver={handleOver}
-      onMouseOut={handleOut}
-      onClick={handleClick}
-      isHover={isHover}
-      {...theme}
-    >
-      <SearchInput
-        onBlur={handleBlur}
+    <Container {...theme} isEnable={isEnable}>
+      <input
+        onChange={onChange}
         onKeyUp={handleKeyUp}
         type="text"
         name=""
         id=""
         placeholder="請輸入一些關鍵字來獲取喜歡的頻道吧 (´▽`ʃ❤ƪ)"
-        isHover={isHover}
         ref={searchInput}
       />
-      <SearchButton isHover={isHover}>
+      <button onClick={commit}>
         <ai.AiOutlineSearch style={{ fontSize: "1.5rem" }} />
-      </SearchButton>
+      </button>
     </Container>
   );
 }
@@ -88,3 +61,101 @@ type SearchBoxThemeProps = {
   iconColor?: string;
   focusColor?: string;
 };
+
+export const Container = styled.div<{
+  iconColor?: string;
+  focusColor?: string;
+  isEnable: boolean;
+}>`
+  --height: 2.4rem;
+  --width: 2.4rem;
+  --bgColor: #2f3640;
+  --iconColor: ${(props) => props.iconColor || "#e84118"};
+  --focusColor: ${(props) => props.focusColor || "#fff"};
+  background: var(--bgColor);
+  width: ${(p) => (p.isEnable ? `100%` : `var(--width)`)};
+  height: var(--height);
+  border-radius: var(--height);
+  padding: calc(var(--height) / 4);
+  transition: width 0.4s;
+
+  input {
+    border: none;
+    background: none;
+    outline: none;
+    float: left;
+    color: #fff;
+    font-size: 16px;
+    line-height: var(--height);
+    border-radius: var(--height);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+    padding: ${(p) => (p.isEnable ? `0 1rem` : `0px`)};
+    width: ${(p) => (p.isEnable ? `80%` : `0%`)};
+    transition: all 0.4s;
+  }
+
+  button {
+    color: var(--iconColor);
+    float: right;
+    width: var(--width);
+    height: var(--height);
+    border-radius: 50%;
+    background-color: ${(p) =>
+    p.isEnable ? `var(--focusColor)` : `var(--bgColor)`};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    :hover{
+
+    }
+  }
+
+  :focus-within {
+    width: 100%;
+    input {
+      padding: 0 1rem;
+      width: 80%;
+    }
+    button {
+      background-color: var(--focusColor);
+    }
+  }
+
+  :hover {
+    width: 100%;
+    input {
+      padding: 0 1rem;
+      width: 80%;
+    }
+    button {
+      background-color: var(--focusColor);
+    }
+  }
+`;
+
+// const SearchInput = styled.input`
+//     border: none;
+//     background: none;
+//     outline: none;
+//     float: left;
+//     color: #fff;
+//     font-size: 16px;
+//     line-height: var(--height);
+//     border-radius: var(--height);
+//     box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+//     padding: 0px;
+//     width: 0%;
+//     transition: all 0.4s;
+// `;
+
+// const SearchButton = styled.a`
+//   color: var(--iconColor);
+//   float: right;
+//   width: var(--width);
+//   height: var(--height);
+//   border-radius: 50%;
+//   background-color: var(--bgColor);
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;

@@ -33,7 +33,7 @@ type SwitchButtonThemeProps = {
 };
 
 const Container = styled.label<SwitchButtonThemeProps>`
-  --width: 40px;
+  --width: 32px;
   --height: calc(var(--width) / 2);
   --radius: calc(var(--height) / 2);
   --beforeColor: ${(props) => props.beforeColor || "#ddd"};

@@ -1,55 +1,85 @@
 import styled from "styled-components";
-import { ChannelsSearch } from "../../features/channelStore/ChannelsSearch";
-import { ChannelsBrowser } from "../../features/channelStore";
 import { useSelector, useDispatch } from "../../app/hooks";
-import { useEffect } from "react";
-import { fetchChannels } from "../../features/channelStore/api";
 import { selectUser } from "../../features/user/slice";
-import { selectChannelTags } from "../../features/channelStore/slice";
-import { ChannelsCollector } from "../../features/channelStore/ChannelsCollector";
-import { SearchSwitchers } from "../../features/channelStore/SearchSwitchers";
-import { Fragment } from "react";
-import { RouteComponentProps } from "react-router-dom";
-import { reqEditVisit } from "../../features/visitStore/api";
-import { selectFavoredList } from "../../features/visitStore/slice";
-import { useLayoutEffect } from "react";
+import { Fragment, useLayoutEffect } from "react";
+import {
+  selectCurrent,
+  selectFavoredList,
+  selectIsFavoredCardsListChanged,
+  selectIsFavoredCardsViewerEnable,
+  selectTags,
+} from "../../features/channelCardStore/slice";
+import {
+  reqFetchChannels,
+  reqEditVisit,
+} from "../../features/channelCardStore";
+import {
+  ChannelCardsGroup,
+  ChannelSearch,
+  ChannelTagsSwitchers,
+  ChannelCardsBrowser,
+} from "../../features/channelCardStore";
 
-interface MatchParams {
-  form: string;
-}
-
-interface ChannelsStageProps extends RouteComponentProps<MatchParams> {}
-
-export default function ChannelsStage(props: ChannelsStageProps) {
-  const isEnabled = props.match.params.form === "visit";
+export default function ChannelsStage() {
+  const isEnable = useSelector(selectIsFavoredCardsViewerEnable);
   const user = useSelector(selectUser);
-  const tags = useSelector(selectChannelTags);
-  const favored = useSelector(selectFavoredList);
+  const tags = useSelector(selectTags);
+  const isListChanged = useSelector(selectIsFavoredCardsListChanged);
+  const favoredList = useSelector(selectFavoredList);
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
-    const { username, ssid } = user;
-    // 透過當前路徑去解析，取得要獲取的資源標籤
-    dispatch(fetchChannels(username, ssid, tags));
-    dispatch(reqEditVisit(username, ssid, favored))
-    return () => {
-      // componentWillUnmount
-    };
-  }, [dispatch, user, tags, favored]);
+    if (isListChanged) {
+      const { username, ssid } = user;
+      // 透過當前路徑去解析，取得要獲取的資源標籤
+      dispatch(reqEditVisit(username, ssid, favoredList, tags));
+    } else {
+      const { username, ssid } = user;
+      // 透過當前路徑去解析，取得要獲取的資源標籤
+      dispatch(reqFetchChannels(username, ssid, tags));
+    }
+    return () => {};
+  }, [dispatch, user, tags]);
 
   return (
-    <Container>
+    <Container isStopScroll={isEnable}>
       <ControlPanel>
-        <ChannelsSearch />
-        <SearchSwitchers />
+        <ChannelSearch />
+        <ChannelTagsSwitchers />
       </ControlPanel>
-      <ChannelsBrowser />
-      {isEnabled ? <ChannelsCollector /> : <Fragment />}
+      <ChannelSearchCard />
+      <ChannelCardsBrowser />
     </Container>
   );
 }
 
-const Container = styled.div`
+function ChannelSearchCard() {
+  const current = useSelector(selectCurrent);
+
+  return (
+    <>
+      {current !== null ? (
+        current.status === "failure" ? (
+          <ChannelCardsGroup
+            key={"ChannelCardsGroup_" + current.group}
+            cards={[current]}
+            groupName={current.group}
+          />
+        ) : (
+          <ChannelCardsGroup
+            key={"ChannelCardsGroup_" + current.group}
+            cards={[current]}
+            groupName={current.group}
+          />
+        )
+      ) : (
+        <Fragment />
+      )}
+    </>
+  );
+}
+
+const Container = styled.div<{ isStopScroll: boolean }>`
   position: absolute;
   top: 65px;
   left: 0;
@@ -59,11 +89,13 @@ const Container = styled.div`
 
   display: flex;
   flex-direction: column;
+  overflow: ${(p) => (p.isStopScroll ? `hidden` : `auto`)};
 `;
 
 const ControlPanel = styled.div`
   position: relative;
   background-color: #666;
+
   display: flex;
   flex-wrap: wrap;
   justify-content: start;

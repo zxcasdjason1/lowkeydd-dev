@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { history } from '../..';
 import { useSelector } from '../../app/hooks';
+import { selectUser } from '../../features/user/slice';
 
 
 export default function HomePage() {
-
-    const user = useSelector((state) => state.user);
+    const user = useSelector(selectUser);
 
     useEffect(() => {
     const { ssid, username } = user;

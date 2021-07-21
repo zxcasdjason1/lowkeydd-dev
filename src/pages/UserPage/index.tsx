@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useDispatch } from "../../app/hooks";
 import { setMsg } from "../../features/user/slice";
 import { Login, Register } from "../../features/user";

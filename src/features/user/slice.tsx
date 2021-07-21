@@ -1,6 +1,13 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { UserSession, UserState } from "../../app/types";
+import { UserLoginResponse, UserSession, UserState } from "../../app/types";
+
+const setSession = (state: UserState, session: UserSession) => {
+  const { username, ssid, expiration } = session;
+  state.username = username;
+  state.ssid = ssid;
+  setCookie(ssid, username, expiration);
+};
 
 const initialState: UserState = {
   username: getCookie("username"),
@@ -12,12 +19,21 @@ const slice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    setUserSession: (state, action: { type: string; payload: UserSession }) => {
-      const { username, ssid, expiration } = action.payload;
-      console.log(action.payload);
-      state.username = username;
-      state.ssid = ssid;
-      setCookie(ssid, username, expiration);
+    setUserLogin: (
+      state,
+      action: { type: string; payload: UserLoginResponse }
+    ) => {
+      const { username, ssid, expiration, msg } = action.payload;
+      setSession(state, { username, ssid, expiration });
+      state.msg = msg;
+    },
+    setUserRegiser: (
+      state,
+      action: { type: string; payload: UserLoginResponse }
+    ) => {
+      const { username, ssid, expiration, msg } = action.payload;
+      setSession(state, { username, ssid, expiration });
+      state.msg = msg;
     },
     setMsg: (state, action: { type: string; payload: string }) => {
       state.msg = action.payload;
@@ -25,7 +41,7 @@ const slice = createSlice({
   },
 });
 
-export const { setUserSession , setMsg} = slice.actions;
+export const { setUserLogin, setUserRegiser, setMsg } = slice.actions;
 export default slice.reducer;
 
 // expiration 會乘上1000倍，所以單位是秒

@@ -2,19 +2,20 @@ import * as ai from "react-icons/ai";
 import styled from "styled-components";
 import { useState } from "react";
 import { NavItemProps } from "../../app/types";
-import { NavItem } from "../NavItem";
-import { CollectionNavItem } from "../../features/channelStore/ChannelsCollector/CollectionNavItem";
+import NavItem from "../NavItem";
+import { FavoredCardsNavItem } from "../../features/channelCardStore";
 
 type NavbarProps = {
   items: NavItemProps[];
-
+  onClick: () => void;
 };
 
-function Navbar(props: NavbarProps) {
+export default function Navbar(props: NavbarProps) {
   const [isEnable, setIsEnable] = useState(false);
 
   const showMenu = () => {
     setIsEnable(!isEnable);
+    props.onClick()
   };
 
   return (
@@ -43,15 +44,15 @@ function Navbar(props: NavbarProps) {
                 showMenu={showMenu}
               />
             ))}
-            <CollectionNavItem showMenu={showMenu}/>
+
+            {/* 額外的 FavoredCardsNav */}
+            <FavoredCardsNavItem showMenu={showMenu} />
           </ul>
         </Menu>
       </Nav>
     </Container>
   );
 }
-
-export default Navbar;
 
 const Container = styled.div`
   position: fixed; //這樣才能讓NAV固定在畫面上
@@ -158,4 +159,3 @@ const ToogleNavBkg = styled.div`
     }
   }
 `;
-
