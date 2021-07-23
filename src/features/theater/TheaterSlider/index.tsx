@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useDispatch, useSelector } from "../../../app/hooks";
-import { IframeProps } from "../../../app/types";
+import { TheaterElement } from "../../../app/types";
 import {
   setSlider,
   selectNumOfElements,
@@ -53,7 +53,7 @@ export function TheaterSlider() {
           <ai.AiOutlineRightCircle />
         </Control>
         <Content>
-          {sliderElements.map((e: IframeProps, i: number) => (
+          {sliderElements.map((e: TheaterElement, i: number) => (
             <TheaterSliderItem
               key={`slider_${i}_cid_${e.cid}_content`}
               item={e}

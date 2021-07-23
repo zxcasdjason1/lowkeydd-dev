@@ -2,7 +2,7 @@ export type VisitItem = {
   cid: string;
   cname: string;
   owner: string;
-  avatar:string;
+  avatar: string;
   group: string;
   method: string;
 };
@@ -41,7 +41,7 @@ export type ChannelStoreState = {
   group: string[];
   tags: string[];
   view: Array<ChannelProps[]>;
-  list:VisitItem[];
+  list: VisitItem[];
 };
 
 export type UserSession = {
@@ -54,20 +54,20 @@ export type UserLoginResponse = {
   ssid: string;
   username: string;
   expiration: number;
-  msg:string;
+  msg: string;
 };
 
 export type UserRegisterResponse = {
   ssid: string;
   username: string;
   expiration: number;
-  msg:string;
+  msg: string;
 };
 
 export type UserState = {
   username: string;
   ssid: string;
-  msg:string;
+  msg: string;
 };
 
 export type NavItemProps = {
@@ -77,28 +77,55 @@ export type NavItemProps = {
 };
 
 export type TheaterState = {
-  elements: IframeProps[];
-  playlist: IframeProps[];
+  elements: TheaterElement[];
+  playlist: PlayerIframe[];
+  chatlist: ChatboxIframe[];
   //slider
-  slider:{
+  slider: {
     sliderIndex: number;
     isTakenOverAnim: boolean;
-    isFolded:boolean;
-  },
+    isFolded: boolean;
+  };
   //iframe
-  iframes:{
+  gridlayout: {
+    flexType:string;
     ratio: number;
-    size: IframeSizeProps;
-  }
+    clientWidth: number;
+    clientHeight: number;
+    col: number;
+    row: number;
+  };
+};
+
+export type TheaterElement = {
+  cid: string;
+  cname: string;
+  avatar: string;
+  streamurl: string;
+  preview: string;
+  method: string;
+  checked: boolean;
 };
 
 export type IframeProps = {
   cid: string;
-  src: string;
-  avatar: string;
   cname: string;
+  avatar: string;
+  streamurl: string;
   preview: string;
-  checked:boolean;
+  method: string;
+  src: string;
+  ratio: number;
+  w: number;
+  h: number;
+};
+
+export interface PlayerIframe extends IframeProps {
+
+};
+
+export interface ChatboxIframe extends IframeProps  {
+  isEnable:boolean,
 };
 
 export type IframeSizeProps = {
@@ -121,7 +148,7 @@ export type ChannelCardProps = {
   avatar: string;
 
   // visit
-  group:string;
+  group: string;
 
   // channel
   status: string;
@@ -135,17 +162,17 @@ export type ChannelCardProps = {
   updatetime: string;
 
   // theme
-  heart:boolean;
-}
+  heart: boolean;
+};
 
 export type FavoredItem = {
   cid: string;
   cname: string;
   owner: string;
-  avatar:string;
+  avatar: string;
   group: string;
   method: string;
-  isChanged:boolean;
-  isDeleted:boolean;
-  isNewAdded:boolean;
+  isChanged: boolean;
+  isDeleted: boolean;
+  isNewAdded: boolean;
 };

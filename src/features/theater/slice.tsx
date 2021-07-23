@@ -1,24 +1,42 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { history } from "../..";
 import { RootState } from "../../app/store";
-import { IframeProps, IframeSizeProps, TheaterState } from "../../app/types";
+import {
+  ChannelCardProps,
+  ChannelProps,
+  ChatboxIframe,
+  PlayerIframe,
+  TheaterElement,
+  TheaterState,
+} from "../../app/types";
+import {
+  calcNewIframeSizeV2,
+  convertToChatboxIframe,
+  convertToPlayerIframe,
+  createChatboxIframe,
+  createPlayerIframe,
+  createTheaterElement,
+  getListAppendIframe,
+  getListRemoveIframe,
+  setIframeSize,
+} from "./share";
 
 const initialState: TheaterState = {
   elements: [],
   playlist: [],
+  chatlist: [],
   slider: {
-    sliderIndex: 1,
+    sliderIndex: 0,
     isTakenOverAnim: false,
     isFolded: false,
   },
-  iframes: {
+  gridlayout: {
+    flexType: "column",
     ratio: 0.5625,
-    size: {
-      col: 0,
-      row: 0,
-      w: 0,
-      h: 0,
-    },
+    clientWidth: 0,
+    clientHeight: 0,
+    col: 0,
+    row: 0,
   },
 };
 
@@ -30,12 +48,30 @@ const slice = createSlice({
       state,
       action: {
         type: string;
-        payload: { elements: IframeProps[]; sliderIndex: number };
+        payload: { channels: ChannelProps[] };
       }
     ) => {
+      const { channels } = action.payload;
+      if (channels.length === 0) {
+        state.elements = [];
+        state.slider.sliderIndex = 0;
+      }
+
+      const mp = new Map<string, boolean>();
+      state.playlist.forEach((p) => mp.set(p.cid, true));
+
+      // 透過playlist中的元素，對應elements進行修改
+      const elements: TheaterElement[] = channels.map((ch, i) => {
+        if (mp.get(ch.cid)) {
+          return createTheaterElement(ch, { checked: true });
+        } else {
+          return createTheaterElement(ch, { checked: false });
+        }
+      });
+
       // 獲取新的 elements後，還要指定起始位置
-      state.elements = action.payload.elements;
-      state.slider.sliderIndex = action.payload.sliderIndex;
+      state.elements = elements;
+      state.slider.sliderIndex = 1;
     },
     setSlider: (
       state,
@@ -61,78 +97,115 @@ const slice = createSlice({
       state.slider.isFolded = action.payload;
       console.log(`slider isFolded : ${action.payload}`);
     },
-    setTheater: (
+    resizeGridLayout: (
       state,
       action: {
         type: string;
-        payload: { playlist: IframeProps[]; elements: IframeProps[] };
+        payload: {
+          clientWidth: number;
+          clientHeight: number;
+        };
       }
     ) => {
-      state.playlist = action.payload.playlist;
-      state.elements = action.payload.elements;
-    },
-    setIframeSize: (
-      state,
-      action: { type: string; payload: IframeSizeProps }
-    ) => {
-      state.iframes.size = action.payload;
+      const { clientWidth, clientHeight } = action.payload;
+      const ratio = state.gridlayout.ratio;
+      const numOfIframes = state.playlist.length;
+      const newIframeSize = calcNewIframeSizeV2(
+        clientWidth,
+        clientHeight,
+        ratio,
+        numOfIframes
+      );
+      const { flexType, pw, ph, cw, ch, col, row } = newIframeSize;
+      state.playlist = state.playlist.map((player) =>
+        setIframeSize(player, { w: pw, h: ph })
+      );
+      state.chatlist = state.chatlist.map((chatbox) =>
+        setIframeSize(chatbox, { w: cw, h: ch })
+      );
+      state.gridlayout = {
+        flexType,
+        ratio,
+        clientWidth,
+        clientHeight,
+        col,
+        row,
+      };
     },
     setFromChannel: (
       state,
       action: {
         type: string;
-        payload: { item: IframeProps };
+        payload: { item: ChannelCardProps };
       }
     ) => {
       const { item } = action.payload;
-      state.playlist = [item];
+      const newPlayerIframe = convertToPlayerIframe(item, {
+        w: 0,
+        h: 0,
+      });
+      const newChatboxIframe = convertToChatboxIframe(item, {
+        w: 0,
+        h: 0,
+        isEnable: item.status === "live"
+      });
+      state.playlist = [newPlayerIframe];
+      state.chatlist = [newChatboxIframe];
       history.push({ pathname: "/theater" });
     },
     appendIframeToPlaylist: (
       state,
       action: {
         type: string;
-        payload: { item: IframeProps };
+        payload: { item: TheaterElement };
       }
     ) => {
       const { item } = action.payload;
-      const newItem = {
-        ...item,
-        checked: true
-      }
-      const newElements: IframeProps[] = !state.elements
-        ? [newItem]
-        : state.elements.map((e) => (e.cid === newItem.cid ? newItem : e));
+      const newItem: TheaterElement = { ...item, checked: true };
+      const newElements: TheaterElement[] = state.elements.map((e) =>
+        e.cid === item.cid ? newItem : e
+      );
 
-      const newPlaylist = !state.playlist
-        ? [newItem]
-        : [newItem, ...state.playlist.filter((p) => p.cid !== newItem.cid)];
+      const newPlaylist: PlayerIframe[] = getListAppendIframe(
+        state.playlist,
+        createPlayerIframe(newItem, { w: 0, h: 0 })
+      );
+
+      const newChatlist: ChatboxIframe[] = getListAppendIframe(
+        state.chatlist,
+        createChatboxIframe(newItem, { w: 0, h: 0, isEnable:true })
+      );
 
       state.elements = newElements;
       state.playlist = newPlaylist;
+      state.chatlist = newChatlist;
     },
     removeIframeFromPlaylist: (
       state,
       action: {
         type: string;
-        payload: { item: IframeProps };
+        payload: { item: TheaterElement };
       }
     ) => {
       const { item } = action.payload;
-      const newItem = {
-        ...item,
-        checked: false
-      }
-      const newElements: IframeProps[] = !state.elements
-        ? [newItem]
-        : state.elements.map((e) => (e.cid === newItem.cid ? newItem : e));
-
-      const newPlaylist = !state.playlist
-        ? [newItem]
-        : state.playlist.filter((p) => p.cid !== newItem.cid);
-
+      const newItem: TheaterElement = { ...item, checked: false };
+      const newElements: TheaterElement[] = state.elements.map((e) =>
+        e.cid === item.cid ? newItem : e
+      );
       state.elements = newElements;
-      state.playlist = newPlaylist;
+      state.playlist = getListRemoveIframe(state.playlist, item.cid);
+      state.chatlist = getListRemoveIframe(state.chatlist, item.cid);
+    },
+    removeIframeByCid: (
+      state,
+      action: {
+        type: string;
+        payload: { cid: string };
+      }
+    ) => {
+      const { cid } = action.payload;
+      state.playlist = getListRemoveIframe(state.playlist, cid);
+      state.chatlist = getListRemoveIframe(state.chatlist, cid);
     },
   },
 });
@@ -141,11 +214,11 @@ export const {
   setElements,
   setSlider,
   setSliderFolded,
-  setTheater,
-  setIframeSize,
+  resizeGridLayout,
   setFromChannel,
   appendIframeToPlaylist,
-  removeIframeFromPlaylist
+  removeIframeFromPlaylist,
+  removeIframeByCid,
 } = slice.actions;
 export default slice.reducer;
 
@@ -158,21 +231,23 @@ export const selectPlaylist = createSelector(
   [selectTheater],
   (theater) => theater.playlist
 );
-export const selectIframes = createSelector(
+export const selectPlayPairs = createSelector([selectTheater], (theater) => {
+  const playlist = theater.playlist;
+  const chatlist = theater.chatlist;
+  const len = playlist.length;
+  const result = [];
+  for (let i = 0; i < len; i++) {
+    result.push({ player: playlist[i], chatbox: chatlist[i] });
+  }
+  return result;
+});
+export const selectGridLayout = createSelector(
   [selectTheater],
-  (theater) => theater.iframes
+  (theater) => theater.gridlayout
 );
 export const selectSlider = createSelector(
   [selectTheater],
   (theater) => theater.slider
-);
-export const selectIframeSize = createSelector(
-  [selectIframes],
-  (theater) => theater.size
-);
-export const selectIframeRatio = createSelector(
-  [selectIframes],
-  (theater) => theater.ratio
 );
 export const selectNumOfElements = createSelector(
   [selectElements],

@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { useDispatch } from "../../../app/hooks";
-import { IframeProps } from "../../../app/types";
+import { TheaterElement } from "../../../app/types";
 import { appendIframeToPlaylist, removeIframeFromPlaylist } from "../slice";
 
 type TheaterSliderItemProps = {
-  item: IframeProps;
+  item: TheaterElement;
   index: number;
   isStopTrans: boolean;
 };

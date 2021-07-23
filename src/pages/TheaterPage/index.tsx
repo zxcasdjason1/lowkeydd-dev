@@ -37,7 +37,7 @@ export default function TheaterPage(props:Props) {
       history.push({pathname:"/channels"})
       return;
     }
-    dispatch(reqTheaterChannels("live", playlist));
+    dispatch(reqTheaterChannels("live"));
     return () => {};
   }, [dispatch, playlist, hasfetchChannels]);
 

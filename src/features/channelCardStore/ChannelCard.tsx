@@ -1,13 +1,11 @@
 import * as ai from "react-icons/ai";
 import { ReactElement, useEffect, useRef, useState, Fragment } from "react";
 import { useDispatch } from "../../app/hooks";
-import { ChannelCardProps, IframeProps } from "../../app/types";
-import { convertToIframeProps } from "../theater";
+import { ChannelCardProps } from "../../app/types";
 import { setFromChannel } from "../theater/slice";
 import styled from "styled-components";
 import { setChannelCard, setSearchResult } from "./slice";
 import { CHANNELS_DEFAULT_GROUPNAME } from "../../app/config";
-
 
 export function ChannelCard(props: ChannelCardProps) {
   const {
@@ -26,7 +24,7 @@ export function ChannelCard(props: ChannelCardProps) {
     group: groupName,
     heart,
   } = props;
-
+  const item = props;
   const [isVisible, setIsVisible] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
   // heartTheme
@@ -36,7 +34,6 @@ export function ChannelCard(props: ChannelCardProps) {
 
   const handleEnterTheater = () => {
     // 當點選頻道進入Theater。
-    const item: IframeProps = convertToIframeProps(props);
     dispatch(setFromChannel({ item }));
   };
 
@@ -82,7 +79,7 @@ export function ChannelCard(props: ChannelCardProps) {
     <Container ref={ref}>
       {status !== "failure" ? (
         <>
-          <AvatarBox>
+          <AvatarBox {...getAvatarStyles(status)}>
             <img src={isVisible ? avatar : undefined} alt={"avatar_" + cid} />
             <div>
               <p>{status}</p>
@@ -113,7 +110,7 @@ export function ChannelCard(props: ChannelCardProps) {
             </Left>
             <Right>
               <ai.AiOutlineCalendar />
-              <p>{starttime}</p>
+              <p>{status === "live" ? "熱映中" : starttime}</p>
             </Right>
           </Detail>
         </Description>
@@ -128,7 +125,7 @@ const GetImg = (current: any, isVisible: boolean): ReactElement =>
   //     <ai.AiOutlineFundView />
   //     <p>一緒にddしましょう o(*￣▽￣*)ブ</p>
   //   </div>
-  // ) : 
+  // ) :
   current.thumbnail === "" ? (
     <div>
       <ai.AiFillFrown />
@@ -158,19 +155,53 @@ const Container = styled.div`
   box-sizing: border-box;
 `;
 
-const AvatarBox = styled.div`
+type AvatarStyle = {
+  fontcolor: string;
+  fontbgcolor: string;
+  bordercolor: string;
+};
+
+const getAvatarStyles = (status: string): AvatarStyle => {
+  switch (status) {
+    case "live":
+      return {
+        fontcolor: "#fff",
+        fontbgcolor: "#ee5253",
+        bordercolor: "#f00",
+      };
+    case "wait":
+      return {
+        fontcolor: "#fff",
+        fontbgcolor: "#34afeb",
+        bordercolor: "#6a97ad",
+      };
+    case "off":
+      return {
+        fontcolor: "#f9fae6",
+        fontbgcolor: "#616161",
+        bordercolor: "#616161",
+      };
+    default:
+      return {
+        fontcolor: "#f0d8e2",
+        fontbgcolor: "#cb4ede",
+        bordercolor: "#6c3075",
+      };
+  }
+};
+
+const AvatarBox = styled.div<AvatarStyle>`
   position: absolute;
   z-index: 1;
   background: none;
   pointer-events: none;
   img {
     width: 4.8em;
-    border: 5px solid burlywood;
+    border: 5px solid ${(p) => p.fontbgcolor};
     border-radius: 50%;
   }
   div {
     position: relative;
-    /* background-color: red; */
     background: none;
     top: -12px;
     left: 0;
@@ -178,14 +209,14 @@ const AvatarBox = styled.div`
     padding: 3px 0;
     p {
       margin: auto;
-      width: 40px;
+      width: 48px;
       padding: 1px 1px;
-      background-color: burlywood;
+      color: ${(p) => p.fontcolor};
+      background-color: ${(p) => p.fontbgcolor};
       text-align: center;
       font-size: 18px;
       text-transform: uppercase;
-      color: #fff;
-      border-radius: 4px;
+      border-radius: 3px;
     }
   }
 `;
@@ -342,38 +373,55 @@ const ChTitle = styled.div`
 `;
 
 const Detail = styled.div`
-  /* background-color: royalblue; */
   padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   div {
+    height: 40px;
     flex: 1;
     background-color: var(--toogleColor);
     padding: 5px 0;
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: space-evenly;
 
-    svg {
-      font-size: 20px;
-      color: #fff;
-    }
-
-    p {
-      font-size: 20px;
-      color: #fff;
-    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
 const Left = styled.div`
   margin: 0 2px 0 5px;
   border-radius: 0 0 0 15px;
+
+  svg {
+    font-size: 20px;
+    color: #fff;
+  }
+
+  p {
+    letter-spacing: 1px;
+    font-size: 14px;
+    color: #fff;
+  }
 `;
 
 const Right = styled.div`
   margin: 0 5px 0 2px;
   border-radius: 0 0 15px 0;
+
+  svg {
+    font-size: 20px;
+    color: #fff;
+  }
+
+  p {
+    letter-spacing: 1px;
+    font-size: 14px;
+    color: #fff;
+  }
 `;
