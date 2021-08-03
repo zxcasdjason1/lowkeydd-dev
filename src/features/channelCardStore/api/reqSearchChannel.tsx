@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_SERVER_URL } from "../../../app/config";
-import { ChannelProps} from "../../../app/types";
+import { ChannelProps } from "../../../app/types";
 import { createChannelCard } from "../share";
 import { setSearchResult } from "../slice";
 
@@ -18,7 +18,10 @@ export const reqSearchChannel = (url: string) => (dispatch: any) => {
           console.log(`成功獲取頻道 ${ch.cname} \n`);
           dispatch(
             setSearchResult({
-              current: createChannelCard(ch, "Search Result", false),
+              current: createChannelCard(ch, {
+                group: "Search Result",
+                heart: false,
+              }),
             })
           );
           break;
@@ -26,10 +29,15 @@ export const reqSearchChannel = (url: string) => (dispatch: any) => {
           console.log(
             `獲取頻道 ${ch.cname} 失敗，請確認該頻道是否已經沒有內容或受到閱覽限制\n`
           );
-
           dispatch(
             setSearchResult({
-              current: createChannelCard(ch, "Search Failed", false),
+              current: createChannelCard(
+                { ...ch, status: "failure" },
+                {
+                  group: "Search Failed",
+                  heart: false,
+                }
+              ),
             })
           );
           break;
@@ -39,7 +47,13 @@ export const reqSearchChannel = (url: string) => (dispatch: any) => {
           console.log("twitch  : https://www.twitch.tv/xxxxxx\n");
           dispatch(
             setSearchResult({
-              current: createChannelCard(ch, "Search Result", false),
+              current: createChannelCard(
+                { ...ch, status: "error" },
+                {
+                  group: "Search Error",
+                  heart: false,
+                }
+              ),
             })
           );
           break;

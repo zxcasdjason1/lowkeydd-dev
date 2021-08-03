@@ -77,6 +77,7 @@ export type NavItemProps = {
 };
 
 export type TheaterState = {
+  fromChannel: ChannelCardProps[];
   elements: TheaterElement[];
   playlist: PlayerIframe[];
   chatlist: ChatboxIframe[];
@@ -88,7 +89,7 @@ export type TheaterState = {
   };
   //iframe
   gridlayout: {
-    flexType:string;
+    flexType: string;
     ratio: number;
     clientWidth: number;
     clientHeight: number;
@@ -120,13 +121,11 @@ export type IframeProps = {
   h: number;
 };
 
-export interface PlayerIframe extends IframeProps {
+export interface PlayerIframe extends IframeProps {}
 
-};
-
-export interface ChatboxIframe extends IframeProps  {
-  isEnable:boolean,
-};
+export interface ChatboxIframe extends IframeProps {
+  isEnable: boolean;
+}
 
 export type IframeSizeProps = {
   col: number;
@@ -175,4 +174,9 @@ export type FavoredItem = {
   isChanged: boolean;
   isDeleted: boolean;
   isNewAdded: boolean;
+};
+
+export type ConnectionConfigProps = {
+  IsLocal: boolean;
+  HostName: string;
 };

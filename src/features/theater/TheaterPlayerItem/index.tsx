@@ -70,7 +70,7 @@ const getPlayerIframe = (player: PlayerIframe): any => {
           scrolling="no"
           frameBorder="0"
           allowFullScreen={false}
-          sandbox="allow-modals allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          sandbox="allow-modals allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation"
         ></iframe>
       );
     case "twitch":
@@ -82,7 +82,7 @@ const getPlayerIframe = (player: PlayerIframe): any => {
           scrolling="no"
           frameBorder="0"
           allowFullScreen={false}
-          sandbox="allow-modals allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          sandbox="allow-modals allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation"
         ></iframe>
       );
     default:

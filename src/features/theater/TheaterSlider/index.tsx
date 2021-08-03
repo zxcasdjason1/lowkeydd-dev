@@ -9,6 +9,7 @@ import {
 } from "../slice";
 import * as ai from "react-icons/ai";
 import { TheaterSliderItem } from "../TheaterSliderItem";
+import { playSliderLeft, playSliderRight } from "../share";
 
 export function TheaterSlider() {
   const { sliderIndex, isTakenOverAnim } = useSelector(selectSlider);
@@ -17,32 +18,16 @@ export function TheaterSlider() {
   const dispatch = useDispatch();
 
   const sliderLeft = () => {
-    let next = sliderIndex - 1;
-    if (next === 0) {
-      dispatch(setSlider({ next: numOfElements + 1, isTakenOverAnim: true }));
-      setTimeout(() => {
-        dispatch(setSlider({ next: numOfElements, isTakenOverAnim: false }));
-      });
-    } else {
-      dispatch(setSlider({ next, isTakenOverAnim: false }));
-    }
+    dispatch(playSliderLeft(sliderIndex, numOfElements));
   };
 
   const sliderRight = () => {
-    let next = sliderIndex + 1;
-    if (next === numOfElements + 1) {
-      dispatch(setSlider({ next: 0, isTakenOverAnim: true }));
-      setTimeout(() => {
-        dispatch(setSlider({ next: 1, isTakenOverAnim: false }));
-      });
-    } else {
-      dispatch(setSlider({ next, isTakenOverAnim: false }));
-    }
+    dispatch(playSliderRight(sliderIndex, numOfElements));
   };
 
-  console.log(
-    `[TheaterSlider] render, numOfElements: ${numOfElements}, sliderIndex: ${sliderIndex}`
-  );
+  // console.log(
+  //   `[TheaterSlider] render, numOfElements: ${numOfElements}, sliderIndex: ${sliderIndex}`
+  // );
   return (
     <SliderWrap>
       <SliderContainer>

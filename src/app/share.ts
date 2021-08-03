@@ -1,3 +1,6 @@
+import { type } from "os";
+import { ConnectionConfigProps } from "./types";
+
 export const useGrouped = function <
   V extends { cid: string; group: string },
   S extends { cid: string }
@@ -60,3 +63,23 @@ export const getGroupMap = <T extends { cid: string; group: string }>(
 //   });
 //   return view;
 // };
+
+export var ConnectionConfig: ConnectionConfigProps = {
+  IsLocal: false,
+  HostName: "",
+};
+
+export const decodeUrlToConnectionConfig = () => {
+  console.log("decodeUrlToConnectionConfig");
+
+  const IsLocal =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1";
+
+  const HostName = window.location.hostname;
+
+  ConnectionConfig = {
+    IsLocal,
+    HostName,
+  };
+};

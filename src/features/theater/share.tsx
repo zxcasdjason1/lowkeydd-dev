@@ -1,3 +1,4 @@
+import { ConnectionConfig } from "../../app/share";
 import {
   ChannelProps,
   ChatboxIframe,
@@ -6,6 +7,7 @@ import {
   PlayerIframe,
   TheaterElement,
 } from "../../app/types";
+import { setSlider } from "./slice";
 
 export const createTheaterElement = (
   ch: ChannelProps,
@@ -29,15 +31,17 @@ const getPlayerSrc = (
   streamurl: string,
   cname: string
 ): string => {
+  console.log("ConnectionConfig.HostName: ", ConnectionConfig.HostName);
+
   let src = "";
   switch (method) {
     case "youtube":
       let sub = streamurl.match(/https?:\/\/www.youtube.com\/watch\?v=(\S*)/);
       let vedioid = sub ? sub[1] : "";
-      src = `//www.youtube.com/embed/${vedioid}?enablejsapi=1&origin=localhost&widgetid=1`;
+      src = `//www.youtube.com/embed/${vedioid}?enablejsapi=1&origin=${ConnectionConfig.HostName}&widgetid=1`;
       break;
     case "twitch":
-      src = `//player.twitch.tv?allowfullscreen=false&channel=${cname}&parent=localhost&muted=false&autoplay=false`;
+      src = `//player.twitch.tv?allowfullscreen=false&channel=${cname}&parent=${ConnectionConfig.HostName}&muted=false&autoplay=false`;
       break;
     default:
       console.error("缺少對應的處理方式: ", method);
@@ -51,15 +55,17 @@ const getChatboxSrc = (
   streamurl: string,
   cname: string
 ): string => {
+  console.log("ConnectionConfig.HostName: ", ConnectionConfig.HostName);
+
   let src = "";
   switch (method) {
     case "youtube":
       let sub = streamurl.match(/https?:\/\/www.youtube.com\/watch\?v=(\S*)/);
       let vedioid = sub ? sub[1] : "";
-      src = `//www.youtube.com/live_chat?v=${vedioid}&is_popout=1&embed_domain=localhost&dark_theme=1`;
+      src = `//www.youtube.com/live_chat?v=${vedioid}&is_popout=1&embed_domain=${ConnectionConfig.HostName}&dark_theme=1`;
       break;
     case "twitch":
-      src = `//www.twitch.tv/embed/${cname}/chat?darkpopout=&secret=safe&parent=localhost`;
+      src = `//www.twitch.tv/embed/${cname}/chat?darkpopout=&secret=safe&parent=${ConnectionConfig.HostName}`;
       break;
     default:
       console.error("缺少對應的處理方式: ", method);
@@ -367,3 +373,29 @@ export const calcNewIframeSizeV2 = (
 
   return { ...result };
 };
+
+export const playSliderLeft =
+  (sliderIndex: number, numOfElements: number) => (dispatch: any) => {
+    let next = sliderIndex - 1;
+    if (next === 0) {
+      dispatch(setSlider({ next: numOfElements + 1, isTakenOverAnim: true }));
+      setTimeout(() => {
+        dispatch(setSlider({ next: numOfElements, isTakenOverAnim: false }));
+      });
+    } else {
+      dispatch(setSlider({ next, isTakenOverAnim: false }));
+    }
+  };
+
+export const playSliderRight =
+  (sliderIndex: number, numOfElements: number) => (dispatch: any) => {
+    let next = sliderIndex + 1;
+    if (next === numOfElements + 1) {
+      dispatch(setSlider({ next: 0, isTakenOverAnim: true }));
+      setTimeout(() => {
+        dispatch(setSlider({ next: 1, isTakenOverAnim: false }));
+      });
+    } else {
+      dispatch(setSlider({ next, isTakenOverAnim: false }));
+    }
+  };

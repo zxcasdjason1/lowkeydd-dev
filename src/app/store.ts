@@ -6,6 +6,7 @@ import {
 import channelCardStoreReducer from "../features/channelCardStore/slice";
 import userReducer from "../features/user/slice";
 import theaterReducer from "../features/theater/slice";
+import { decodeUrlToConnectionConfig } from "./share";
 
 const reducer = combineReducers({
   channelCardStore: channelCardStoreReducer,
@@ -16,6 +17,9 @@ const reducer = combineReducers({
 const middleware = getDefaultMiddleware({
   serializableCheck: false,
 });
+
+// 透過Url取得連線參數。
+decodeUrlToConnectionConfig();
 
 // const preloadedState = {
 //   channels:{

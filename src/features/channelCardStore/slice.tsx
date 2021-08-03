@@ -41,11 +41,10 @@ const setCluster = (
   const clusters = channels.map((chgroups, i) =>
     chgroups !== null
       ? chgroups.map((ch) =>
-          createChannelCard(
-            ch,
-            group[i],
-            group[i] !== CHANNELS_DEFAULT_GROUPNAME
-          )
+          createChannelCard(ch, {
+            group: group[i],
+            heart: group[i] !== CHANNELS_DEFAULT_GROUPNAME,
+          })
         )
       : []
   );

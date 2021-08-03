@@ -4,6 +4,9 @@ import { ChannelCardsGroup } from "./ChannelCardsGroup";
 import { ChannelCardProps } from "../../app/types";
 import { Fragment } from "react";
 
+/**
+ * 瀏覽頻道，顯示當前可被瀏覽頻道內容。
+ */
 export function ChannelCardsBrowser() {
   const { group, clusters } = useSelector(selectChannelCardStore);
   const view = clusters.filter((cs) => cs !== null);
@@ -26,7 +29,7 @@ const GetChannelCardsGroup = (
   //   groupName === VISITS_DEFAULT_GROUPNAME
   //     ? CHANNELS_DEFAULT_GROUPNAME
   //     : groupName;
-  console.log("GetChannelCardsGroup groupName", groupName);
+  // console.log("GetChannelCardsGroup groupName", groupName);
   if (cards.length === 0) {
     return <Fragment key={"ChannelCardsGroup_" + groupName} />;
   } else {

@@ -11,10 +11,14 @@ import {
 
 export const createChannelCard = (
   ch: ChannelProps,
-  group: string,
-  heart: boolean,
+  options: {
+    group: string,
+    heart: boolean;
+  }
 ): ChannelCardProps => {
   // 表示為自動添加的預設名稱
+
+  const { group, heart } = options;
 
   return {
     ...ch,

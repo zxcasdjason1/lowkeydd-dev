@@ -13,10 +13,10 @@ import { selectHasFetchChannels } from "../../features/channelCardStore/slice";
 import { history } from "../..";
 
 type Props = {
-  setNavbarFolded:(isFolded:boolean)=>void
-}
+  setNavbarFolded: (isFolded: boolean) => void;
+};
 
-export default function TheaterPage(props:Props) {
+export default function TheaterPage(props: Props) {
   const hasfetchChannels = useSelector(selectHasFetchChannels);
   const playlist = useSelector(selectPlaylist);
   const { isFolded } = useSelector(selectSlider);
@@ -31,15 +31,17 @@ export default function TheaterPage(props:Props) {
       window.dispatchEvent(new Event("resize"));
     }
   };
-  
+
   useLayoutEffect(() => {
-    if (!hasfetchChannels){
-      history.push({pathname:"/channels"})
+    // 進入Theater前，必須先至少取得一次完整的頻道資訊避免異常。
+    if (!hasfetchChannels) {
+      history.push({ pathname: "/channels" });
       return;
     }
+    // 進入頁面時，先獲取Theater清單(目前為取出所有live頻道)
     dispatch(reqTheaterChannels("live"));
     return () => {};
-  }, [dispatch, playlist, hasfetchChannels]);
+  }, [hasfetchChannels, dispatch]);
 
   return (
     <>

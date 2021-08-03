@@ -1,8 +1,8 @@
 import { NavItemProps, Switcher } from "./types";
 import * as ai from "react-icons/ai";
 
-// export const API_SERVER_URL = "https://lowkeydd.ddnsking.com";
-export const API_SERVER_URL = "http://192.168.50.240:8000";
+// export const API_SERVER_URL = "http://192.168.50.240:8000";
+export const API_SERVER_URL = `https://lowkeydd.ddnsking.com`;
 
 export const VISITS_DEFAULT_GROUPNAME = "Favorite";
 

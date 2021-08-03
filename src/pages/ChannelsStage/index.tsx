@@ -30,12 +30,12 @@ export default function ChannelsStage() {
 
   useLayoutEffect(() => {
     if (isListChanged) {
+      // 檢查收藏表單是否已經被改變，如果已有異動，先發送請求獲取新的收藏表單。
       const { username, ssid } = user;
-      // 透過當前路徑去解析，取得要獲取的資源標籤
       dispatch(reqEditVisit(username, ssid, favoredList, tags));
     } else {
+      // 獲取當前資料庫中的頻道資訊。
       const { username, ssid } = user;
-      // 透過當前路徑去解析，取得要獲取的資源標籤
       dispatch(reqFetchChannels(username, ssid, tags));
     }
     return () => {};

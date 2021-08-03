@@ -15,7 +15,7 @@ export function ChannelCard(props: ChannelCardProps) {
     owner,
     status,
     // streamurl,
-    // thumbnail,
+    thumbnail,
     title,
     viewcount,
     starttime,
@@ -27,19 +27,29 @@ export function ChannelCard(props: ChannelCardProps) {
   const item = props;
   const [isVisible, setIsVisible] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
-  // heartTheme
-  const heartTheme = getHeartTheme(heart);
+
+  const avatarStyles = getAvatarStyles(status);
+  const heartStyles = getHeartTheme(status, heart);
+  const previewStyles = getPreviewImage(cid, status, thumbnail, isVisible);
 
   const dispatch = useDispatch();
 
   const handleEnterTheater = () => {
     // 當點選頻道進入Theater。
-    dispatch(setFromChannel({ item }));
+    if (status !== "failure" && status !== "error") {
+      dispatch(setFromChannel({ item }));
+    }
   };
 
   const onFavoredHeartBtnClick = () => {
     const card: ChannelCardProps = { ...props, heart: !heart };
-    if (groupName !== "Search Result") {
+    if (groupName === "Search Result") {
+      dispatch(
+        setSearchResult({
+          current: { ...props, heart: !heart },
+        })
+      );
+    } else {
       dispatch(
         setChannelCard({
           card,
@@ -48,12 +58,6 @@ export function ChannelCard(props: ChannelCardProps) {
             isNewAdded: groupName === CHANNELS_DEFAULT_GROUPNAME,
             isDeleted: false,
           },
-        })
-      );
-    } else {
-      dispatch(
-        setSearchResult({
-          current: { ...props, heart: !heart },
         })
       );
     }
@@ -75,26 +79,22 @@ export function ChannelCard(props: ChannelCardProps) {
     };
   }, [ref, isVisible]);
 
+  // console.log("owner: ", owner, "status: ", status);
+
   return (
     <Container ref={ref}>
-      {status !== "failure" ? (
-        <>
-          <AvatarBox {...getAvatarStyles(status)}>
-            <img src={isVisible ? avatar : undefined} alt={"avatar_" + cid} />
-            <div>
-              <p>{status}</p>
-            </div>
-          </AvatarBox>
-          <FavoredHeartBtn onClick={onFavoredHeartBtnClick} {...heartTheme}>
-            {heartTheme.icon}
-          </FavoredHeartBtn>
-        </>
-      ) : (
-        <Fragment />
-      )}
+      <AvatarBox {...avatarStyles}>
+        <img src={isVisible ? avatar : undefined} alt={"avatar_" + cid} />
+        <div>
+          <h1>{status}</h1>
+        </div>
+      </AvatarBox>
+      <FavoredHeartBtn onClick={onFavoredHeartBtnClick} {...heartStyles}>
+        {heartStyles.icon}
+      </FavoredHeartBtn>
       <CardBody>
-        <PreviewBox onClick={handleEnterTheater}>
-          {GetImg(props, isVisible)}
+        <PreviewBox {...previewStyles} onClick={handleEnterTheater}>
+          {previewStyles.image}
         </PreviewBox>
         <Description>
           <Owner>
@@ -110,7 +110,7 @@ export function ChannelCard(props: ChannelCardProps) {
             </Left>
             <Right>
               <ai.AiOutlineCalendar />
-              <p>{status === "live" ? "熱映中" : starttime}</p>
+              <p>{status === "live" ? "直播中" : starttime}</p>
             </Right>
           </Detail>
         </Description>
@@ -118,27 +118,6 @@ export function ChannelCard(props: ChannelCardProps) {
     </Container>
   );
 }
-
-const GetImg = (current: any, isVisible: boolean): ReactElement =>
-  // current === null ? (
-  //   <div>
-  //     <ai.AiOutlineFundView />
-  //     <p>一緒にddしましょう o(*￣▽￣*)ブ</p>
-  //   </div>
-  // ) :
-  current.thumbnail === "" ? (
-    <div>
-      <ai.AiFillFrown />
-      <p>獲取頻道訊息發生錯誤</p>
-    </div>
-  ) : (
-    <div>
-      <img
-        src={isVisible ? current.thumbnail : undefined}
-        alt={"thumbnail_" + current.cid}
-      />
-    </div>
-  );
 
 const Container = styled.div`
   --navColor: #4c4a46;
@@ -159,6 +138,7 @@ type AvatarStyle = {
   fontcolor: string;
   fontbgcolor: string;
   bordercolor: string;
+  ishidden: boolean;
 };
 
 const getAvatarStyles = (status: string): AvatarStyle => {
@@ -168,29 +148,34 @@ const getAvatarStyles = (status: string): AvatarStyle => {
         fontcolor: "#fff",
         fontbgcolor: "#ee5253",
         bordercolor: "#f00",
+        ishidden: false,
       };
     case "wait":
       return {
         fontcolor: "#fff",
         fontbgcolor: "#34afeb",
         bordercolor: "#6a97ad",
+        ishidden: false,
       };
     case "off":
       return {
         fontcolor: "#f9fae6",
         fontbgcolor: "#616161",
         bordercolor: "#616161",
+        ishidden: false,
       };
     default:
       return {
         fontcolor: "#f0d8e2",
         fontbgcolor: "#cb4ede",
         bordercolor: "#6c3075",
+        ishidden: true,
       };
   }
 };
 
 const AvatarBox = styled.div<AvatarStyle>`
+  display: ${(p) => (p.ishidden ? `none` : `static`)};
   position: absolute;
   z-index: 1;
   background: none;
@@ -207,7 +192,7 @@ const AvatarBox = styled.div<AvatarStyle>`
     left: 0;
     width: 100%;
     padding: 3px 0;
-    p {
+    h1 {
       margin: auto;
       width: 48px;
       padding: 1px 1px;
@@ -225,28 +210,40 @@ type HeartThemeType = {
   color: string;
   hoverColor: string;
   icon: any;
+  isHidden: boolean;
 };
-export const getHeartTheme = (type: boolean): HeartThemeType => {
-  switch (type) {
-    case true:
+export const getHeartTheme = (
+  status: string,
+  heart: boolean
+): HeartThemeType => {
+  switch (status) {
+    case "failure":
+    case "error":
       return {
-        color: "#ee5253",
-        hoverColor: "#ee5253",
-        icon: <ai.AiFillHeart />,
-      };
-
-    case false:
-      return {
-        color: "#aaa",
-        hoverColor: "#ee5253",
-        icon: <ai.AiOutlineHeart />,
+        color: "",
+        hoverColor: "",
+        icon: null,
+        isHidden: true,
       };
     default:
-      throw new Error("沒有定義得型態錯誤!");
+      return heart === true
+        ? {
+            color: "#ee5253",
+            hoverColor: "#ee5253",
+            icon: <ai.AiFillHeart />,
+            isHidden: false,
+          }
+        : {
+            color: "#aaa",
+            hoverColor: "#ee5253",
+            icon: <ai.AiOutlineHeart />,
+            isHidden: false,
+          };
   }
 };
 
 const FavoredHeartBtn = styled.div<HeartThemeType>`
+  display: ${(p) => (p.isHidden ? `none` : `static`)};
   position: absolute;
   transform: translate(-50%, -50%);
   right: 0.5em;
@@ -280,12 +277,60 @@ const CardBody = styled.div`
   margin: 10px 10px;
 `;
 
-const PreviewBox = styled.a`
+type PreviewBoxProps = {
+  isEnabled: boolean; // 允許點擊
+  image: ReactElement;
+};
+const getPreviewImage = (
+  cid: string,
+  status: string,
+  thumbnail: string,
+  isVisible: boolean
+): PreviewBoxProps => {
+  switch (status) {
+    case "failure":
+      return {
+        isEnabled: false,
+        image: (
+          <div>
+            <ai.AiFillFrown />
+            <h1>獲取頻道訊息發生錯誤</h1>
+          </div>
+        ),
+      };
+    case "error":
+      return {
+        isEnabled: false,
+        image: (
+          <div>
+            <ai.AiFillExclamationCircle />
+            <h1>輸入的網址格式有誤?</h1>
+            <p>可參考下方的網址範例 : </p>
+            <p>https://www.twitch.tv/xxxx</p>
+            <p>https://www.youtube.com/channel/xxxx</p>
+          </div>
+        ),
+      };
+    default:
+      return {
+        isEnabled: true,
+        image: (
+          <div>
+            <img
+              src={isVisible ? thumbnail : undefined}
+              alt={"thumbnail_" + cid}
+            />
+          </div>
+        ),
+      };
+  }
+};
+const PreviewBox = styled.a<PreviewBoxProps>`
   padding: 10px;
   display: flex;
   align-items: center;
   //點擊後將跳轉到Theater
-  cursor: pointer;
+  cursor: ${(p) => (p.isEnabled ? `pointer` : `auto`)};
 
   div {
     background-color: #000;
@@ -300,6 +345,7 @@ const PreviewBox = styled.a`
     // 透過hidden把超出範圍的圖片直接剪裁掉
     overflow: hidden;
     border-radius: 1.2em;
+    box-sizing: border-box;
 
     color: var(--toogleColor);
 
@@ -314,8 +360,12 @@ const PreviewBox = styled.a`
       margin: 0 0 10px 0;
       font-size: 150px;
     }
+    h1 {
+      font-size: 18px;
+      margin: 0 0 10px 0;
+    }
     p {
-      font-size: 20px;
+      font-size: 1.5vmin;
     }
   }
 `;
@@ -405,7 +455,7 @@ const Left = styled.div`
 
   p {
     letter-spacing: 1px;
-    font-size: 14px;
+    font-size: 16px;
     color: #fff;
   }
 `;
@@ -420,8 +470,7 @@ const Right = styled.div`
   }
 
   p {
-    letter-spacing: 1px;
-    font-size: 14px;
+    font-size: 16px;
     color: #fff;
   }
 `;

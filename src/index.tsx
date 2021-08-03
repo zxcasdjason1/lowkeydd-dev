@@ -3,11 +3,10 @@ import "./index.css";
 import App from "./App";
 import { Provider } from "react-redux";
 import store from "./app/store";
-
 import { Router } from "react-router";
+import {createHashHistory} from 'history'
 
-import {createBrowserHistory} from 'history'
-export const history = createBrowserHistory()
+export const history = createHashHistory()
 
 ReactDOM.render(
   <Provider store={store}>

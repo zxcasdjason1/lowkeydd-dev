@@ -46,7 +46,7 @@ export function TheaterIframesViewer() {
     };
   }, [resizeIframes]);
 
-  console.log(`[TheaterIframesViewer] render, numOfIframes: ${numOfIframes}`);
+  // console.log(`[TheaterIframesViewer] render, numOfIframes: ${numOfIframes}`);
   return (
     <Container ref={dom} col={col} row={row}>
       {pairs.map(({ player, chatbox }) => (

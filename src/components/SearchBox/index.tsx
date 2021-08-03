@@ -42,7 +42,7 @@ export default function SearchBox(props: SearchBoxProps) {
         type="text"
         name=""
         id=""
-        placeholder="請輸入一些關鍵字來獲取喜歡的頻道吧 (´▽`ʃ❤ƪ)"
+        placeholder="(๑•̀ㅂ•́)و✧ 輸入喜歡的頻道網址 !!! "
         ref={searchInput}
       />
       <button onClick={commit}>

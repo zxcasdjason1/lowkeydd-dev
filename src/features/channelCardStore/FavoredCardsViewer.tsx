@@ -17,6 +17,9 @@ import { reqUpdateVisit } from "./api";
 import { history } from "../..";
 import { useLayoutEffect } from "react";
 
+/**
+ * 收藏品，表列出已登入使用者自定義的喜好頻道列表
+ */
 export function FavoredCardsViewer() {
   const { username, ssid } = useSelector(selectUser);
   const isLogin: boolean = username !== "";
@@ -102,7 +105,7 @@ const getHeaderIcon = (
   if (!isLogin) {
     // login first
     return {
-      text: "請先登入唷o(*￣▽￣*)ブ",
+      text: "請先登入",
       icon: <ai.AiOutlineUser />,
     };
   }
@@ -147,14 +150,14 @@ const Header = styled.div<HeaderThemeType>`
     transition: 0.5s;
 
     svg {
-      font-size: 42px;
+      font-size: 8vmin;
       padding-right: 5px;
       transition: 0.2s;
     }
 
     p {
-      letter-spacing: 5px;
-      font-size: 32px;
+      letter-spacing: 1vmin;
+      font-size: 6vmin;
       transition: 0.2s;
     }
 
@@ -163,11 +166,11 @@ const Header = styled.div<HeaderThemeType>`
       background-color: var(--btnBgHoverColor);
 
       svg {
-        font-size: 46px;
+        font-size: 9vmin;
       }
 
       p {
-        font-size: 35px;
+        font-size: 8vmin;
       }
     }
   }

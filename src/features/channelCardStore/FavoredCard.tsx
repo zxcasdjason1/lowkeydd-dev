@@ -136,33 +136,22 @@ export function FavoredCard(props: FavoredItem) {
 const Container = styled.div`
   --navColor: #4c4a46;
   --btnHoverColor: rgb(25, 133, 161);
-  /* --btnHoverBgColor: rgba(25, 133, 161, 0.5);
-    --toogleColor: #fff;
-    --bkgColor: #999; */
-
   box-sizing: border-box;
-
   display: flex;
   justify-content: space-between;
-
   align-items: center;
   background-color: #c5c3c6;
   padding: 16px;
   margin: 6px auto;
   border-radius: 10px;
-
-  // 最大寬度
-  /* max-width: 480px; */
 `;
 
 const Avatar = styled.div`
   margin-right: 15px;
-  /* background-color: var(--btnHoverColor); */
   border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
-
   pointer-events: none;
 
   img {

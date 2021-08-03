@@ -37,11 +37,16 @@ const ChannelGridCantainer = styled.div`
   --toogleColor: #fff;
   --bkgColor: #fff;
 
-  @media (min-width: 360px) {
-    display: grid;
-    grid-gap: 4px;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    justify-content: center;
-    align-items: center;
+
+  display: grid;
+  grid-gap: 4px;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 360px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
   }
 `;

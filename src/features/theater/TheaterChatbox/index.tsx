@@ -27,7 +27,6 @@ const getChatboxIframe = (chatbox: ChatboxIframe): any => {
           title={`${cname}'s channel`}
           scrolling="no"
           allowFullScreen={false}
-          allowTransparency={true}
           seamless={false}
         ></iframe>
       );
@@ -40,7 +39,6 @@ const getChatboxIframe = (chatbox: ChatboxIframe): any => {
           scrolling="no"
           frameBorder="0"
           allowFullScreen={false}
-          allowTransparency={true}
           seamless={false}
         ></iframe>
       );
