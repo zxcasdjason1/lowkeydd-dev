@@ -66,7 +66,10 @@ const slice = createSlice({
       //    2) 透過點擊卡片進入，這種方式會自動播放卡片上的影片。
       // 此處，檢查是否為(2)的方式，即檢查fromChannel，並再檢查後清除。
       var found = 0;
-      const cidFromChannel: string = state.fromChannel[0].cid || "";
+      var cidFromChannel: string = "";
+      if (state.fromChannel.length > 0) {
+        cidFromChannel = state.fromChannel[0].cid;
+      }
 
       // 透過playlist中的元素，對應elements進行修改
       const elements: TheaterElement[] = channels.map((ch, i) => {
@@ -83,7 +86,7 @@ const slice = createSlice({
         }
       });
 
-      // 獲取新的 elements後，還要指定起始位置
+      state.fromChannel = []; //每次都清空
       state.elements = elements;
       state.slider.sliderIndex = found + 1;
     },
