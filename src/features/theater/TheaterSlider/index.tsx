@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "../../../app/hooks";
 import { TheaterElement } from "../../../app/types";
 import {
-  setSlider,
   selectNumOfElements,
   selectSliderElements,
   selectSlider,

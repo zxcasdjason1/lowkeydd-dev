@@ -1,4 +1,3 @@
-import { type } from "os";
 import { ConnectionConfigProps } from "./types";
 
 export const useGrouped = function <

@@ -1,5 +1,5 @@
 import * as ai from "react-icons/ai";
-import { ReactElement, useEffect, useRef, useState, Fragment } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { useDispatch } from "../../app/hooks";
 import { ChannelCardProps } from "../../app/types";
 import { setFromChannel } from "../theater/slice";
