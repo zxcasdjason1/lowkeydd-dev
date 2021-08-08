@@ -35,8 +35,12 @@ const slice = createSlice({
       setSession(state, { username, ssid, expiration });
       state.msg = msg;
     },
-    setMsg: (state, action: { type: string; payload: string }) => {
-      state.msg = action.payload;
+    setMsg: (state, action: { type: string; payload: string | undefined }) => {
+      if (action.payload === undefined) {
+        state.msg = "";
+      } else {
+        state.msg = action.payload;
+      }
     },
   },
 });
@@ -69,4 +73,7 @@ function getCookie(c_name: string): string {
 export const selectUser = (state: RootState) => state.user;
 export const selectMsg = createSelector([selectUser], (user) => {
   return user.msg;
+});
+export const selectIsLogin = createSelector([selectUser], (user) => {
+  return user.username !== "" && user.username !== "";
 });

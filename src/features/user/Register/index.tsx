@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { reqRegister } from "../api";
 import { history } from "../../../index";
 import { useSelector } from "../../../app/hooks";
-import { selectUser } from "../slice";
+import { selectUser, setMsg } from "../slice";
 import {
   Wrap,
   Container,
@@ -20,6 +20,7 @@ import { Fragment } from "react";
 
 export function Register() {
   const dispatch = useDispatch();
+  
 
   const {username, msg} = useSelector(selectUser);
   const usernameInput = useRef<HTMLInputElement>(null);
@@ -38,14 +39,17 @@ export function Register() {
 
     if (username === "") {
       console.log("用戶名不可為空");
+      dispatch(setMsg("用戶名不可為空"));
       return;
     }
     if (password === "") {
       console.log("密碼不可為空");
+      dispatch(setMsg("密碼不可為空"));
       return;
     }
     if (password !== password2) {
       console.log("輸入的密碼不一致");
+      dispatch(setMsg("輸入的密碼不一致"));
       return;
     }
 
@@ -56,8 +60,10 @@ export function Register() {
     if(usernameInput.current){
       usernameInput.current.value = username;
     }
-    return () => {};
-  }, [usernameInput, username])
+    return () => {
+      dispatch(setMsg());
+    };
+  }, [dispatch, usernameInput, username])
 
   return (
     <Wrap>
@@ -100,60 +106,3 @@ export function Register() {
     </Wrap>
   );
 }
-
-// const UsernameField = styled.div`
-//   position: relative;
-//   border-bottom: 2px solid #adadad;
-//   margin: 30px 0;
-// `;
-// const PasswordField = styled.div`
-//   position: relative;
-//   border-bottom: 2px solid #adadad;
-//   margin: 30px 0;
-// `;
-// const RegisterField = styled.div`
-//   width: 100%;
-//   padding: 10px 0;
-//   border-radius: 25px;
-//   font-size: 18px;
-//   font-weight: 700px;
-//   color: #fff;
-//   background-color: var(--btnHoverColor);
-//   letter-spacing: 2px;
-//   cursor: pointer;
-//   outline: none;
-//   border: none;
-//   border: 2px solid;
-//   p {
-//     /* background-color: red; */
-//     width: 100%;
-//     text-align: center;
-//     pointer-events: none;
-//   }
-//   :hover {
-//     border-color: var(--btnHoverColor);
-//     transition: 0.2s;
-//   }
-// `;
-
-// const LoginField = styled.div`
-//   position: relative;
-//   margin: 30px 0;
-
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   p {
-//     /* background-color: red; */
-//     text-align: center;
-//     pointer-events: none;
-//   }
-//   div {
-//     padding: 0px 10px;
-//     color: var(--btnHoverColor);
-//     cursor: pointer;
-//     :hover {
-//       text-decoration: underline;
-//     }
-//   }
-// `;

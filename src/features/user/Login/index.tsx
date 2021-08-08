@@ -17,11 +17,9 @@ import {
 
 export function Login() {
   const dispatch = useDispatch();
-
   const { username, msg } = useSelector(selectUser);
   const usernameInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
-
   const routeToRegister = () => {
     history.push({ pathname: "/register" });
   };
@@ -44,12 +42,15 @@ export function Login() {
     dispatch(reqLogin(username, password));
   };
 
+  
   useLayoutEffect(() => {
     if (usernameInput.current) {
       usernameInput.current.value = username;
     }
-    return () => {};
-  }, [usernameInput, username]);
+    return () => {
+      dispatch(setMsg());
+    };
+  }, [dispatch, usernameInput, username]);
 
   return (
     <Wrap>
@@ -63,7 +64,7 @@ export function Login() {
               <h1>{msg}</h1>
             </MsgBox>
           ) : (
-            <Fragment/>
+            <Fragment />
           )}
           <UsernameField>
             <input

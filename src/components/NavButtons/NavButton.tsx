@@ -1,28 +1,54 @@
 import styled from "styled-components";
-import { history } from "../../index";
-import { NavItemProps } from "../../app/types";
+import { history } from "../..";
+import { NavButtonProps } from "../../app/types";
 
-interface Props extends NavItemProps{
-  showMenu:Function
-}
-
-export default function NavItem(props: Props) {
-  const { title, path, icon, showMenu } = props;
+export default function NavButton(props: NavButtonProps) {
+  const { title, path, icon, closeMenu } = props;
 
   const onClick = () => {
-    if (path !== ""){
+    if (path !== "") {
       history.push({ pathname: `${path}` });
     }
-    showMenu();
+    closeMenu();
   };
 
   return (
-    <Container onClick={onClick}>
-      {icon}
-      <p>{title}</p>
-    </Container>
+    <Wrap>
+      <Container onClick={onClick}>
+        {icon}
+        <p>{title}</p>
+      </Container>
+      {/* 附加物 */}
+      {props.children}
+    </Wrap>
   );
 }
+
+const Wrap = styled.div`
+  display: flex;
+  :hover {
+    div {
+      // Container
+      background-color: var(--menuText_Hover);
+
+      p {
+        // NavItemTextColor
+        color: #fff;
+      }
+      svg {
+        // NavItemIconColor
+        color: #fff;
+      }
+    }
+
+    div {
+      h3 {
+        // NavUser-Backaground
+        background-color: var(--menuText_Hover);
+      }
+    }
+  }
+`;
 
 const Container = styled.div`
   position: relative;
@@ -31,6 +57,12 @@ const Container = styled.div`
   justify-content: center;
   padding: 0 1.5em;
   cursor: pointer;
+  div {
+    width: 80%;
+    p {
+      margin: 0px;
+    }
+  }
 
   svg {
     color: var(--menuText);
@@ -43,12 +75,8 @@ const Container = styled.div`
     font-size: 23px;
     letter-spacing: 5px;
   }
-  :hover {
-    background-color: var(--menuText_Hover);
-    p {
-      color: var(#fff);
-    }
-  }
+
+  transition: 0.3s;
 
   // 螢幕寬度小於768px時
   @media screen and (max-width: 768px) and (min-width: 480px) {
@@ -62,36 +90,25 @@ const Container = styled.div`
     p {
       display: none;
     }
-    :hover {
-      svg {
-        font-size: 38px;
-      }
-    }
   }
   @media screen and (max-width: 480px) {
+    width: 80%;
     margin: 0px 10px 0px 15px;
     padding: 25px;
     /* background-color: orange; */
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+
     svg {
       font-size: 28px;
     }
     p {
+      margin: 0px;
       display: block;
       letter-spacing: 10px;
       font-size: 25px;
       width: 50%;
-    }
-    :hover {
-      border-radius: 10px;
-      svg {
-        font-size: 30px;
-      }
-      p {
-        font-size: 26px;
-      }
     }
   }
 `;

@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 export type VisitItem = {
   cid: string;
   cname: string;
@@ -74,6 +76,14 @@ export type NavItemProps = {
   title: string;
   path: string;
   icon: any;
+};
+
+export type NavButtonProps = {
+  title: string;
+  path: string;
+  icon: any;
+  closeMenu:Function; 
+  children?:ReactElement;
 };
 
 export type TheaterState = {

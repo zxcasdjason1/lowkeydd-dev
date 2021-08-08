@@ -2,7 +2,7 @@ import * as ai from "react-icons/ai";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "../../app/hooks";
 import { FavoredItem, VisitList } from "../../app/types";
-import { selectUser } from "../user/slice";
+import { selectIsLogin, selectUser } from "../user/slice";
 import { FavoredCardsGroup } from "./FavoredCardsGroup";
 import { Fragment } from "react";
 import {
@@ -11,7 +11,6 @@ import {
   selectIsFavoredCardsListChanged,
   selectTags,
   selectVisitList,
-  setIsFavoredCardsViewerEnable,
 } from "./slice";
 import { reqUpdateVisit } from "./api";
 import { history } from "../..";
@@ -22,7 +21,7 @@ import { useLayoutEffect } from "react";
  */
 export function FavoredCardsViewer() {
   const { username, ssid } = useSelector(selectUser);
-  const isLogin: boolean = username !== "";
+  const isLogin: boolean = useSelector(selectIsLogin);
   const isListChanged: boolean = useSelector(selectIsFavoredCardsListChanged);
   const headerTheme: HeaderThemeType = getHeaderIcon(isLogin, isListChanged);
   const favoredlist: FavoredItem[][] = useSelector(selectFavoredCardsList);
@@ -34,11 +33,15 @@ export function FavoredCardsViewer() {
 
   const onHeaderBtnClick = () => {
     if (!isLogin) {
+      // 請先登入
       history.push({ pathname: "/login/" });
     } else if (isListChanged) {
+      // 上傳檔案
       dispatch(reqUpdateVisit(username, ssid, visit, tags));
+    }else{
+      // 直接關閉
+      history.goBack();
     }
-    dispatch(setIsFavoredCardsViewerEnable(false));
   };
 
   useLayoutEffect(() => {
@@ -89,7 +92,6 @@ const ViewerContainer = styled.div`
   width: 100%;
   height: calc(100vh - 65px);
   background-color: var(--bkgColor);
-  z-index: 7;
   overflow-y: auto;
 `;
 

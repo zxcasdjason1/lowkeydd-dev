@@ -8,6 +8,6 @@ export { ChannelTagsSwitchers } from "./ChannelTagsSwitchers";
 export { FavoredCardsViewer } from "./FavoredCardsViewer";
 export { FavoredCardsGroup } from "./FavoredCardsGroup";
 export { FavoredCard } from "./FavoredCard";
-export { FavoredCardsNavItem } from "./FavoredCardsNavItem";
+// export { FavoredCardsNavItem } from "./FavoredCardsNavItem";
 
 export { reqEditVisit, reqFetchChannels, reqUpdateVisit } from "./api";

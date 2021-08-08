@@ -6,7 +6,6 @@ import {
   selectCurrent,
   selectFavoredList,
   selectIsFavoredCardsListChanged,
-  selectIsFavoredCardsViewerEnable,
   selectTags,
 } from "../../features/channelCardStore/slice";
 import {
@@ -21,7 +20,7 @@ import {
 } from "../../features/channelCardStore";
 
 export default function ChannelsStage() {
-  const isEnable = useSelector(selectIsFavoredCardsViewerEnable);
+
   const user = useSelector(selectUser);
   const tags = useSelector(selectTags);
   const isListChanged = useSelector(selectIsFavoredCardsListChanged);
@@ -42,7 +41,7 @@ export default function ChannelsStage() {
   }, [dispatch, user, tags]);
 
   return (
-    <Container isStopScroll={isEnable}>
+    <Container>
       <ControlPanel>
         <ChannelSearch />
         <ChannelTagsSwitchers />
@@ -79,7 +78,7 @@ function ChannelSearchCard() {
   );
 }
 
-const Container = styled.div<{ isStopScroll: boolean }>`
+const Container = styled.div`
   position: absolute;
   top: 65px;
   left: 0;
@@ -89,7 +88,7 @@ const Container = styled.div<{ isStopScroll: boolean }>`
 
   display: flex;
   flex-direction: column;
-  overflow: ${(p) => (p.isStopScroll ? `hidden` : `auto`)};
+  overflow: "auto";
 `;
 
 const ControlPanel = styled.div`

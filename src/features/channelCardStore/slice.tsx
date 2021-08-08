@@ -20,7 +20,6 @@ type ChannelCardStore = {
   favoredList: FavoredItem[];
   tags: string[];
   current: ChannelCardProps | null;
-  isFavoredCardsViewerEnable: boolean;
 };
 
 const initialState: ChannelCardStore = {
@@ -30,7 +29,6 @@ const initialState: ChannelCardStore = {
   favoredList: [],
   tags: ["live"],
   current: null,
-  isFavoredCardsViewerEnable: false,
 };
 
 const setCluster = (
@@ -187,20 +185,7 @@ const slice = createSlice({
           );
         }
       }
-    },
-    setIsFavoredCardsViewerEnable: (
-      state,
-      action: {
-        type: string;
-        payload: boolean | undefined;
-      }
-    ) => {
-      if (action.payload === undefined) {
-        state.isFavoredCardsViewerEnable = !state.isFavoredCardsViewerEnable;
-      } else {
-        state.isFavoredCardsViewerEnable = action.payload;
-      }
-    },
+    }
   },
 });
 
@@ -209,7 +194,6 @@ export const {
   setChannelCard,
   setFavoredList,
   setSearchResult,
-  setIsFavoredCardsViewerEnable,
 } = slice.actions;
 export default slice.reducer;
 
@@ -244,11 +228,6 @@ export const selectFavoredList = createSelector(
 export const selectCurrent = createSelector(
   [selectChannelCardStore],
   (store) => store.current
-);
-
-export const selectIsFavoredCardsViewerEnable = createSelector(
-  [selectChannelCardStore],
-  (store) => store.isFavoredCardsViewerEnable
 );
 
 export const selectVisitList = createSelector(

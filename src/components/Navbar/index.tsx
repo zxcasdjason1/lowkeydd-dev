@@ -2,20 +2,13 @@ import * as ai from "react-icons/ai";
 import styled from "styled-components";
 import { useState } from "react";
 import { NavItemProps } from "../../app/types";
-import NavItem from "../NavItem";
-import { FavoredCardsNavItem } from "../../features/channelCardStore";
+import { NavBrowser, NavTheater, NavUser, NavCollections } from "../NavButtons";
 
-type NavbarProps = {
-  items: NavItemProps[];
-  onClick: () => void;
-};
-
-export default function Navbar(props: NavbarProps) {
+export default function Navbar() {
   const [isEnable, setIsEnable] = useState(false);
 
-  const showMenu = () => {
+  const closeMenu = () => {
     setIsEnable(!isEnable);
-    props.onClick()
   };
 
   return (
@@ -25,34 +18,59 @@ export default function Navbar(props: NavbarProps) {
           <p>LowkeyDD</p>
         </Logo>
         <Menu isEnable={isEnable}>
-          <ToogleNavBkg onClick={showMenu}>
+          <ToogleNavBkg onClick={closeMenu}>
             <div>
               <ai.AiOutlineMenu />
             </div>
           </ToogleNavBkg>
           <ul>
-            <ToogleNavBkg onClick={showMenu}>
+            <ToogleNavBkg onClick={closeMenu}>
               <div>
                 <ai.AiOutlineClose />
               </div>
             </ToogleNavBkg>
 
-            {props.items.map((item) => (
-              <NavItem
+            {/* {NavItemList.map((item, i) => (
+              <NavButton
                 key={`MenuItem_${item.title}`}
                 {...item}
-                showMenu={showMenu}
+                closeMenu={closeMenu}
               />
-            ))}
+            ))} */}
 
-            {/* 額外的 FavoredCardsNav */}
-            <FavoredCardsNavItem showMenu={showMenu} />
+            <NavBrowser {...NavItemList[0]} closeMenu={closeMenu} />
+            <NavTheater {...NavItemList[1]} closeMenu={closeMenu} />
+            <NavUser {...NavItemList[2]} closeMenu={closeMenu} />
+            <NavCollections {...NavItemList[3]} closeMenu={closeMenu} />
           </ul>
         </Menu>
       </Nav>
     </Container>
   );
 }
+
+const NavItemList: NavItemProps[] = [
+  {
+    title: "瀏覽",
+    path: "/channels/",
+    icon: <ai.AiOutlineHeart />,
+  },
+  {
+    title: "影院",
+    path: "/theater/",
+    icon: <ai.AiOutlineVideoCamera />,
+  },
+  {
+    title: "會員",
+    path: "/login/",
+    icon: <ai.AiOutlineUser />,
+  },
+  {
+    title: "收藏",
+    path: "/visit/",
+    icon: <ai.AiOutlineBook />,
+  },
+];
 
 const Container = styled.div`
   position: fixed; //這樣才能讓NAV固定在畫面上
@@ -63,7 +81,7 @@ const Container = styled.div`
   --menuText: #c5c3c6;
   --menuText_Hover: #1985a1;
   --logoColor: #fff;
-  z-index: 5;
+  z-index: 7;
 `;
 
 const Nav = styled.nav`
@@ -152,10 +170,10 @@ const ToogleNavBkg = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    div:hover {
-      background-color: var(--toogleColor);
-      color: var(--logoColor);
+      :hover {
+        background-color: var(--toogleColor);
+        color: var(--logoColor);
+      }
     }
   }
 `;
