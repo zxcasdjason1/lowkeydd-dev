@@ -96,6 +96,7 @@ export type TheaterState = {
     sliderIndex: number;
     isTakenOverAnim: boolean;
     isFolded: boolean;
+    isFullScreen:boolean;
   };
   //iframe
   gridlayout: {

@@ -3,9 +3,12 @@ import styled from "styled-components";
 import { useState } from "react";
 import { NavItemProps } from "../../app/types";
 import { NavBrowser, NavTheater, NavUser, NavCollections } from "../NavButtons";
+import { selectSlider } from "../../features/theater/slice";
+import { useSelector } from "../../app/hooks";
 
 export default function Navbar() {
   const [isEnable, setIsEnable] = useState(false);
+  const { isFolded } = useSelector(selectSlider);
 
   const closeMenu = () => {
     setIsEnable(!isEnable);
@@ -13,7 +16,7 @@ export default function Navbar() {
 
   return (
     <Container>
-      <Nav>
+      <Nav isFolded={isFolded}>
         <Logo>
           <p>LowkeyDD</p>
         </Logo>
@@ -29,15 +32,6 @@ export default function Navbar() {
                 <ai.AiOutlineClose />
               </div>
             </ToogleNavBkg>
-
-            {/* {NavItemList.map((item, i) => (
-              <NavButton
-                key={`MenuItem_${item.title}`}
-                {...item}
-                closeMenu={closeMenu}
-              />
-            ))} */}
-
             <NavBrowser {...NavItemList[0]} closeMenu={closeMenu} />
             <NavTheater {...NavItemList[1]} closeMenu={closeMenu} />
             <NavUser {...NavItemList[2]} closeMenu={closeMenu} />
@@ -84,8 +78,9 @@ const Container = styled.div`
   z-index: 7;
 `;
 
-const Nav = styled.nav`
+const Nav = styled.nav<{isFolded : boolean}>`
   position: relative;
+  top: ${p=>p.isFolded ? `-65px`:`0px`};
   background-color: var(--navColor);
   display: flex;
   align-items: center;

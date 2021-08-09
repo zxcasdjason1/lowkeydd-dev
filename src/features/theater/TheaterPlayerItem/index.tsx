@@ -2,9 +2,9 @@ import styled from "styled-components";
 import * as ai from "react-icons/ai";
 import { useState } from "react";
 import { ChatboxIframe, PlayerIframe } from "../../../app/types";
-import { removeIframeByCid } from "../slice";
+import { removeIframeByCid, switchChatBoxByCid } from "../slice";
 import { useDispatch } from "../../../app/hooks";
-import { TheaterChatbox } from '../TheaterChatbox';
+import { TheaterChatbox } from "../TheaterChatbox";
 
 type Props = {
   flexType: string;
@@ -20,6 +20,7 @@ export function TheaterPlayerItem(props: Props) {
 
   const dispatch = useDispatch();
   const showMenu = () => {
+    console.log("showMenu");
     setIsEnable(!isEnable);
   };
   const onLeaveMenu = () => {
@@ -31,6 +32,9 @@ export function TheaterPlayerItem(props: Props) {
   const removeIframe = () => {
     dispatch(removeIframeByCid({ cid }));
   };
+  const switchChatBox = () => {
+    dispatch(switchChatBoxByCid({ cid }));
+  };
 
   return (
     <IframeGridLocator
@@ -41,6 +45,7 @@ export function TheaterPlayerItem(props: Props) {
       chatboxHeight={ch}
     >
       <IframeContainer>
+        {getPlayerIframe(player)}
         <Menu
           onClick={showMenu}
           onMouseEnter={onEnterMenu}
@@ -50,10 +55,13 @@ export function TheaterPlayerItem(props: Props) {
           <div onClick={removeIframe}>
             <ai.AiOutlineCloseCircle />
           </div>
+          &nbsp;
+          <div onClick={switchChatBox}>
+            <ai.AiOutlineMessage />
+          </div>
         </Menu>
-        {getPlayerIframe(player)}
       </IframeContainer>
-        <TheaterChatbox {...chatbox}/>
+      <TheaterChatbox {...chatbox} />
     </IframeGridLocator>
   );
 }
@@ -91,8 +99,6 @@ const getPlayerIframe = (player: PlayerIframe): any => {
   }
 };
 
-
-
 const IframeGridLocator = styled.div<{
   flexType: string;
   playerWidth: number;
@@ -128,16 +134,20 @@ const Menu = styled.h1<{ isEnable: boolean }>`
   right: 0;
   position: absolute;
   width: 100%;
-  height: ${(p) => (p.isEnable ? `200px` : `50px`)};
-  background-color: black;
+  height: ${(p) => (p.isEnable ? `200px` : `100px`)};
+  max-height: 100vh;
+  background-color: #000;
   opacity: ${(p) => (p.isEnable ? `0.8` : `0.02`)};
   transition: 0.6s;
+  cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  // MenuButton
   div {
-    font-size: ${(p) => (p.isEnable ? `100px` : `0px`)};
+    font-size: ${(p) => (p.isEnable ? `75px` : `0px`)};
     svg {
       position: relative;
       top: ${(p) => (p.isEnable ? `0%` : `30%`)};

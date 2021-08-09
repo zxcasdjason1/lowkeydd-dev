@@ -232,6 +232,20 @@ export const calcNewIframeSize = (
   return { col, row, w, h };
 };
 
+export const calcSingleIframeSize = (
+  cW: number,
+  cH: number,
+  curRow: number,
+  curCol: number,
+  ratio: number,
+): { w: number; h: number } => {
+  const gridW = cW / curCol;
+  const gridH = gridW * ratio;
+  let h = Math.min(gridH, cH / curRow);
+  let w = h * (1 / ratio);
+  return { w, h };
+};
+
 type IframeSizePropsV2 = {
   col: number;
   row: number;

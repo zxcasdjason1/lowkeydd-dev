@@ -1,6 +1,7 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { history } from "../..";
 import { RootState } from "../../app/store";
+import { enableFullScreen, exitFullScreen } from "../../app/toggleFullScreen";
 import {
   ChannelCardProps,
   ChannelProps,
@@ -11,6 +12,7 @@ import {
 } from "../../app/types";
 import {
   calcNewIframeSizeV2,
+  calcSingleIframeSize,
   convertToChatboxIframe,
   convertToPlayerIframe,
   createChatboxIframe,
@@ -30,6 +32,7 @@ const initialState: TheaterState = {
     sliderIndex: 0,
     isTakenOverAnim: false,
     isFolded: false,
+    isFullScreen: false,
   },
   gridlayout: {
     flexType: "column",
@@ -111,8 +114,29 @@ const slice = createSlice({
         payload: boolean;
       }
     ) => {
+      // 主動觸發一次resize
+      if (state.playlist.length > 0) {
+        console.log("resize on after sliderFold");
+        window.dispatchEvent(new Event("resize"));
+      }
+
       state.slider.isFolded = action.payload;
       console.log(`slider isFolded : ${action.payload}`);
+    },
+    setFullScreen: (
+      state,
+      action: {
+        type: string;
+        payload: boolean;
+      }
+    ) => {
+      if (action.payload) {
+        enableFullScreen(document.body);
+      } else {
+        exitFullScreen();
+      }
+      state.slider.isFullScreen = action.payload;
+      console.log(`slider isFullScreen : ${action.payload}`);
     },
     resizeGridLayout: (
       state,
@@ -127,19 +151,43 @@ const slice = createSlice({
       const { clientWidth, clientHeight } = action.payload;
       const ratio = state.gridlayout.ratio;
       const numOfIframes = state.playlist.length;
-      const newIframeSize = calcNewIframeSizeV2(
+      const { flexType, pw, ph, cw, ch, col, row } = calcNewIframeSizeV2(
         clientWidth,
         clientHeight,
         ratio,
         numOfIframes
       );
-      const { flexType, pw, ph, cw, ch, col, row } = newIframeSize;
-      state.playlist = state.playlist.map((player) =>
-        setIframeSize(player, { w: pw, h: ph })
+      const { w: noChatWidth, h: noChatHeight } = calcSingleIframeSize(
+        clientWidth,
+        clientHeight,
+        row,
+        col,
+        ratio
       );
-      state.chatlist = state.chatlist.map((chatbox) =>
-        setIframeSize(chatbox, { w: cw, h: ch })
-      );
+
+      let newPlayerList: PlayerIframe[] = [];
+      let newChatboxList: ChatboxIframe[] = [];
+
+      state.chatlist.forEach((chatbox, i) => {
+        const player = state.playlist[i];
+        if (chatbox.isEnable) {
+          newPlayerList.push(setIframeSize(player, { w: pw, h: ph }));
+          newChatboxList.push(setIframeSize(chatbox, { w: cw, h: ch }));
+          // playerSize.push({ w: pw, h: ph });
+          // chatboxSize.push({ w: cw, h: ch });
+        } else {
+          newPlayerList.push(
+            setIframeSize(player, { w: noChatWidth, h: noChatHeight })
+          );
+          newChatboxList.push(setIframeSize(chatbox, { w: 0, h: 0 }));
+          // playerSize.push({ w: noChatWidth, h: noChatHeight });
+          // chatboxSize.push({ w: 0, h: 0 });
+        }
+      });
+
+      state.playlist = newPlayerList;
+      state.chatlist = newChatboxList;
+
       state.gridlayout = {
         flexType,
         ratio,
@@ -197,6 +245,11 @@ const slice = createSlice({
       state.elements = newElements;
       state.playlist = newPlaylist;
       state.chatlist = newChatlist;
+
+      if (state.playlist.length > 0) {
+        console.log("resize on after appendIframeToPlaylist");
+        window.dispatchEvent(new Event("resize"));
+      }
     },
     removeIframeFromPlaylist: (
       state,
@@ -213,6 +266,11 @@ const slice = createSlice({
       state.elements = newElements;
       state.playlist = getListRemoveIframe(state.playlist, item.cid);
       state.chatlist = getListRemoveIframe(state.chatlist, item.cid);
+
+      if (state.playlist.length > 0) {
+        console.log("resize on after removeIframeFromPlaylist");
+        window.dispatchEvent(new Event("resize"));
+      }
     },
     removeIframeByCid: (
       state,
@@ -222,7 +280,7 @@ const slice = createSlice({
       }
     ) => {
       const { cid } = action.payload;
-      
+
       // 透過關閉元素的cid，找出對應在Slider上的元素，連同設置為關閉狀態。
       if (state.elements.length > 0) {
         state.elements = state.elements.map((e) =>
@@ -232,6 +290,30 @@ const slice = createSlice({
 
       state.playlist = getListRemoveIframe(state.playlist, cid);
       state.chatlist = getListRemoveIframe(state.chatlist, cid);
+
+      if (state.playlist.length > 0) {
+        console.log("resize on after removeIframeByCid");
+        window.dispatchEvent(new Event("resize"));
+      }
+    },
+    switchChatBoxByCid: (
+      state,
+      action: {
+        type: string;
+        payload: { cid: string };
+      }
+    ) => {
+      const { cid } = action.payload;
+
+      // 透過關閉元素的cid，找出對應在Slider上的元素，連同設置為關閉狀態。
+      state.chatlist = state.chatlist.map((c: ChatboxIframe) =>
+        c.cid === cid ? { ...c, isEnable: !c.isEnable } : c
+      );
+
+      if (state.playlist.length > 0) {
+        console.log("resize on after switchChatBoxByCid");
+        window.dispatchEvent(new Event("resize"));
+      }
     },
   },
 });
@@ -240,11 +322,13 @@ export const {
   setElements,
   setSlider,
   setSliderFolded,
+  setFullScreen,
   resizeGridLayout,
   setFromChannel,
   appendIframeToPlaylist,
   removeIframeFromPlaylist,
   removeIframeByCid,
+  switchChatBoxByCid,
 } = slice.actions;
 export default slice.reducer;
 
