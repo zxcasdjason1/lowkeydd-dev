@@ -1,6 +1,8 @@
 # lowkeydd-dev
 
-主要功能為獲取 youtube 與 twitch 兩平台上的直播訊息後，讓使用者跨平台觀看直播內容，註冊會員後還能自訂自己喜歡的直播內容。 
+主要功能為獲取 youtube 與 twitch 兩平台上的直播訊息後，
+
+讓使用者跨平台觀看直播內容，註冊會員後還能自訂自己喜歡的直播內容。 
 
 網址連結: https://lowkeydd.ddnsking.com/#/channels/
 
