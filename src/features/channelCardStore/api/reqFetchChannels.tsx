@@ -1,3 +1,6 @@
+/**
+ * 獲取頻道卡片群集(channels)、用戶收藏者清單(list)、頻道分群(group)
+ */
 import axios from "axios";
 import {
   API_SERVER_URL,

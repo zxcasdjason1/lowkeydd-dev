@@ -1,3 +1,6 @@
+/**
+ * 僅用在未登入用戶將頻道設置為最愛時，待登入後，比對存檔與當前紀錄兩者進行合併。
+ */
 import axios from "axios";
 import {
   API_SERVER_URL,
@@ -5,7 +8,7 @@ import {
   VISITS_DEFAULT_GROUPNAME,
 } from "../../../app/config";
 import { FavoredItem, VisitItem, VisitList } from "../../../app/types";
-import { createVisitItem } from "../share";
+import { createVisitItem } from "../shares";
 import { setFavoredList } from "../slice";
 import { reqUpdateVisit } from "./reqUpdateVisit";
 

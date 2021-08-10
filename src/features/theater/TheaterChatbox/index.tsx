@@ -8,9 +8,11 @@ export function TheaterChatbox(props: ChatboxIframe) {
   return (
     <>
       {chatbox.isEnable ? (
-        <ChatboxContainer width={w} height={h}>{getChatboxIframe(chatbox)}</ChatboxContainer>
+        <ChatboxContainer width={w} height={h}>
+          {getChatboxIframe(chatbox)}
+        </ChatboxContainer>
       ) : (
-        <Fragment/>
+        <Fragment />
       )}
     </>
   );

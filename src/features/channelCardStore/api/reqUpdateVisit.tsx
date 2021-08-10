@@ -1,3 +1,6 @@
+/**
+ * 上傳頻道收藏清單
+ */
 import axios from "axios";
 import { history } from "../../..";
 import { API_SERVER_URL } from "../../../app/config";

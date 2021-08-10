@@ -1,8 +1,8 @@
 import { Fragment, useLayoutEffect, useRef } from "react";
-import { reqLogin } from "../api";
-import { useDispatch, useSelector } from "../../../app/hooks";
-import { history } from "../../../index";
-import { selectUser, setMsg } from "../slice";
+import { reqLogin } from "./api";
+import { useDispatch, useSelector } from "../../app/hooks";
+import { history } from "../../index";
+import { selectUser, setMsg } from "./slice";
 import {
   Wrap,
   Container,
@@ -13,13 +13,14 @@ import {
   PasswordField,
   MainButton,
   SwitchField,
-} from "../styles";
+} from "./styles";
 
-export function Login() {
-  const dispatch = useDispatch();
+export function LoginPage() {
   const { username, msg } = useSelector(selectUser);
   const usernameInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
+  
   const routeToRegister = () => {
     history.push({ pathname: "/register" });
   };

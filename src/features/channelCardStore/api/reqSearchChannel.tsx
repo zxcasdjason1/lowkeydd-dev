@@ -1,7 +1,10 @@
+/**
+ * 透過關鍵字搜尋頻道
+ */
 import axios from "axios";
 import { API_SERVER_URL } from "../../../app/config";
 import { ChannelProps } from "../../../app/types";
-import { createChannelCard } from "../share";
+import { createChannelCard } from "../shares";
 import { setSearchResult } from "../slice";
 
 export const reqSearchChannel = (url: string) => (dispatch: any) => {

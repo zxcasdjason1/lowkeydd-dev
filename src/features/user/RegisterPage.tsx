@@ -1,10 +1,10 @@
 import { useLayoutEffect } from "react";
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
-import { reqRegister } from "../api";
-import { history } from "../../../index";
-import { useSelector } from "../../../app/hooks";
-import { selectUser, setMsg } from "../slice";
+import { reqRegister } from "./api";
+import { history } from "../../index";
+import { useSelector } from "../../app/hooks";
+import { selectUser, setMsg } from "./slice";
 import {
   Wrap,
   Container,
@@ -15,18 +15,15 @@ import {
   PasswordField,
   MainButton,
   SwitchField,
-} from "../styles";
+} from "./styles";
 import { Fragment } from "react";
 
-export function Register() {
-  const dispatch = useDispatch();
-  
-
+export function RegisterPage() {
   const {username, msg} = useSelector(selectUser);
   const usernameInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
   const passwordInput2 = useRef<HTMLInputElement>(null);
-
+  const dispatch = useDispatch();
 
   const routeToLogin = () => {
     history.push({ pathname: "/login" });
@@ -38,17 +35,17 @@ export function Register() {
     const password2 = passwordInput2.current?.value + "";
 
     if (username === "") {
-      console.log("用戶名不可為空");
+      // console.log("用戶名不可為空");
       dispatch(setMsg("用戶名不可為空"));
       return;
     }
     if (password === "") {
-      console.log("密碼不可為空");
+      // console.log("密碼不可為空");
       dispatch(setMsg("密碼不可為空"));
       return;
     }
     if (password !== password2) {
-      console.log("輸入的密碼不一致");
+      // console.log("輸入的密碼不一致");
       dispatch(setMsg("輸入的密碼不一致"));
       return;
     }

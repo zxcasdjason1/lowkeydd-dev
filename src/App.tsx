@@ -5,7 +5,7 @@ import TheaterPage from "./pages/TheaterPage";
 import HomePage from "./pages/HomePage";
 import LoadingPage from "./pages/LoadingPage";
 import { FavoredCardsViewer } from "./features/channelCardStore";
-import { Login, Register } from "./features/user";
+import { LoginPage, RegisterPage } from "./features/user";
 
 export default function App() {
 
@@ -17,8 +17,8 @@ export default function App() {
         <Route path="/channels/" component={ChannelsStage} />
         <Route path="/theater/" component={TheaterPage} />
         <Route path="/visit/" component={FavoredCardsViewer} />
-        <Route path="/login/" component={Login} />
-        <Route path="/register/" component={Register} />
+        <Route path="/login/" component={LoginPage} />
+        <Route path="/register/" component={RegisterPage} />
         <Route path="/loading/" component={LoadingPage} />
       </Switch>
     </div>

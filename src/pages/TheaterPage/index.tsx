@@ -1,8 +1,8 @@
 import { useLayoutEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "../../app/hooks";
-import { TheaterSlider, TheaterIframesViewer } from "../../features/theater";
-import { reqTheaterChannels } from "../../features/theater";
+import { TheaterSlider, TheaterIframesViewer, reqTheaterChannels } from "../../features/theater";
+
 import {
   selectSlider,
   setFullScreen,

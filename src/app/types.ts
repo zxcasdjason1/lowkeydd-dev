@@ -14,14 +14,6 @@ export type VisitList = {
   list: Array<VisitItem>;
 };
 
-export type visitStoreState = {
-  group: string[];
-  list: Array<VisitItem>;
-  current: ChannelProps | null;
-  favored: Array<VisitItem>;
-  isListChanged: boolean;
-};
-
 export type ChannelProps = {
   cid: string;
   cname: string;
@@ -38,12 +30,13 @@ export type ChannelProps = {
   updatetime: string;
 };
 
-export type ChannelStoreState = {
-  current: ChannelProps | null;
+export type ChannelCardStore = {
+  hasFetchChannels: boolean;
+  clusters: ChannelCardProps[][];
   group: string[];
+  favoredList: FavoredItem[];
   tags: string[];
-  view: Array<ChannelProps[]>;
-  list: VisitItem[];
+  current: ChannelCardProps | null;
 };
 
 export type UserSession = {
@@ -185,9 +178,4 @@ export type FavoredItem = {
   isChanged: boolean;
   isDeleted: boolean;
   isNewAdded: boolean;
-};
-
-export type ConnectionConfigProps = {
-  IsLocal: boolean;
-  HostName: string;
 };

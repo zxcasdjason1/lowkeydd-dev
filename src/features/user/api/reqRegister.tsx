@@ -2,7 +2,7 @@ import axios from "axios";
 import { history } from "../../..";
 import { API_SERVER_URL } from "../../../app/config";
 import { UserRegisterResponse } from "../../../app/types";
-import { setMsg, setUserRegiser } from "../slice";
+import { setMsg, setUserRegister } from "../slice";
 
 export const reqRegister =
   (username: string, password: string) => (dispatch: any) => {
@@ -22,7 +22,7 @@ export const reqRegister =
             expiration,
             msg,
           };
-          dispatch(setUserRegiser(userRegisterRes));
+          dispatch(setUserRegister(userRegisterRes));
           setTimeout(() => {
             history.push({ pathname: "/channels" });
             console.log("註冊成功，直接跳轉到 channels");

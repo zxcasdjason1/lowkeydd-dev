@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import SwitchBtn from "../../components/SwitchBtn";
-import { SwitcherList } from "../../app/config";
 import { useDispatch, useSelector } from "../../app/hooks";
 import { selectUser } from "../user/slice";
 import { selectTags } from "./slice";
 import { reqFetchChannels } from "./api";
+import { Switcher } from "../../app/types";
 
 export function ChannelTagsSwitchers() {
   const { username, ssid } = useSelector(selectUser);
@@ -59,3 +59,9 @@ const SwitchBtnBox = styled.div`
     color: #eee;
   }
 `;
+
+export const SwitcherList: Array<Switcher> = [
+  { checked: false, htmlFor: "live", afterColor: "#f00" },
+  { checked: false, htmlFor: "wait", afterColor: "#0ff" },
+  { checked: false, htmlFor: "off", afterColor: "#856" },
+];

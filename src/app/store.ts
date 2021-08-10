@@ -6,7 +6,7 @@ import {
 import channelCardStoreReducer from "../features/channelCardStore/slice";
 import userReducer from "../features/user/slice";
 import theaterReducer from "../features/theater/slice";
-import { decodeUrlToConnectionConfig } from "./share";
+import { decodeUrlToConnectionConfig } from "./connections";
 
 const reducer = combineReducers({
   channelCardStore: channelCardStoreReducer,

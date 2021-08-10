@@ -8,7 +8,8 @@ import {
 } from "../slice";
 import * as ai from "react-icons/ai";
 import { TheaterSliderItem } from "../TheaterSliderItem";
-import { playSliderLeft, playSliderRight } from "../share";
+import { playSliderLeft, playSliderRight } from "../api";
+
 
 export function TheaterSlider() {
   const { sliderIndex, isTakenOverAnim } = useSelector(selectSlider);

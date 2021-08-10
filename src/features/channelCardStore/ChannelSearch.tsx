@@ -1,7 +1,7 @@
 import SearchBox from "../../components/SearchBox";
 import { useDispatch, useSelector } from "../../app/hooks";
 import { reqFetchChannels } from "./api";
-import { reqSearchChannel } from "./api/reqSearchChannel";
+import { reqSearchChannel } from "./api";
 import { selectUser } from "../user/slice";
 
 export function ChannelSearch() {
@@ -9,7 +9,7 @@ export function ChannelSearch() {
   const dispatch = useDispatch();
 
   const onSubmit = (keyword: string) => {
-    if (keyword === "") return
+    if (keyword === "") return;
     if (
       keyword === "all" ||
       keyword === "live" ||
@@ -18,8 +18,8 @@ export function ChannelSearch() {
       keyword === "failure"
     ) {
       dispatch(reqFetchChannels(username, ssid, [keyword]));
-    }else{
-      dispatch(reqSearchChannel(keyword))
+    } else {
+      dispatch(reqSearchChannel(keyword));
     }
   };
 

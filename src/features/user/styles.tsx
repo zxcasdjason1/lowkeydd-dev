@@ -159,11 +159,13 @@ export const UsernameField = styled.div`
   border-bottom: 2px solid #adadad;
   margin: 30px 0;
 `;
+
 export const PasswordField = styled.div`
   position: relative;
   border-bottom: 2px solid #adadad;
   margin: 30px 0;
 `;
+
 export const MainButton = styled.div`
   width: 100%;
   padding: 10px 0;
