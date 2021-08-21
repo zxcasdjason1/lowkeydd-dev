@@ -80,8 +80,9 @@ export type NavButtonProps = {
   title: string;
   path: string;
   icon: any;
-  closeMenu:Function; 
-  children?:ReactElement;
+  children?: ReactElement;
+  beforeSwitch: Function; // NavButton 按下前
+  afterSwitch: Function; // NavButton 按下後
 };
 
 export type TheaterState = {
@@ -94,7 +95,7 @@ export type TheaterState = {
     sliderIndex: number;
     isTakenOverAnim: boolean;
     isFolded: boolean;
-    isFullScreen:boolean;
+    isFullScreen: boolean;
   };
   //iframe
   gridlayout: {

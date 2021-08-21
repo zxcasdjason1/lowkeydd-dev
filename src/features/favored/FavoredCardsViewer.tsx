@@ -1,60 +1,37 @@
 import * as ai from "react-icons/ai";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "../../app/hooks";
-import { FavoredItem, VisitList } from "../../app/types";
-import { selectIsLogin, selectUser } from "../user/slice";
+import { FavoredItem } from "../../app/types";
 import { FavoredCardsGroup } from "./FavoredCardsGroup";
 import { Fragment } from "react";
-import { history } from "../..";
-import { reqUpdateVisit } from "./api";
 import {
   selectFavoredCardsList,
   selectGroup,
-  selectIsListChanged,
-  selectVisitList,
 } from "./slice";
-import { selectTags } from "../channelCardStore/slice";
 
 /**
  * 收藏品，表列出已登入使用者自定義的喜好頻道列表
  */
 export function FavoredCardsViewer() {
-  const user = useSelector(selectUser);
-  const isLogin: boolean = useSelector(selectIsLogin);
 
-  //這裡指得是channelCard中的favoredList是否有改變
-  const isListChanged: boolean = useSelector(selectIsListChanged);
-
-  const headerTheme: HeaderThemeType = getHeaderIcon(isLogin, isListChanged);
+  // const isLogin: boolean = useSelector(selectIsLogin);
+  // const isListChanged: boolean = useSelector(selectIsListChanged);
+  // const headerTheme: HeaderThemeType = getHeaderIcon(isLogin, isListChanged);
   const favoredCardsList: FavoredItem[][] = useSelector(selectFavoredCardsList);
   const group = useSelector(selectGroup);
-  const visit: VisitList = useSelector(selectVisitList);
-  const tags: string[] = useSelector(selectTags);
+
 
   const dispatch = useDispatch();
 
-  const onHeaderBtnClick = () => {
-    if (!isLogin) {
-      // 請先登入
-      history.push({ pathname: "/login/" });
-    } else if (isListChanged) {
-      // 保存修改
-      const { username, ssid } = user;
-      dispatch(reqUpdateVisit(username, ssid, visit, tags));
-    } else {
-      // 直接關閉
-      history.goBack();
-    }
-  };
 
   return (
     <ViewerContainer>
-      <Header {...headerTheme}>
+      {/* <Header {...headerTheme}>
         <div onClick={onHeaderBtnClick}>
           {headerTheme.icon}
           <p>{headerTheme.text}</p>
         </div>
-      </Header>
+      </Header> */}
       <Content>
         {favoredCardsList.map((items: FavoredItem[], i) => {
           // 驗證groupname

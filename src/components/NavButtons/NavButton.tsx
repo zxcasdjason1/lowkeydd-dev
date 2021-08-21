@@ -1,18 +1,52 @@
 import styled from "styled-components";
 import { history } from "../..";
-import { useDispatch } from "../../app/hooks";
-import { NavButtonProps } from "../../app/types";
-import { setMsg } from "../../features/user/slice";
+import { useDispatch, useSelector } from "../../app/hooks";
+import { NavButtonProps, VisitList } from "../../app/types";
+import { reqUpdateVisit } from "../../features/favored/api";
+import {
+  selectIsListChanged,
+  selectVisitList,
+} from "../../features/favored/slice";
+import { selectIsLogin, selectUser, setMsg } from "../../features/user/slice";
 
 export default function NavButton(props: NavButtonProps) {
-  const { title, path, icon, closeMenu } = props;
-  const dispatch = useDispatch()
-  const onClick = () => {
-    if (path !== "") {
-      dispatch(setMsg("")) // clear
-      history.push({ pathname: `${path}` });
+  const { title, path, icon, beforeSwitch, afterSwitch } = props;
+
+  const isListChanged: boolean = useSelector(selectIsListChanged);
+  const user = useSelector(selectUser);
+  const isLogin: boolean = useSelector(selectIsLogin);
+  const visit: VisitList = useSelector(selectVisitList);
+  const dispatch = useDispatch();
+
+  const onLeavingCollections = (nextPath: string): boolean => {
+    console.log("location:>", history.location);
+    console.log("nextPath:>", nextPath);
+    if (history.location.pathname === "/favored/") {
+      if (!isLogin) {
+        history.push({ pathname: "/login/" });
+        return true;
+      } else if (isListChanged) {
+        // 自動保存
+        console.log("The favoredlist is Changed, saved automatically");
+        const { username, ssid } = user;
+        dispatch(reqUpdateVisit(username, ssid, visit, nextPath));
+        return true;
+      }
     }
-    closeMenu();
+    return false;
+  };
+
+  const onClick = () => {
+    if (path === "") return; //無效
+    beforeSwitch();
+    if (history.location.pathname !== path) {
+      let isChanged = onLeavingCollections(path);
+      if (!isChanged) {
+        dispatch(setMsg("")); // clear
+        history.push({ pathname: `${path}` });
+      }
+    }
+    afterSwitch();
   };
 
   return (

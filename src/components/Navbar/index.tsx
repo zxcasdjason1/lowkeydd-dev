@@ -8,10 +8,17 @@ import { useSelector } from "../../app/hooks";
 
 export default function Navbar() {
   const [isEnable, setIsEnable] = useState(false);
-  const { isFolded } = useSelector(selectSlider);
+  const { isFolded } = useSelector(selectSlider)
 
   const closeMenu = () => {
+    // close menu when is mobile.
     setIsEnable(!isEnable);
+  };
+
+  const beforeSwitch = () => {
+  };
+  const afterSwitch = () => {
+    closeMenu();
   };
 
   return (
@@ -32,10 +39,26 @@ export default function Navbar() {
                 <ai.AiOutlineClose />
               </div>
             </ToogleNavBkg>
-            <NavBrowser {...NavItemList[0]} closeMenu={closeMenu} />
-            <NavTheater {...NavItemList[1]} closeMenu={closeMenu} />
-            <NavUser {...NavItemList[2]} closeMenu={closeMenu} />
-            <NavCollections {...NavItemList[3]} closeMenu={closeMenu} />
+            <NavBrowser
+              {...NavItemList[0]}
+              beforeSwitch={beforeSwitch}
+              afterSwitch={afterSwitch}
+            />
+            <NavTheater
+              {...NavItemList[1]}
+              beforeSwitch={beforeSwitch}
+              afterSwitch={afterSwitch}
+            />
+            <NavUser
+              {...NavItemList[2]}
+              beforeSwitch={beforeSwitch}
+              afterSwitch={afterSwitch}
+            />
+            <NavCollections
+              {...NavItemList[3]}
+              beforeSwitch={beforeSwitch}
+              afterSwitch={afterSwitch}
+            />
           </ul>
         </Menu>
       </Nav>
@@ -78,9 +101,9 @@ const Container = styled.div`
   z-index: 7;
 `;
 
-const Nav = styled.nav<{isFolded : boolean}>`
+const Nav = styled.nav<{ isFolded: boolean }>`
   position: relative;
-  top: ${p=>p.isFolded ? `-65px`:`0px`};
+  top: ${(p) => (p.isFolded ? `-65px` : `0px`)};
   background-color: var(--navColor);
   display: flex;
   align-items: center;

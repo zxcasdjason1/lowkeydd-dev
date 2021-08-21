@@ -47,7 +47,7 @@ export function ChannelCard(props: ChannelCardProps) {
   const onFavoredHeartBtnClick = () => {
     if (!isLogin) {
       dispatch(setMsg("想加收藏要先登入唷"));
-      history.push({pathname:'/login'})
+      history.push({ pathname: "/login" });
       return;
     }
     const card: ChannelCardProps = { ...props, heart: !heart };
@@ -77,7 +77,7 @@ export function ChannelCard(props: ChannelCardProps) {
             isDeleted: false,
           },
         })
-      )
+      );
       dispatch(
         setFromChannelCard({
           card,

@@ -18,8 +18,7 @@ const slice = createSlice({
   reducers,
 });
 
-export const { setStore, setChannelCard, setFavoredList, setSearchResult } =
-  slice.actions;
+export const { setStore, setChannelCard, setSearchResult } = slice.actions;
 
 export default slice.reducer;
 
@@ -31,9 +30,9 @@ export const selectHasFetchChannels = createSelector(
   (store) => store.hasFetchChannels
 );
 
-export const selectChannelsCluster = createSelector(
+export const selectChannelsInGroup = createSelector(
   [selectChannelCardStore],
-  (store) => store.clusters
+  (store) => store.clusters.filter((cs) => cs !== null)
 );
 
 export const selectTags = createSelector(

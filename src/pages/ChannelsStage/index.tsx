@@ -7,37 +7,21 @@ import {
   selectTags,
 } from "../../features/channelCardStore/slice";
 import {
-  reqFetchChannels,
-  reqMergedVisit,
-} from "../../features/channelCardStore";
-import {
   ChannelCardsGroup,
   ChannelSearch,
   ChannelTagsSwitchers,
   ChannelCardsBrowser,
 } from "../../features/channelCardStore";
-import {
-  selectIsListChanged,
-  selectFavoredList,
-} from "../../features/favored/slice";
+import { reqFetchChannels } from "../../features/channelCardStore";
 
 export default function ChannelsStage() {
   const user = useSelector(selectUser);
   const tags = useSelector(selectTags);
-  const isListChanged = useSelector(selectIsListChanged);
-  const favoredList = useSelector(selectFavoredList);
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
-    if (isListChanged) {
-      // 檢查收藏表單是否已經被改變，如果已有異動，先發送請求獲取新的收藏表單。
-      const { username, ssid } = user;
-      dispatch(reqMergedVisit(username, ssid, favoredList, tags));
-    } else {
-      // 獲取當前資料庫中的頻道資訊。
-      const { username, ssid } = user;
-      dispatch(reqFetchChannels(username, ssid, tags));
-    }
+    const { username, ssid } = user;
+    dispatch(reqFetchChannels(username, ssid, tags));
     return () => {};
   }, [dispatch, user, tags]);
 

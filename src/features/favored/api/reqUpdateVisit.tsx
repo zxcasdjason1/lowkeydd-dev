@@ -4,16 +4,14 @@
  */
 import axios from "axios";
 import { history } from "../../..";
-
 import { API_SERVER_URL, VISITS_DEFAULT_GROUPNAME } from "../../../app/config";
 import { FavoredItem, VisitItem, VisitList } from "../../../app/types";
 import { setMsg } from "../../user/slice";
-
 import { createFavoredItem } from "../shares/createFavoredItem";
 import { setFavoredList } from "../slice";
 
 export const reqUpdateVisit =
-  (username: string, ssid: string, visit: VisitList, tags: string[]) =>
+  (username: string, ssid: string, visit: VisitList, nextPathName: string) =>
   (dispatch: any) => {
     const postform = new FormData();
     postform.append("username", username);
@@ -52,6 +50,8 @@ export const reqUpdateVisit =
               group: group,
             })
           );
+          history.push({ pathname: nextPathName });
+          dispatch(setMsg(""));
         } else if (code === "failure") {
           console.log("code failure，重新導引到登入頁面:\n");
           setFavoredList({

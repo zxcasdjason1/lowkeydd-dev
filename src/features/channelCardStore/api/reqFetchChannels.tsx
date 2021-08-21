@@ -8,6 +8,8 @@ import {
   VISITS_DEFAULT_GROUPNAME,
 } from "../../../app/config";
 import { ChannelProps, VisitItem } from "../../../app/types";
+import { createFavoredItem } from "../../favored/shares/createFavoredItem";
+import { setFavoredList } from "../../favored/slice";
 import { setStore } from "../slice";
 
 export const reqFetchChannels =
@@ -36,7 +38,6 @@ export const reqFetchChannels =
         const channels: ChannelProps[][] = response.data["channels"];
         const group: string[] = response.data["group"];
         const list: VisitItem[] = response.data["list"];
- 
 
         // 檢驗收到的資料，如果沒有傳送AUTH或驗證失敗，會收到空的group清單。
 
@@ -61,6 +62,27 @@ export const reqFetchChannels =
             })
           );
         }
+
+        dispatch(
+          setFavoredList({
+            group:
+              group && group.length > 0
+                ? group.includes(VISITS_DEFAULT_GROUPNAME)
+                  ? group
+                  : [VISITS_DEFAULT_GROUPNAME, ...group]
+                : [VISITS_DEFAULT_GROUPNAME],
+            list:
+              list && list.length > 0
+                ? list.map((l: VisitItem) =>
+                    createFavoredItem(l, {
+                      isChanged: false,
+                      isDeleted: false,
+                      isNewAdded: false,
+                    })
+                  )
+                : [],
+          })
+        );
       },
       (error) => {
         console.log("失敗了, 錯誤如下:\n", error);
