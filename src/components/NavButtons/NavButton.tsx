@@ -1,12 +1,15 @@
 import styled from "styled-components";
 import { history } from "../..";
+import { useDispatch } from "../../app/hooks";
 import { NavButtonProps } from "../../app/types";
+import { setMsg } from "../../features/user/slice";
 
 export default function NavButton(props: NavButtonProps) {
   const { title, path, icon, closeMenu } = props;
-
+  const dispatch = useDispatch()
   const onClick = () => {
     if (path !== "") {
+      dispatch(setMsg("")) // clear
       history.push({ pathname: `${path}` });
     }
     closeMenu();

@@ -4,13 +4,11 @@ import { selectUser } from "../../features/user/slice";
 import { Fragment, useLayoutEffect } from "react";
 import {
   selectCurrent,
-  selectFavoredList,
-  selectIsFavoredCardsListChanged,
   selectTags,
 } from "../../features/channelCardStore/slice";
 import {
   reqFetchChannels,
-  reqEditVisit,
+  reqMergedVisit,
 } from "../../features/channelCardStore";
 import {
   ChannelCardsGroup,
@@ -18,12 +16,15 @@ import {
   ChannelTagsSwitchers,
   ChannelCardsBrowser,
 } from "../../features/channelCardStore";
+import {
+  selectIsListChanged,
+  selectFavoredList,
+} from "../../features/favored/slice";
 
 export default function ChannelsStage() {
-
   const user = useSelector(selectUser);
   const tags = useSelector(selectTags);
-  const isListChanged = useSelector(selectIsFavoredCardsListChanged);
+  const isListChanged = useSelector(selectIsListChanged);
   const favoredList = useSelector(selectFavoredList);
   const dispatch = useDispatch();
 
@@ -31,7 +32,7 @@ export default function ChannelsStage() {
     if (isListChanged) {
       // 檢查收藏表單是否已經被改變，如果已有異動，先發送請求獲取新的收藏表單。
       const { username, ssid } = user;
-      dispatch(reqEditVisit(username, ssid, favoredList, tags));
+      dispatch(reqMergedVisit(username, ssid, favoredList, tags));
     } else {
       // 獲取當前資料庫中的頻道資訊。
       const { username, ssid } = user;

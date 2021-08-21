@@ -12,7 +12,7 @@ import { createVisitItem } from "../shares";
 import { setFavoredList } from "../slice";
 import { reqUpdateVisit } from "./reqUpdateVisit";
 
-export const reqEditVisit =
+export const reqMergedVisit =
   (username: string, ssid: string, already: FavoredItem[], tags: string[]) =>
   (dispatch: any) => {
     const postform = new FormData();

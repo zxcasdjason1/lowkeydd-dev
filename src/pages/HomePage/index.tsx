@@ -1,26 +1,21 @@
-import { useEffect } from 'react'
-import { history } from '../..';
-import { useSelector } from '../../app/hooks';
-import { selectUser } from '../../features/user/slice';
-
+import { useEffect } from "react";
+import { history } from "../..";
+import { useDispatch, useSelector } from "../../app/hooks";
+import { selectIsLogin, setMsg } from "../../features/user/slice";
 
 export default function HomePage() {
-    const user = useSelector(selectUser);
+  const isLogin = useSelector(selectIsLogin);
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-    const { ssid, username } = user;
-    console.log({ ssid });
-    if (ssid !== "" && username !== "") {
-        history.push({ pathname: "/channels" });
-    } else{
-        history.push({ pathname: "/login" });
+  useEffect(() => {
+    if (isLogin) {
+      history.push({ pathname: "/channels" });
+    } else {
+      dispatch(setMsg("")); // clear
+      history.push({ pathname: "/login" });
     }
     return () => {};
-  }, [user]);
+  }, [isLogin, dispatch]);
 
-    return (
-        <div>
-            Home
-        </div>
-    )
+  return <div>Home</div>;
 }

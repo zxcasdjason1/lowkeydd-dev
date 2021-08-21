@@ -39,6 +39,11 @@ export type ChannelCardStore = {
   current: ChannelCardProps | null;
 };
 
+export type FavoredCardStore = {
+  group: string[];
+  favoredList: FavoredItem[];
+};
+
 export type UserSession = {
   ssid: string;
   username: string;

@@ -5,26 +5,28 @@ import { FavoredItem, VisitList } from "../../app/types";
 import { selectIsLogin, selectUser } from "../user/slice";
 import { FavoredCardsGroup } from "./FavoredCardsGroup";
 import { Fragment } from "react";
+import { history } from "../..";
+import { reqUpdateVisit } from "./api";
 import {
   selectFavoredCardsList,
   selectGroup,
-  selectIsFavoredCardsListChanged,
-  selectTags,
+  selectIsListChanged,
   selectVisitList,
 } from "./slice";
-import { reqUpdateVisit } from "./api";
-import { history } from "../..";
-import { useLayoutEffect } from "react";
+import { selectTags } from "../channelCardStore/slice";
 
 /**
  * 收藏品，表列出已登入使用者自定義的喜好頻道列表
  */
 export function FavoredCardsViewer() {
-  const { username, ssid } = useSelector(selectUser);
+  const user = useSelector(selectUser);
   const isLogin: boolean = useSelector(selectIsLogin);
-  const isListChanged: boolean = useSelector(selectIsFavoredCardsListChanged);
+
+  //這裡指得是channelCard中的favoredList是否有改變
+  const isListChanged: boolean = useSelector(selectIsListChanged);
+
   const headerTheme: HeaderThemeType = getHeaderIcon(isLogin, isListChanged);
-  const favoredlist: FavoredItem[][] = useSelector(selectFavoredCardsList);
+  const favoredCardsList: FavoredItem[][] = useSelector(selectFavoredCardsList);
   const group = useSelector(selectGroup);
   const visit: VisitList = useSelector(selectVisitList);
   const tags: string[] = useSelector(selectTags);
@@ -36,17 +38,14 @@ export function FavoredCardsViewer() {
       // 請先登入
       history.push({ pathname: "/login/" });
     } else if (isListChanged) {
-      // 上傳檔案
+      // 保存修改
+      const { username, ssid } = user;
       dispatch(reqUpdateVisit(username, ssid, visit, tags));
-    }else{
+    } else {
       // 直接關閉
       history.goBack();
     }
   };
-
-  useLayoutEffect(() => {
-    return () => {};
-  }, []);
 
   return (
     <ViewerContainer>
@@ -57,7 +56,7 @@ export function FavoredCardsViewer() {
         </div>
       </Header>
       <Content>
-        {favoredlist.map((items: FavoredItem[], i) => {
+        {favoredCardsList.map((items: FavoredItem[], i) => {
           // 驗證groupname
           // 根據分群顯示
           const groupName = group[i];
@@ -114,7 +113,7 @@ const getHeaderIcon = (
   if (isChanged) {
     // should update
     return {
-      text: "上傳檔案",
+      text: "保存修改",
       icon: <ai.AiOutlineCloudUpload />,
     };
   } else {

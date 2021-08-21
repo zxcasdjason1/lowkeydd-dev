@@ -2,7 +2,7 @@ import { Fragment, useLayoutEffect, useRef } from "react";
 import { reqLogin } from "./api";
 import { useDispatch, useSelector } from "../../app/hooks";
 import { history } from "../../index";
-import { selectUser, setMsg } from "./slice";
+import { selectMsg, selectUser, setMsg } from "./slice";
 import {
   Wrap,
   Container,
@@ -16,12 +16,14 @@ import {
 } from "./styles";
 
 export function LoginPage() {
-  const { username, msg } = useSelector(selectUser);
+  const user = useSelector(selectUser);
+  const msg = useSelector(selectMsg);
   const usernameInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   
   const routeToRegister = () => {
+    dispatch(setMsg("")) //clear
     history.push({ pathname: "/register" });
   };
 
@@ -45,13 +47,11 @@ export function LoginPage() {
 
   
   useLayoutEffect(() => {
-    if (usernameInput.current) {
+    const {username} = user
+    if (usernameInput.current && username !== "") {
       usernameInput.current.value = username;
     }
-    return () => {
-      dispatch(setMsg());
-    };
-  }, [dispatch, usernameInput, username]);
+  }, [usernameInput, user]);
 
   return (
     <Wrap>

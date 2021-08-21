@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { reqRegister } from "./api";
 import { history } from "../../index";
 import { useSelector } from "../../app/hooks";
-import { selectUser, setMsg } from "./slice";
+import { selectMsg, selectUser, setMsg } from "./slice";
 import {
   Wrap,
   Container,
@@ -19,13 +19,15 @@ import {
 import { Fragment } from "react";
 
 export function RegisterPage() {
-  const {username, msg} = useSelector(selectUser);
+  const user = useSelector(selectUser);
+  const msg = useSelector(selectMsg);
   const usernameInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
   const passwordInput2 = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
 
   const routeToLogin = () => {
+    dispatch(setMsg("")); // clear
     history.push({ pathname: "/login" });
   };
 
@@ -54,13 +56,11 @@ export function RegisterPage() {
   };
 
   useLayoutEffect(() => {
-    if(usernameInput.current){
+    const {username} = user;
+    if(usernameInput.current && username !== "") {
       usernameInput.current.value = username;
     }
-    return () => {
-      dispatch(setMsg());
-    };
-  }, [dispatch, usernameInput, username])
+  }, [usernameInput, user])
 
   return (
     <Wrap>

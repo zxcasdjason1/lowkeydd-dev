@@ -2,7 +2,7 @@ import * as ai from "react-icons/ai";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "../../app/hooks";
 import { FavoredItem } from "../../app/types";
-import { setFavoredList, selectChannelCardStore } from "./slice";
+import { selectFavoredList, selectGroup, setFavoredList } from "./slice";
 
 export function FavoredCard(props: FavoredItem) {
   const {
@@ -14,7 +14,8 @@ export function FavoredCard(props: FavoredItem) {
     isDeleted,
     isNewAdded,
   } = props;
-  const { favoredList: list, group } = useSelector(selectChannelCardStore);
+  const list = useSelector(selectFavoredList);
+  const group = useSelector(selectGroup);
 
   const dispatch = useDispatch();
 

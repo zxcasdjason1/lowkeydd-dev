@@ -1,11 +1,14 @@
 import * as ai from "react-icons/ai";
 import { ReactElement, useEffect, useRef, useState } from "react";
-import { useDispatch } from "../../app/hooks";
+import { useDispatch, useSelector } from "../../app/hooks";
 import { ChannelCardProps } from "../../app/types";
-import { setFromChannel } from "../theater/slice";
 import styled from "styled-components";
 import { setChannelCard, setSearchResult } from "./slice";
 import { CHANNELS_DEFAULT_GROUPNAME } from "../../app/config";
+import { setFromChannelCard } from "../favored/slice";
+import { setFromChannel } from "../theater/slice";
+import { selectIsLogin, setMsg } from "../user/slice";
+import { history } from "../..";
 
 export function ChannelCard(props: ChannelCardProps) {
   const {
@@ -25,9 +28,9 @@ export function ChannelCard(props: ChannelCardProps) {
     heart,
   } = props;
   const item = props;
+  const isLogin = useSelector(selectIsLogin);
   const [isVisible, setIsVisible] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
-
   const avatarStyles = getAvatarStyles(status);
   const heartStyles = getHeartTheme(status, heart);
   const previewStyles = getPreviewImage(cid, status, thumbnail, isVisible);
@@ -42,6 +45,11 @@ export function ChannelCard(props: ChannelCardProps) {
   };
 
   const onFavoredHeartBtnClick = () => {
+    if (!isLogin) {
+      dispatch(setMsg("想加收藏要先登入唷"));
+      history.push({pathname:'/login'})
+      return;
+    }
     const card: ChannelCardProps = { ...props, heart: !heart };
     if (groupName === "Search Result") {
       dispatch(
@@ -49,9 +57,29 @@ export function ChannelCard(props: ChannelCardProps) {
           current: { ...props, heart: !heart },
         })
       );
+      dispatch(
+        setFromChannelCard({
+          card,
+          options: {
+            isChanged: false,
+            isNewAdded: true,
+            isDeleted: false,
+          },
+        })
+      );
     } else {
       dispatch(
         setChannelCard({
+          card,
+          options: {
+            isChanged: false,
+            isNewAdded: groupName === CHANNELS_DEFAULT_GROUPNAME,
+            isDeleted: false,
+          },
+        })
+      )
+      dispatch(
+        setFromChannelCard({
           card,
           options: {
             isChanged: false,

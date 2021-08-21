@@ -61,7 +61,7 @@ const NavItemList: NavItemProps[] = [
   },
   {
     title: "收藏",
-    path: "/visit/",
+    path: "/favored/",
     icon: <ai.AiOutlineBook />,
   },
 ];

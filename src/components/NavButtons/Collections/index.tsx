@@ -1,16 +1,17 @@
 import styled from "styled-components";
 import { useSelector } from "../../../app/hooks";
 import { NavButtonProps } from "../../../app/types";
-import { selectNumOfFavoredCards } from "../../../features/channelCardStore/slice";
+import { selectNumOfNewAdded } from "../../../features/favored/slice";
+
 import NavButton from "../NavButton";
 
 export function NavCollections(props: NavButtonProps) {
-  const numOfFavored = useSelector(selectNumOfFavoredCards);
+  const numOfAddedFavored= useSelector(selectNumOfNewAdded);
 
   return (
     <NavButton {...props}>
-      <Counter visible={numOfFavored > 0}>
-        <span>{numOfFavored}</span>
+      <Counter visible={numOfAddedFavored > 0}>
+        <span>{numOfAddedFavored}</span>
       </Counter>
     </NavButton>
   );
