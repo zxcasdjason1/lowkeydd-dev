@@ -73,7 +73,7 @@ const Wrap = styled.div<{ isFolded: boolean }>`
 
   width: 100%;
   height: calc(100vh - var(--topOffset));
-  z-index: 5;
+  z-index: 3;
 `;
 
 const HideNavBarBtn = styled.span<{ isFolded: boolean }>`
@@ -89,7 +89,7 @@ const HideNavBarBtn = styled.span<{ isFolded: boolean }>`
   opacity: 0.7;
 
   cursor: pointer;
-  z-index: 10;
+  z-index: 4;
   border-radius: 50%;
 
   transition: 0.3s;
@@ -113,7 +113,7 @@ const FullScreenBtn = styled.span<{ isFolded: boolean }>`
   opacity: 0.7;
 
   cursor: pointer;
-  z-index: 10;
+  z-index: 4;
   border-radius: 50%;
 
   transition: 0.3s;

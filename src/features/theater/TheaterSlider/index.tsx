@@ -55,48 +55,41 @@ export function TheaterSlider() {
 const SliderWrap = styled.div`
   position: absolute;
   width: 100%;
-  height: auto;
+  height: 100vh;
+  background-color:#4c4a46;
   z-index: 1;
 `;
 
 const SliderContainer = styled.div`
-  --navColor: #4c4a46;
-  --toogleColor: #1985a1;
-
   position: relative;
   width: 100%;
-
   margin: 0 auto;
   overflow: hidden;
-  background-color: var(--navColor);
   box-sizing: border-box;
-
   display: flex;
   flex-direction: row;
+  background: none;
 `;
 
 const Content = styled.div`
   width: 100%;
-
-  background-color: gray;
   margin: 0 auto;
   display: flex;
   justify-content: left;
   overflow: hidden;
-
   align-items: center;
+  background: none;
 `;
 
 const Control = styled.span`
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
-
   font-size: 50px;
   background-color: none;
   color: hotpink;
   opacity: 0.7;
-
+  
   cursor: pointer;
   z-index: 1;
   border-radius: 50%;

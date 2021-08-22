@@ -141,10 +141,13 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #c5c3c6;
+
+  background-color: none;
+  border-radius: 10px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+
   padding: 16px;
   margin: 6px auto;
-  border-radius: 10px;
 `;
 
 const Avatar = styled.div`

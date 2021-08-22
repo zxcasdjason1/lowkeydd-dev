@@ -24,7 +24,7 @@ export default function FavoredPage() {
     }
 
     return () => {};
-  }, [dispatch, user]);
+  }, [dispatch, user, isLogin,  hasFetchChannel]);
 
   return <FavoredCardsViewer />;
 }

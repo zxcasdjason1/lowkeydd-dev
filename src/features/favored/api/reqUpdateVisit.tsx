@@ -50,6 +50,7 @@ export const reqUpdateVisit =
               group: group,
             })
           );
+          console.log("reqUpdateVisit is success, now directo : ",nextPathName)
           history.push({ pathname: nextPathName });
           dispatch(setMsg(""));
         } else if (code === "failure") {

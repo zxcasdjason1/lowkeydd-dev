@@ -16,7 +16,7 @@ export function FavoredCardsGroup(props: {
         groupName={groupName}
         fontsize={"30px"}
         lineColor={"rgb(25, 133, 161)"}
-        bkgColor={"#4c4a46"}
+        bkgColor={"#4c5c68"}
       />
       <Content>
         {props.items.map((item: FavoredItem) => (

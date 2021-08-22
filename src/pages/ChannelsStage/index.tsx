@@ -64,16 +64,17 @@ function ChannelSearchCard() {
 }
 
 const Container = styled.div`
-  position: absolute;
+    position: absolute;
   top: 65px;
-  left: 0;
-
+  left: 50%;
+  transform: translate(-50%, 0);
   width: 100%;
   height: calc(100vh - 65px);
-
+  background: #4c5c68;
+  overflow-y: auto;
+  
   display: flex;
   flex-direction: column;
-  overflow: "auto";
 `;
 
 const ControlPanel = styled.div`

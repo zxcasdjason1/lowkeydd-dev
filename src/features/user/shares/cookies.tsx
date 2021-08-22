@@ -1,6 +1,13 @@
 // expiration 會乘上1000倍，所以單位是秒
-export function setCookie(ssid: string, username: string, expiration: number) {
+export function setSessionCookie(ssid: string, username: string, expiration: number) {
   var expires = new Date(Date.now() + expiration * 1000).toUTCString();
+  document.cookie = `ssid=${ssid}; expires=${expires}; path=/`;
+  document.cookie = `username=${username}; expires=${expires}; path=/`;
+}
+
+export function removeSessionCookie(ssid: string, username: string,) {
+  // 透過把修改有限期限為現在，來讓它自動被清除掉。
+  var expires = new Date(Date.now()).toUTCString();
   document.cookie = `ssid=${ssid}; expires=${expires}; path=/`;
   document.cookie = `username=${username}; expires=${expires}; path=/`;
 }

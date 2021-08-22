@@ -18,20 +18,57 @@ export default function NavButton(props: NavButtonProps) {
   const visit: VisitList = useSelector(selectVisitList);
   const dispatch = useDispatch();
 
-  const onLeavingCollections = (nextPath: string): boolean => {
-    console.log("location:>", history.location);
-    console.log("nextPath:>", nextPath);
-    if (history.location.pathname === "/favored/") {
-      if (!isLogin) {
-        history.push({ pathname: "/login/" });
-        return true;
-      } else if (isListChanged) {
-        // 自動保存
-        console.log("The favoredlist is Changed, saved automatically");
-        const { username, ssid } = user;
-        dispatch(reqUpdateVisit(username, ssid, visit, nextPath));
-        return true;
-      }
+  const onLeaving = (curPath: string, nextPath: string): boolean => {
+    // console.log("==============ONLEAVING==============");
+    // console.log("onLeaving curPath:>", curPath);
+    // console.log("onLeaving nextPath:>", nextPath);
+    // console.log("=====================================");
+    switch (curPath) {
+      case "/favored/":
+        return onLeavingCollections(curPath, nextPath);
+      default:
+        return false;
+    }
+  };
+
+  const onLeavingCollections = (curPath: string, nextPath: string): boolean => {
+    if (!isLogin) {
+      history.push({ pathname: "/login/" });
+      return true;
+    } else if (isListChanged) {
+      // 自動保存
+      console.log("The favoredlist is Changed, saved automatically");
+      const { username, ssid } = user;
+      dispatch(reqUpdateVisit(username, ssid, visit, nextPath));
+      return true;
+    }
+    return false;
+  };
+
+  const onEnter = (curPath: string, nextPath: string): boolean => {
+    // console.log("==============ON_ENTER==============");
+    // console.log("onEnter curPath:>", curPath);
+    // console.log("onEnter nextPath:>", nextPath);
+    // console.log("=====================================");
+    switch (nextPath) {
+      case "/login/":
+        return onEnterLogin(nextPath);
+      case "/register/":
+        return onEnterRegister(nextPath);
+      default:
+        return false;
+    }
+  };
+
+  const onEnterRegister = (nextPath: string): boolean => {
+    return false;
+  };
+  const onEnterLogin = (nextPath: string): boolean => {
+    if (isLogin) {
+      console.log("onEnterLogin");
+      dispatch(setMsg(`${user.username} 要登出嗎?`))
+      history.push({ pathname: "/logout/" });
+      return true;
     }
     return false;
   };
@@ -39,11 +76,17 @@ export default function NavButton(props: NavButtonProps) {
   const onClick = () => {
     if (path === "") return; //無效
     beforeSwitch();
-    if (history.location.pathname !== path) {
-      let isChanged = onLeavingCollections(path);
-      if (!isChanged) {
-        dispatch(setMsg("")); // clear
-        history.push({ pathname: `${path}` });
+    const current = history.location.pathname;
+    if (current !== path) {
+      // 當Nav離開頁面時，是否發生條件轉址。
+      let isLeavingChanged = onLeaving(current, path);
+      if (!isLeavingChanged) {
+        // 當Nav進入頁面時，是否發生條件轉址。
+        let isEnterChanged = onEnter(current, path);
+        if (!isEnterChanged) {
+          dispatch(setMsg("")); // clear
+          history.push({ pathname: `${path}` });
+        }
       }
     }
     afterSwitch();
@@ -82,6 +125,11 @@ const Wrap = styled.div`
       h3 {
         // NavUser-Backaground
         background-color: var(--menuText_Hover);
+
+        span{
+          // NavUser-UserName
+          color: #fff;
+        }
       }
     }
   }

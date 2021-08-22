@@ -284,6 +284,7 @@ const FavoredHeartBtn = styled.div<HeartThemeType>`
   width: 40px;
   height: 40px;
   background-color: none;
+  
 
   svg {
     font-size: 35px;
@@ -300,9 +301,11 @@ const FavoredHeartBtn = styled.div<HeartThemeType>`
 `;
 
 const CardBody = styled.div`
-  background-color: var(--navColor);
+  background-color: none;
   border-radius: 1.2em;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
   margin: 10px 10px;
+
 `;
 
 type PreviewBoxProps = {

@@ -1,28 +1,16 @@
-import * as ai from "react-icons/ai";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "../../app/hooks";
+import { useSelector } from "../../app/hooks";
 import { FavoredItem } from "../../app/types";
 import { FavoredCardsGroup } from "./FavoredCardsGroup";
 import { Fragment } from "react";
-import {
-  selectFavoredCardsList,
-  selectGroup,
-} from "./slice";
+import { selectFavoredCardsList, selectGroup } from "./slice";
 
 /**
  * 收藏品，表列出已登入使用者自定義的喜好頻道列表
  */
 export function FavoredCardsViewer() {
-
-  // const isLogin: boolean = useSelector(selectIsLogin);
-  // const isListChanged: boolean = useSelector(selectIsListChanged);
-  // const headerTheme: HeaderThemeType = getHeaderIcon(isLogin, isListChanged);
   const favoredCardsList: FavoredItem[][] = useSelector(selectFavoredCardsList);
   const group = useSelector(selectGroup);
-
-
-  const dispatch = useDispatch();
-
 
   return (
     <ViewerContainer>
@@ -61,98 +49,98 @@ const ViewerContainer = styled.div`
   --toogleColor: #fff;
   --bkgColor: #4c4a46;
 
-  position: fixed;
+  position: absolute;
   top: 65px;
   left: 50%;
   transform: translate(-50%, 0);
   width: 100%;
   height: calc(100vh - 65px);
-  background-color: var(--bkgColor);
+  background: #4c5c68;
   overflow-y: auto;
 `;
 
-type HeaderThemeType = {
-  icon: any;
-  text: string;
-};
-const getHeaderIcon = (
-  isLogin: boolean,
-  isChanged: boolean
-): HeaderThemeType => {
-  // debugger
-  if (!isLogin) {
-    // login first
-    return {
-      text: "請先登入",
-      icon: <ai.AiOutlineUser />,
-    };
-  }
-  if (isChanged) {
-    // should update
-    return {
-      text: "保存修改",
-      icon: <ai.AiOutlineCloudUpload />,
-    };
-  } else {
-    // colsed
-    return {
-      text: "直接關閉",
-      icon: <ai.AiOutlineClose />,
-    };
-  }
-};
+// type HeaderThemeType = {
+//   icon: any;
+//   text: string;
+// };
+// const getHeaderIcon = (
+//   isLogin: boolean,
+//   isChanged: boolean
+// ): HeaderThemeType => {
+//   // debugger
+//   if (!isLogin) {
+//     // login first
+//     return {
+//       text: "請先登入",
+//       icon: <ai.AiOutlineUser />,
+//     };
+//   }
+//   if (isChanged) {
+//     // should update
+//     return {
+//       text: "保存修改",
+//       icon: <ai.AiOutlineCloudUpload />,
+//     };
+//   } else {
+//     // colsed
+//     return {
+//       text: "直接關閉",
+//       icon: <ai.AiOutlineClose />,
+//     };
+//   }
+// };
 
-const Header = styled.div<HeaderThemeType>`
-  position: relative;
-  background-color: var(--navColor);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+// const Header = styled.div<HeaderThemeType>`
+//   position: relative;
+//   background-color: var(--navColor);
+//   width: 100%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
 
-  div {
-    position: relative;
-    width: 100%;
-    margin: 10px 20px 0;
-    padding: 15px 0;
-    border-radius: 30px;
-    font-weight: 700px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    color: var(--btnTextColor);
-    background-color: var(--btnBgColor);
-    cursor: pointer;
-    border: 2px solid;
-    transition: 0.5s;
+//   div {
+//     position: relative;
+//     width: 100%;
+//     margin: 10px 20px 0;
+//     padding: 15px 0;
+//     border-radius: 30px;
+//     font-weight: 700px;
+//     display: flex;
+//     flex-direction: row;
+//     align-items: center;
+//     justify-content: center;
+//     color: var(--btnTextColor);
+//     background-color: var(--btnBgColor);
+//     cursor: pointer;
+//     border: 2px solid;
+//     transition: 0.5s;
 
-    svg {
-      font-size: 8vmin;
-      padding-right: 5px;
-      transition: 0.2s;
-    }
+//     svg {
+//       font-size: 8vmin;
+//       padding-right: 5px;
+//       transition: 0.2s;
+//     }
 
-    p {
-      letter-spacing: 1vmin;
-      font-size: 6vmin;
-      transition: 0.2s;
-    }
+//     p {
+//       letter-spacing: 1vmin;
+//       font-size: 6vmin;
+//       transition: 0.2s;
+//     }
 
-    :hover {
-      color: var(--btnTextHoverColor);
-      background-color: var(--btnBgHoverColor);
+//     :hover {
+//       color: var(--btnTextHoverColor);
+//       background-color: var(--btnBgHoverColor);
 
-      svg {
-        font-size: 9vmin;
-      }
+//       svg {
+//         font-size: 9vmin;
+//       }
 
-      p {
-        font-size: 8vmin;
-      }
-    }
-  }
-`;
+//       p {
+//         font-size: 8vmin;
+//       }
+//     }
+//   }
+// `;
 
 const Content = styled.div`
   position: relative;

@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { reqRegister } from "./api";
 import { history } from "../../index";
 import { useSelector } from "../../app/hooks";
-import { selectMsg, selectUser, setMsg } from "./slice";
+import { selectIsLogin, selectMsg, selectUser, setMsg } from "./slice";
 import {
   Wrap,
   Container,
@@ -20,6 +20,7 @@ import { Fragment } from "react";
 
 export function RegisterPage() {
   const user = useSelector(selectUser);
+  const isLogin = useSelector(selectIsLogin);
   const msg = useSelector(selectMsg);
   const usernameInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
@@ -54,6 +55,15 @@ export function RegisterPage() {
 
     dispatch(reqRegister(username, password));
   };
+
+  // 如果用戶已經登入時，直接從網址進入會強制轉址到logout。
+  useLayoutEffect(()=>{
+    if (isLogin){
+      dispatch(setMsg(`${user.username} 要登出嗎?`))
+      history.push({ pathname: "/logout" });
+    }
+    return ()=>{}
+  },[])
 
   useLayoutEffect(() => {
     const {username} = user;

@@ -3,8 +3,8 @@ import Navbar from "./components/Navbar";
 import ChannelsStage from "./pages/ChannelsStage";
 import TheaterPage from "./pages/TheaterPage";
 import HomePage from "./pages/HomePage";
-import LoadingPage from "./pages/LoadingPage";
-import { LoginPage, RegisterPage } from "./features/user";
+// import LoadingPage from "./pages/LoadingPage";
+import { LoginPage, RegisterPage, LogoutPage } from "./features/user";
 import FavoredPage from "./pages/FavoredPage";
 
 export default function App() {
@@ -17,8 +17,9 @@ export default function App() {
         <Route path="/theater/" component={TheaterPage} />
         <Route path="/favored/" component={FavoredPage} />
         <Route path="/login/" component={LoginPage} />
+        <Route path="/logout/" component={LogoutPage} />
         <Route path="/register/" component={RegisterPage} />
-        <Route path="/loading/" component={LoadingPage} />
+        {/* <Route path="/loading/" component={LoadingPage} /> */}
       </Switch>
     </div>
   );

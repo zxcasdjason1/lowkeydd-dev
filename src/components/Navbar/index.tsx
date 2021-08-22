@@ -98,7 +98,7 @@ const Container = styled.div`
   --menuText: #c5c3c6;
   --menuText_Hover: #1985a1;
   --logoColor: #fff;
-  z-index: 7;
+  z-index: 5;
 `;
 
 const Nav = styled.nav<{ isFolded: boolean }>`

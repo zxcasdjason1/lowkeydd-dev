@@ -2,7 +2,7 @@ import { Fragment, useLayoutEffect, useRef } from "react";
 import { reqLogin } from "./api";
 import { useDispatch, useSelector } from "../../app/hooks";
 import { history } from "../../index";
-import { selectMsg, selectUser, setMsg } from "./slice";
+import { selectIsLogin, selectMsg, selectUser, setMsg } from "./slice";
 import {
   Wrap,
   Container,
@@ -17,6 +17,7 @@ import {
 
 export function LoginPage() {
   const user = useSelector(selectUser);
+  const isLogin = useSelector(selectIsLogin);
   const msg = useSelector(selectMsg);
   const usernameInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
@@ -45,6 +46,14 @@ export function LoginPage() {
     dispatch(reqLogin(username, password));
   };
 
+  // 如果用戶已經登入時，直接從網址進入會強制轉址到logout。
+  useLayoutEffect(()=>{
+    if (isLogin){
+      dispatch(setMsg(`${user.username} 要登出嗎?`))
+      history.push({ pathname: "/logout" });
+    }
+    return ()=>{}
+  },[])
   
   useLayoutEffect(() => {
     const {username} = user
@@ -52,6 +61,7 @@ export function LoginPage() {
       usernameInput.current.value = username;
     }
   }, [usernameInput, user]);
+
 
   return (
     <Wrap>

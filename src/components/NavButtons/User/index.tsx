@@ -1,17 +1,22 @@
 import styled from "styled-components";
 import { useSelector } from "../../../app/hooks";
 import { NavButtonProps } from "../../../app/types";
-import { selectIsLogin } from "../../../features/user/slice";
+import { selectIsLogin, selectUser } from "../../../features/user/slice";
 import NavButton from "../NavButton";
 
 export function NavUser(props: NavButtonProps) {
+  const user = useSelector(selectUser);
   const isLogin = useSelector(selectIsLogin);
-
+  const usernameInfo =
+    user.username.length > 6
+      ? user.username.substring(0, 6) + "..."
+      : user.username;
   return (
     <NavButton {...props}>
       <Status visible={isLogin}>
         <h3>
           <span>{}</span>
+          <span>{usernameInfo}</span>
         </h3>
       </Status>
     </NavButton>
@@ -42,21 +47,36 @@ const Status = styled.div<{ visible: boolean }>`
     color: white;
     background-color: var(--navColor);
     border-radius: 50%;
+    pointer-events: none;
 
-    span {
+    // green login dot
+    span:nth-child(1) {
       display: var(--display);
       content: "";
       position: absolute;
       top: 2px;
-      left: 2px;
+      left: 0px;
       width: 6px;
       height: 6px;
       background-color: #54f542;
       border-radius: 50%;
+
+    }
+    // downMenu
+    span:nth-child(2) {
+      display: var(--display);
+      content: "";
+      transform: translate(-50%, -50%);
+      position: relative;
+      top: 16px;
+      left: 30px;
+      color: var(--menuText);
+      width: 100px;
+      font-size: 14px;
+
     }
 
     transition: 0.3s;
-  
   }
   @media screen and (max-width: 768px) and (min-width: 480px) {
     line-height: 18px;
@@ -69,11 +89,18 @@ const Status = styled.div<{ visible: boolean }>`
       left: -67px;
       width: 14px;
       height: 14px;
-      span {
+
+      span:nth-child(1) {
         top: 2px;
         left: 2px;
         width: 10px;
         height: 10px;
+      }
+
+      span:nth-child(2) {
+        left: 0px;
+        width: 100px;
+        font-size: 14px;
       }
     }
   }
@@ -90,11 +117,16 @@ const Status = styled.div<{ visible: boolean }>`
       height: 10px;
       background-color: var(--menuBgColor);
 
-      span {
+      span:nth-child(1) {
         top: 2px;
         left: 2px;
         width: 6px;
         height: 6px;
+      }
+
+      span:nth-child(2) {
+        top: 16px;
+        left: 0px;
       }
     }
   }

@@ -6,7 +6,7 @@ import { selectNumOfNewAdded } from "../../../features/favored/slice";
 import NavButton from "../NavButton";
 
 export function NavCollections(props: NavButtonProps) {
-  const numOfAddedFavored= useSelector(selectNumOfNewAdded);
+  const numOfAddedFavored = useSelector(selectNumOfNewAdded);
 
   return (
     <NavButton {...props}>
@@ -28,6 +28,7 @@ const Counter = styled.div<{ visible: boolean }>`
   top: 22px;
   right: 95px;
   font-size: 12px;
+  pointer-events: none;
 
   span {
     display: var(--display);

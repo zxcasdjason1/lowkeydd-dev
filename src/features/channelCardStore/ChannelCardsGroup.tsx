@@ -15,7 +15,7 @@ export function ChannelCardsGroup(props: {
         groupName={groupName}
         fontsize={"40px"}
         lineColor={"rgb(25, 133, 161)"}
-        bkgColor={"#fff"}
+        bkgColor={"#4c5c68"}
       />
       <ChannelGridCantainer key={"ChannelGridCantainer_" + groupName}>
         {cards.map((ch: ChannelCardProps) => (
@@ -37,7 +37,6 @@ const ChannelGridCantainer = styled.div`
   --toogleColor: #fff;
   --bkgColor: #fff;
 
-
   display: grid;
   grid-gap: 4px;
   grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
@@ -49,4 +48,6 @@ const ChannelGridCantainer = styled.div`
     flex-direction: column;
     width: 100%;
   }
+
+  
 `;

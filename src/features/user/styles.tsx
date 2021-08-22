@@ -6,16 +6,25 @@ export const Wrap = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  background: none;
+  /* background: none; */
+  background: linear-gradient(120deg, #4c4a46, #c5c3c6);
   overflow: hidden;
 `;
 
 export const Container = styled.div`
-  --navColor: #4c4a46;
-  --btnHoverColor: rgb(25, 133, 161);
-  --btnHoverBgColor: rgba(25, 133, 161, 0.5);
-  --toogleColor: #fff;
-  --bkgColor: #fff;
+  --titleColor: #E87A00;
+
+  --mainColor: #4c5c68;
+  --mainBorderColor: #adadad;
+  --mainHoverColor: #E87A00;
+  --mainBorderHoverColor: #D89C60;
+
+  --inputLineColor: #adadad;
+  --inputLineValidColor: #E87A00;
+
+  --msgBgColor: #E87A00;
+  --msgBorderColor: #D89C60;
+  --msgTxtColor: #fff;
 
   position: relative;
   top: 50%;
@@ -23,10 +32,9 @@ export const Container = styled.div`
   transform: translate(-50%, -50%);
 
   box-sizing: border-box;
-  border: 5px solid;
-  border-radius: 1.5em 1.5em 1.5em 1.5em;
-  border-color: var(--navColor);
-  background-color: var(--bkgColor);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
 
   max-width: 480px;
   min-width: 250px;
@@ -34,70 +42,6 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* background-color: red; */
-`;
-
-export const MsgBox = styled.div`
-  position: relative;
-  left: 0%;
-  top: 0%;
-
-  padding: 20px 0;
-  border-radius: 20px;
-
-  border: 2px solid var(--btnHoverBgColor);
-
-  display: flex;
-  justify-content: center;
-
-  :after {
-    position: absolute;
-    margin-top: 58px;
-    background-color: #fff;
-    /* top: 20px; */
-    content: "";
-    width: 25px;
-    height: 25px;
-    border-bottom: 2px solid var(--btnHoverBgColor);
-    border-right: 2px solid var(--btnHoverBgColor);
-    /* border-top: 2px solid var(--btnHoverBgColor); */
-    /* border-left: 2px solid var(--btnHoverBgColor); */
-    transform: rotate(45deg);
-    z-index: 1;
-  }
-
-  h1 {
-    position: relative;
-    display: block;
-    color: var(--btnHoverBgColor);
-    z-index: 2;
-
-    animation: animate .8s linear infinite;
-
-    @keyframes animate {
-      0% {
-        transform: translateX(-3px);
-      }
-      50% {
-        transform: translateX(3px);
-      }
-      100% {
-        transform: translateX(-3px);
-      }
-    }
-  }
-`;
-
-export const Title = styled.div`
-  padding: 20px 0 0 0;
-  h1 {
-    letter-spacing: 5px;
-    text-align: center;
-    padding: 0 0 20px 0;
-    border-bottom: 1px solid silver;
-    font-size: 28px;
-    width: 100%;
-  }
 `;
 
 export const Content = styled.div`
@@ -115,17 +59,20 @@ export const Content = styled.div`
       font-size: 16px;
       border: none;
       outline: none;
-      color: var(--btnHoverColor);
+      color: var(--inputLineValidColor);
 
       :focus ~ label {
         top: -5px;
-        color: var(--btnHoverColor);
+        color: var(--inputLineValidColor);
       }
       :valid ~ label {
         top: -5px;
-        color: var(--btnHoverColor);
+        color: var(--inputLineValidColor);
       }
       :focus ~ span::before {
+        width: 100%;
+      }
+      :valid ~ span::before {
         width: 100%;
       }
     }
@@ -133,7 +80,7 @@ export const Content = styled.div`
       position: absolute;
       top: 50%;
       left: 5px;
-      color: #adadad;
+      color: var(--inputLineColor);
       transform: translateY(-50%);
       font-size: 16px;
       pointer-events: none;
@@ -147,8 +94,72 @@ export const Content = styled.div`
         left: 0;
         width: 0%;
         height: 2px;
-        background-color: var(--btnHoverColor);
+        background-color: var(--inputLineValidColor);
         transition: 0.3s;
+      }
+    }
+  }
+`;
+
+export const Title = styled.div`
+  padding: 20px 0 0 0;
+  h1 {
+    letter-spacing: 5px;
+    text-align: center;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid silver;
+    font-size: 28px;
+    width: 100%;
+    color: var(--titleColor);
+    font-weight: 400;
+  }
+`;
+
+export const MsgBox = styled.div`
+  position: relative;
+  left: 0%;
+  top: 0%;
+  padding: 20px 0;
+
+  border-radius: 20px;
+  border: 2px solid var(--msgBorderColor);
+
+  display: flex;
+  justify-content: center;
+  background: var(--msgBgColor);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+
+  :after {
+    position: absolute;
+    margin-top: 59px;
+    content: "";
+    width: 25px;
+    height: 25px;
+    background-color: var(--msgBgColor);
+    border-bottom: 2px solid var(--msgBorderColor);
+    border-right: 2px solid var(--msgBorderColor);
+
+    transform: rotate(45deg);
+    z-index: 1;
+  }
+
+  h1 {
+    position: relative;
+    display: block;
+    color: var(--msgTxtColor);
+    z-index: 2;
+
+    animation: animate 0.8s linear infinite;
+
+    @keyframes animate {
+      0% {
+        transform: translateX(-3px);
+      }
+      50% {
+        transform: translateX(3px);
+      }
+      100% {
+        transform: translateX(-3px);
       }
     }
   }
@@ -156,14 +167,22 @@ export const Content = styled.div`
 
 export const UsernameField = styled.div`
   position: relative;
-  border-bottom: 2px solid #adadad;
+  border-bottom: 2px solid var(--inputLineColor);
   margin: 30px 0;
+
+  input {
+    background: none;
+  }
 `;
 
 export const PasswordField = styled.div`
   position: relative;
-  border-bottom: 2px solid #adadad;
+  border-bottom: 2px solid var(--inputLineColor);
   margin: 30px 0;
+
+  input {
+    background: none;
+  }
 `;
 
 export const MainButton = styled.div`
@@ -172,20 +191,22 @@ export const MainButton = styled.div`
   border-radius: 25px;
   font-size: 18px;
   font-weight: 700px;
-  color: #fff;
-  background-color: var(--btnHoverColor);
+  color: var(--inputLineColor);
+  background-color: var(--mainColor);
+  border: 2px solid;
+  border-color: var(--mainBorderColor);
   letter-spacing: 2px;
   cursor: pointer;
   outline: none;
-  border: 2px solid;
   p {
-    /* background-color: red; */
     width: 100%;
     text-align: center;
     pointer-events: none;
   }
   :hover {
-    border-color: var(--btnHoverColor);
+    color: #fff;
+    background-color: var(--mainHoverColor);
+    border-color: var(--mainBorderHoverColor);
     transition: 0.2s;
   }
 `;
@@ -198,13 +219,13 @@ export const SwitchField = styled.div`
   align-items: center;
   justify-content: center;
   p {
-    /* background-color: red; */
     text-align: center;
     pointer-events: none;
+    color: var(--inputLineColor);
   }
   div {
     padding: 0px 10px;
-    color: var(--btnHoverColor);
+    color: var(--titleColor);
     cursor: pointer;
     :hover {
       text-decoration: underline;
