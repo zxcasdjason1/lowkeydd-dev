@@ -11,7 +11,7 @@ import {
 import { ChannelProps, VisitItem } from "../../../app/types";
 import { createFavoredItem } from "../../favored/shares/createFavoredItem";
 import { setFavoredList } from "../../favored/slice";
-import { setSearchResult, setStore } from "../slice";
+import { setStore } from "../slice";
 
 export const reqFetchChannels =
   (username: string, ssid: string, tags: string[]) => (dispatch: any) => {

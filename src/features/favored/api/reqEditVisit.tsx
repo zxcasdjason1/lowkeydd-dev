@@ -5,7 +5,7 @@ import axios from "axios";
 import { history } from "../../..";
 import { API_SERVER_URL, VISITS_DEFAULT_GROUPNAME } from "../../../app/config";
 import { VisitItem, VisitList, FavoredItem } from "../../../app/types";
-import { onErrorAndClearUser, setMsg } from "../../user/slice";
+import { onErrorAndClearUser } from "../../user/slice";
 import { createFavoredItem } from "../shares/createFavoredItem";
 import { setFavoredList } from "../slice";
 

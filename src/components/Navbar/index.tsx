@@ -5,8 +5,6 @@ import { NavItemProps } from "../../app/types";
 import { NavBrowser, NavTheater, NavUser, NavCollections } from "../NavButtons";
 import { selectSlider } from "../../features/theater/slice";
 import { useSelector } from "../../app/hooks";
-import { history } from "../..";
-import { useEffect } from "react";
 
 export default function Navbar() {
   const [isEnable, setIsEnable] = useState(false);
