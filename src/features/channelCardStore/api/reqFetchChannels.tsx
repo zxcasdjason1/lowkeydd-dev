@@ -2,6 +2,7 @@
  * 獲取頻道卡片群集(channels)、用戶收藏者清單(list)、頻道分群(group)
  */
 import axios from "axios";
+import { history } from "../../..";
 import {
   API_SERVER_URL,
   CHANNELS_DEFAULT_GROUPNAME,
@@ -10,7 +11,7 @@ import {
 import { ChannelProps, VisitItem } from "../../../app/types";
 import { createFavoredItem } from "../../favored/shares/createFavoredItem";
 import { setFavoredList } from "../../favored/slice";
-import { setStore } from "../slice";
+import { setSearchResult, setStore } from "../slice";
 
 export const reqFetchChannels =
   (username: string, ssid: string, tags: string[]) => (dispatch: any) => {
@@ -30,8 +31,6 @@ export const reqFetchChannels =
     request.append("username", username);
     request.append("ssid", ssid);
     request.append("tags", JSON.stringify(tags));
-
-    console.log("getLetsddV2Channels, tags: ", [tags]);
     axios.post(`${API_SERVER_URL}/letsdd/v2`, request).then(
       (response) => {
         console.log("成功了, 回應如下:\n", response.data);
@@ -39,30 +38,24 @@ export const reqFetchChannels =
         const group: string[] = response.data["group"];
         const list: VisitItem[] = response.data["list"];
 
-        // 檢驗收到的資料，如果沒有傳送AUTH或驗證失敗，會收到空的group清單。
+        /**
+         * ChannelCards
+         *
+         *  1) 設置Channels。
+         */
+        dispatch(
+          setStore({
+            channels,
+            group: group.concat(CHANNELS_DEFAULT_GROUPNAME),
+            tags,
+          })
+        );
 
-        if (group.length === 0 && channels.length === 1) {
-          // 使用預設的群組名稱為此頻道來命名。
-          dispatch(
-            setStore({
-              channels: [[], ...channels],
-              group: [VISITS_DEFAULT_GROUPNAME, CHANNELS_DEFAULT_GROUPNAME],
-              tags,
-              list,
-            })
-          );
-        } else {
-          // 使用收到的group清單。
-          dispatch(
-            setStore({
-              channels,
-              group: group.concat(CHANNELS_DEFAULT_GROUPNAME),
-              tags,
-              list,
-            })
-          );
-        }
-
+        /**
+         * Facvored
+         *
+         *  1) 設置Favoredlist
+         */
         dispatch(
           setFavoredList({
             group:
@@ -86,6 +79,9 @@ export const reqFetchChannels =
       },
       (error) => {
         console.log("失敗了, 錯誤如下:\n", error);
+        setTimeout(() => {
+          history.push({ pathname: "/channels/" });
+        }, 1000);
       }
     );
   };

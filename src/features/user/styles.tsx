@@ -138,20 +138,16 @@ export const MsgBox = styled.div`
     background-color: var(--msgBgColor);
     border-bottom: 2px solid var(--msgBorderColor);
     border-right: 2px solid var(--msgBorderColor);
-
     transform: rotate(45deg);
-    z-index: 1;
   }
 
   h1 {
     position: relative;
     display: block;
     color: var(--msgTxtColor);
-    z-index: 2;
+    animation: msgTextShaking 0.8s linear infinite;
 
-    animation: animate 0.8s linear infinite;
-
-    @keyframes animate {
+    @keyframes msgTextShaking {
       0% {
         transform: translateX(-3px);
       }

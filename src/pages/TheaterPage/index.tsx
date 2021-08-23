@@ -1,7 +1,11 @@
 import { useLayoutEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "../../app/hooks";
-import { TheaterSlider, TheaterIframesViewer, reqTheaterChannels } from "../../features/theater";
+import {
+  TheaterSlider,
+  TheaterIframesViewer,
+  reqTheaterChannels,
+} from "../../features/theater";
 
 import {
   selectSlider,
@@ -12,22 +16,18 @@ import * as ai from "react-icons/ai";
 import { selectHasFetchChannels } from "../../features/channelCardStore/slice";
 import { history } from "../..";
 
-type Props = {
-  setNavbarFolded: (isFolded: boolean) => void;
-};
-
-export default function TheaterPage(props: Props) {
+export default function TheaterPage() {
   const hasfetchChannels = useSelector(selectHasFetchChannels);
-  const { isFolded,isFullScreen } = useSelector(selectSlider);
+  const { isFolded, isFullScreen } = useSelector(selectSlider);
   const dispatch = useDispatch();
 
   const sliderFold = () => {
     dispatch(setSliderFolded(!isFolded));
   };
 
-  const fullScreen = ()=>{
+  const fullScreen = () => {
     dispatch(setFullScreen(!isFullScreen));
-  }
+  };
 
   useLayoutEffect(() => {
     // 進入Theater前，必須先至少取得一次完整的頻道資訊避免異常。
@@ -37,11 +37,19 @@ export default function TheaterPage(props: Props) {
     }
     // 進入頁面時，先獲取Theater清單(目前為取出所有live頻道)
     dispatch(reqTheaterChannels("live"));
-    return () => {};
+    
+    return () => {
+      // 離開影院時，強制將Folded狀態回復。
+      dispatch(setSliderFolded(false));
+    };
   }, [hasfetchChannels, dispatch]);
 
   return (
     <>
+      <Wrap isFolded={isFolded}>
+        <TheaterSlider />
+        <TheaterIframesViewer />
+      </Wrap>
       <HideNavBarBtn onClick={sliderFold} isFolded={isFolded}>
         {isFolded ? (
           <ai.AiOutlineVerticalAlignBottom />
@@ -52,14 +60,10 @@ export default function TheaterPage(props: Props) {
       <FullScreenBtn onClick={fullScreen} isFolded={isFolded}>
         {isFullScreen ? (
           <ai.AiOutlineFullscreenExit />
-          ) : (
+        ) : (
           <ai.AiOutlineFullscreen />
         )}
       </FullScreenBtn>
-      <Wrap isFolded={isFolded}>
-        <TheaterSlider />
-        <TheaterIframesViewer />
-      </Wrap>
     </>
   );
 }
@@ -73,7 +77,9 @@ const Wrap = styled.div<{ isFolded: boolean }>`
 
   width: 100%;
   height: calc(100vh - var(--topOffset));
-  z-index: 3;
+
+  overflow: hidden;
+  /* z-index: -1; //為了讓整體在NAV後面 */
 `;
 
 const HideNavBarBtn = styled.span<{ isFolded: boolean }>`
@@ -89,9 +95,7 @@ const HideNavBarBtn = styled.span<{ isFolded: boolean }>`
   opacity: 0.7;
 
   cursor: pointer;
-  z-index: 4;
   border-radius: 50%;
-
   transition: 0.3s;
 
   :hover {
@@ -113,9 +117,7 @@ const FullScreenBtn = styled.span<{ isFolded: boolean }>`
   opacity: 0.7;
 
   cursor: pointer;
-  z-index: 4;
   border-radius: 50%;
-
   transition: 0.3s;
 
   :hover {

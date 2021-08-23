@@ -5,7 +5,7 @@ import axios from "axios";
 import { history } from "../../..";
 import { API_SERVER_URL, VISITS_DEFAULT_GROUPNAME } from "../../../app/config";
 import { VisitItem, VisitList, FavoredItem } from "../../../app/types";
-import { setMsg } from "../../user/slice";
+import { onErrorAndClearUser, setMsg } from "../../user/slice";
 import { createFavoredItem } from "../shares/createFavoredItem";
 import { setFavoredList } from "../slice";
 
@@ -53,8 +53,8 @@ export const reqEditVisit =
             list: [],
             group: [VISITS_DEFAULT_GROUPNAME],
           });
+          dispatch(onErrorAndClearUser("發生錯誤了，麻煩請重新登入"))
           history.push({ pathname: "/login" });
-          dispatch(setMsg("發生錯誤了，麻煩請重新登入"));
         }
       },
       (err) => {

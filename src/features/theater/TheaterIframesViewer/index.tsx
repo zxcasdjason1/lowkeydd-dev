@@ -69,7 +69,6 @@ const Container = styled.div<{ col: number; row: number }>`
   height: calc(100% - 100px);
   box-sizing: border-box;
   background: linear-gradient(120deg, #4c4a46, #c5c3c6);
-  z-index: 1;
 
   display: grid;
   grid-template-columns: repeat(${(props) => props.col}, 1fr);

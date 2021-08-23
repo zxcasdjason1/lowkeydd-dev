@@ -7,7 +7,7 @@ const initialState: ChannelCardStore = {
   hasFetchChannels: false,
   clusters: [[]],
   group: [],
-  favoredList: [],
+  // favoredList: [],
   tags: ["live"],
   current: null,
 };

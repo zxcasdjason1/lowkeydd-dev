@@ -123,7 +123,6 @@ const IframeContainer = styled.div`
   height: var(--playerHeight);
   position: relative;
   iframe {
-    z-index: 1;
     width: var(--playerWidth);
     height: var(--playerHeight);
   }
@@ -134,7 +133,7 @@ const Menu = styled.h1<{ isEnable: boolean }>`
   right: 0;
   position: absolute;
   width: 100%;
-  height: ${(p) => (p.isEnable ? `200px` : `100px`)};
+  height: ${(p) => (p.isEnable ? `80px` : `50px`)};
   max-height: 100vh;
   background-color: #000;
   opacity: ${(p) => (p.isEnable ? `0.8` : `0.02`)};
@@ -147,7 +146,7 @@ const Menu = styled.h1<{ isEnable: boolean }>`
 
   // MenuButton
   div {
-    font-size: ${(p) => (p.isEnable ? `75px` : `0px`)};
+    font-size: ${(p) => (p.isEnable ? `50px` : `0px`)};
     svg {
       position: relative;
       top: ${(p) => (p.isEnable ? `0%` : `30%`)};

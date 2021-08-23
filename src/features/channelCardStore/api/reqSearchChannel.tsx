@@ -2,7 +2,12 @@
  * 透過關鍵字搜尋頻道
  */
 import axios from "axios";
-import { API_SERVER_URL } from "../../../app/config";
+import {
+  API_SERVER_URL,
+  CHANNELS_SEARCH_ERROR,
+  CHANNELS_SEARCH_FAILED,
+  CHANNELS_SEARCH_RESULT,
+} from "../../../app/config";
 import { ChannelProps } from "../../../app/types";
 import { createChannelCard } from "../shares";
 import { setSearchResult } from "../slice";
@@ -22,7 +27,7 @@ export const reqSearchChannel = (url: string) => (dispatch: any) => {
           dispatch(
             setSearchResult({
               current: createChannelCard(ch, {
-                group: "Search Result",
+                group: CHANNELS_SEARCH_RESULT,
                 heart: false,
               }),
             })
@@ -37,7 +42,7 @@ export const reqSearchChannel = (url: string) => (dispatch: any) => {
               current: createChannelCard(
                 { ...ch, status: "failure" },
                 {
-                  group: "Search Failed",
+                  group: CHANNELS_SEARCH_ERROR,
                   heart: false,
                 }
               ),
@@ -53,7 +58,7 @@ export const reqSearchChannel = (url: string) => (dispatch: any) => {
               current: createChannelCard(
                 { ...ch, status: "error" },
                 {
-                  group: "Search Error",
+                  group: CHANNELS_SEARCH_FAILED,
                   heart: false,
                 }
               ),

@@ -6,7 +6,7 @@ import axios from "axios";
 import { history } from "../../..";
 import { API_SERVER_URL, VISITS_DEFAULT_GROUPNAME } from "../../../app/config";
 import { FavoredItem, VisitItem, VisitList } from "../../../app/types";
-import { setMsg } from "../../user/slice";
+import { onErrorAndClearUser, setMsg } from "../../user/slice";
 import { createFavoredItem } from "../shares/createFavoredItem";
 import { setFavoredList } from "../slice";
 
@@ -52,15 +52,19 @@ export const reqUpdateVisit =
           );
           console.log("reqUpdateVisit is success, now directo : ",nextPathName)
           history.push({ pathname: nextPathName });
-          dispatch(setMsg(""));
+          if (nextPathName === "/login/"){
+            dispatch(setMsg(`${username} 要登出嗎?`));
+          }else{
+            dispatch(setMsg(""));
+          }
         } else if (code === "failure") {
           console.log("code failure，重新導引到登入頁面:\n");
           setFavoredList({
             list: [],
             group: [VISITS_DEFAULT_GROUPNAME],
           });
+          dispatch(onErrorAndClearUser("發生錯誤了，麻煩請重新登入"))
           history.push({ pathname: "/login" });
-          dispatch(setMsg("發生錯誤了，麻煩請重新登入"));
         }
       },
       (err) => {

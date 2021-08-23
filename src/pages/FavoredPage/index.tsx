@@ -18,7 +18,8 @@ export default function FavoredPage() {
       if (!hasFetchChannel) {
         dispatch(reqEditVisit(username, ssid));
       }
-    } else {
+    } 
+    else {
       history.push({ pathname: "/login" });
       dispatch(setMsg("想加收藏要先登入唷~"));
     }

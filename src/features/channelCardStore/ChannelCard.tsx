@@ -3,12 +3,20 @@ import { ReactElement, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "../../app/hooks";
 import { ChannelCardProps } from "../../app/types";
 import styled from "styled-components";
-import { setChannelCard, setSearchResult } from "./slice";
-import { CHANNELS_DEFAULT_GROUPNAME } from "../../app/config";
-import { setFromChannelCard } from "../favored/slice";
+import {setChannelCard, setSearchResult } from "./slice";
+import {
+  CHANNELS_DEFAULT_GROUPNAME,
+  CHANNELS_SEARCH_RESULT,
+} from "../../app/config";
+import {
+  selectIsListChanged,
+  selectVisitList,
+  setFromChannelCard,
+} from "../favored/slice";
 import { setFromChannel } from "../theater/slice";
-import { selectIsLogin, setMsg } from "../user/slice";
+import { selectIsLogin, selectUser, setMsg } from "../user/slice";
 import { history } from "../..";
+import { reqUpdateVisit } from "../favored/api";
 
 export function ChannelCard(props: ChannelCardProps) {
   const {
@@ -29,6 +37,9 @@ export function ChannelCard(props: ChannelCardProps) {
   } = props;
   const item = props;
   const isLogin = useSelector(selectIsLogin);
+  const user = useSelector(selectUser);
+  const visit = useSelector(selectVisitList);
+  const isListChanged = useSelector(selectIsListChanged);
   const [isVisible, setIsVisible] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
   const avatarStyles = getAvatarStyles(status);
@@ -38,9 +49,14 @@ export function ChannelCard(props: ChannelCardProps) {
   const dispatch = useDispatch();
 
   const handleEnterTheater = () => {
-    // 當點選頻道進入Theater。
     if (status !== "failure" && status !== "error") {
-      dispatch(setFromChannel({ item }));
+      // 當點選頻道進入Theater。
+      if (isLogin && isListChanged) {
+        const { username, ssid } = user;
+        dispatch(reqUpdateVisit(username, ssid, visit, "/theater/"));
+      } else {
+        dispatch(setFromChannel({ item }));
+      }
     }
   };
 
@@ -51,7 +67,7 @@ export function ChannelCard(props: ChannelCardProps) {
       return;
     }
     const card: ChannelCardProps = { ...props, heart: !heart };
-    if (groupName === "Search Result") {
+    if (groupName === CHANNELS_SEARCH_RESULT) {
       dispatch(
         setSearchResult({
           current: { ...props, heart: !heart },
@@ -68,16 +84,7 @@ export function ChannelCard(props: ChannelCardProps) {
         })
       );
     } else {
-      dispatch(
-        setChannelCard({
-          card,
-          options: {
-            isChanged: false,
-            isNewAdded: groupName === CHANNELS_DEFAULT_GROUPNAME,
-            isDeleted: false,
-          },
-        })
-      );
+      dispatch(setChannelCard({ card }));
       dispatch(
         setFromChannelCard({
           card,
@@ -111,15 +118,6 @@ export function ChannelCard(props: ChannelCardProps) {
 
   return (
     <Container ref={ref}>
-      <AvatarBox {...avatarStyles}>
-        <img src={isVisible ? avatar : undefined} alt={"avatar_" + cid} />
-        <div>
-          <h1>{status}</h1>
-        </div>
-      </AvatarBox>
-      <FavoredHeartBtn onClick={onFavoredHeartBtnClick} {...heartStyles}>
-        {heartStyles.icon}
-      </FavoredHeartBtn>
       <CardBody>
         <PreviewBox {...previewStyles} onClick={handleEnterTheater}>
           {previewStyles.image}
@@ -143,6 +141,15 @@ export function ChannelCard(props: ChannelCardProps) {
           </Detail>
         </Description>
       </CardBody>
+      <AvatarBox {...avatarStyles}>
+        <img src={isVisible ? avatar : undefined} alt={"avatar_" + cid} />
+        <div>
+          <h1>{status}</h1>
+        </div>
+      </AvatarBox>
+      <FavoredHeartBtn onClick={onFavoredHeartBtnClick} {...heartStyles}>
+        {heartStyles.icon}
+      </FavoredHeartBtn>
     </Container>
   );
 }
@@ -205,7 +212,8 @@ const getAvatarStyles = (status: string): AvatarStyle => {
 const AvatarBox = styled.div<AvatarStyle>`
   display: ${(p) => (p.ishidden ? `none` : `static`)};
   position: absolute;
-  z-index: 1;
+  top: 0;
+  left: 0;
   background: none;
   pointer-events: none;
   img {
@@ -276,15 +284,12 @@ const FavoredHeartBtn = styled.div<HeartThemeType>`
   transform: translate(-50%, -50%);
   right: 0.5em;
   top: 2.5em;
-  z-index: 1;
-
   text-align: center;
   cursor: pointer;
 
   width: 40px;
   height: 40px;
   background-color: none;
-  
 
   svg {
     font-size: 35px;
@@ -305,7 +310,6 @@ const CardBody = styled.div`
   border-radius: 1.2em;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
   margin: 10px 10px;
-
 `;
 
 type PreviewBoxProps = {

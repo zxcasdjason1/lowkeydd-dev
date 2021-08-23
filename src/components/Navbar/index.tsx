@@ -5,28 +5,27 @@ import { NavItemProps } from "../../app/types";
 import { NavBrowser, NavTheater, NavUser, NavCollections } from "../NavButtons";
 import { selectSlider } from "../../features/theater/slice";
 import { useSelector } from "../../app/hooks";
+import { history } from "../..";
+import { useEffect } from "react";
 
 export default function Navbar() {
   const [isEnable, setIsEnable] = useState(false);
-  const { isFolded } = useSelector(selectSlider)
+  const { isFolded } = useSelector(selectSlider);
 
   const closeMenu = () => {
     // close menu when is mobile.
     setIsEnable(!isEnable);
   };
 
-  const beforeSwitch = () => {
-  };
+  const beforeSwitch = () => {};
+
   const afterSwitch = () => {
     closeMenu();
   };
 
   return (
     <Container>
-      <Nav isFolded={isFolded}>
-        <Logo>
-          <p>LowkeyDD</p>
-        </Logo>
+      <NavBar isFolded={isFolded}>
         <Menu isEnable={isEnable}>
           <ToogleNavBkg onClick={closeMenu}>
             <div>
@@ -61,7 +60,10 @@ export default function Navbar() {
             />
           </ul>
         </Menu>
-      </Nav>
+        <Logo>
+          <p>LowkeyDD</p>
+        </Logo>
+      </NavBar>
     </Container>
   );
 }
@@ -98,14 +100,14 @@ const Container = styled.div`
   --menuText: #c5c3c6;
   --menuText_Hover: #1985a1;
   --logoColor: #fff;
-  z-index: 5;
+  z-index: 1;
 `;
 
-const Nav = styled.nav<{ isFolded: boolean }>`
+const NavBar = styled.nav<{ isFolded: boolean }>`
   position: relative;
-  top: ${(p) => (p.isFolded ? `-65px` : `0px`)};
+  /* top: ${(p) => (p.isFolded ? `-65px` : `0px`)}; */
   background-color: var(--navColor);
-  display: flex;
+  display: ${(p) => (p.isFolded ? `none` : `flex`)};
   align-items: center;
   justify-content: flex-start;
 `;
@@ -119,7 +121,6 @@ const Logo = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  z-index: 1;
   p {
     color: var(--logoColor);
     font-size: 25px;
@@ -140,6 +141,7 @@ const Menu = styled.ul<{ isEnable: boolean }>`
   height: 100%;
   display: flex;
   align-items: center;
+
   ul {
     position: relative;
     /* background-color: #0051ff; */

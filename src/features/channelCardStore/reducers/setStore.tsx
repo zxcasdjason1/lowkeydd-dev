@@ -2,8 +2,8 @@
  * 獲取頻道卡片跟用戶收藏者清單本是兩支api，合併成一個reqFetchChannels來一次性獲取後設置。
  */
 import { CHANNELS_DEFAULT_GROUPNAME } from "../../../app/config";
-import { ChannelCardStore, ChannelProps, VisitItem } from "../../../app/types";
-import { createChannelCard, createFavoredItem } from "../shares";
+import { ChannelCardStore, ChannelProps } from "../../../app/types";
+import { createChannelCard } from "../shares";
 
 export const setStore =(
   state: ChannelCardStore,
@@ -12,30 +12,20 @@ export const setStore =(
     payload: {
       channels: ChannelProps[][];
       group: string[];
-      list: VisitItem[];
+      // list: VisitItem[];
       tags: string[];
     };
   }
 ) => {
-  const { channels, group, list, tags } = action.payload;
+  const { channels, group, tags } = action.payload;
   state.group = group;
   state.tags = tags[0] === "all" ? ["live", "wait", "off"] : tags;
-
-  // 設置使用者個人的收藏清單
-  if (list) {
-    state.favoredList = list.map((v: VisitItem) =>
-      createFavoredItem(v, {
-        isChanged: false,
-        isNewAdded: false,
-        isDeleted: false,
-      })
-    );
-  }
 
   // cluster
   setCluster(state, channels, group);
 };
 
+// 產生新的卡片群集，同時會檢查傳入的卡片群組名稱並且修正成合法的。
 const setCluster = (
   state: ChannelCardStore,
   channels: ChannelProps[][],

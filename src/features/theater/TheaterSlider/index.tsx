@@ -31,12 +31,6 @@ export function TheaterSlider() {
   return (
     <SliderWrap>
       <SliderContainer>
-        <Control onClick={sliderLeft}>
-          <ai.AiOutlineLeftCircle />
-        </Control>
-        <Control onClick={sliderRight}>
-          <ai.AiOutlineRightCircle />
-        </Control>
         <Content>
           {sliderElements.map((e: TheaterElement, i: number) => (
             <TheaterSliderItem
@@ -47,6 +41,12 @@ export function TheaterSlider() {
             />
           ))}
         </Content>
+        <Control onClick={sliderLeft}>
+          <ai.AiOutlineLeftCircle />
+        </Control>
+        <Control onClick={sliderRight}>
+          <ai.AiOutlineRightCircle />
+        </Control>
       </SliderContainer>
     </SliderWrap>
   );
@@ -57,7 +57,6 @@ const SliderWrap = styled.div`
   width: 100%;
   height: 100vh;
   background-color:#4c4a46;
-  z-index: 1;
 `;
 
 const SliderContainer = styled.div`
@@ -91,7 +90,6 @@ const Control = styled.span`
   opacity: 0.7;
   
   cursor: pointer;
-  z-index: 1;
   border-radius: 50%;
   :nth-of-type(1) {
     left: 30px;

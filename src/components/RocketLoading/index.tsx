@@ -50,11 +50,11 @@ const Dot = styled.div<DotProps>`
     background-color: var(--dotColor);
     border-radius: 50%;
     transform: scale(0);
-    animation: animate calc(2s / var(--speed)) linear infinite;
+    animation: rocketFlying calc(2s / var(--speed)) linear infinite;
     animation-delay: calc(0.1s / var(--speed) * var(--i));
   }
 
-  @keyframes animate {
+  @keyframes rocketFlying {
     0% {
       transform: scale(0);
     }

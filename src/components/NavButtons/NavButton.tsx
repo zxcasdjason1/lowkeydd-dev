@@ -7,11 +7,15 @@ import {
   selectIsListChanged,
   selectVisitList,
 } from "../../features/favored/slice";
-import { selectIsLogin, selectUser, setMsg } from "../../features/user/slice";
+import {
+  onErrorAndClearUser,
+  selectIsLogin,
+  selectUser,
+  setMsg,
+} from "../../features/user/slice";
 
 export default function NavButton(props: NavButtonProps) {
   const { title, path, icon, beforeSwitch, afterSwitch } = props;
-
   const isListChanged: boolean = useSelector(selectIsListChanged);
   const user = useSelector(selectUser);
   const isLogin: boolean = useSelector(selectIsLogin);
@@ -24,6 +28,8 @@ export default function NavButton(props: NavButtonProps) {
     // console.log("onLeaving nextPath:>", nextPath);
     // console.log("=====================================");
     switch (curPath) {
+      case "/channels/":
+        return onLeavingBrowser(curPath, nextPath);
       case "/favored/":
         return onLeavingCollections(curPath, nextPath);
       default:
@@ -31,16 +37,49 @@ export default function NavButton(props: NavButtonProps) {
     }
   };
 
+  const _autoSaveOnError = () => {
+    /**
+     * 照理說是要登入才能異動List，
+     * 如果使用者離開時已經登入失效，要提醒重新登入。
+     * (此時，異動的資料也會失效)
+     */
+    dispatch(onErrorAndClearUser("發生錯誤了，麻煩請重新登入"));
+    history.push({ pathname: "/login" });
+  };
+
+  const _autoSaveAndRedirectTo = (nextPath: string) => {
+    /**
+     * 自動保存
+     */
+    console.log("The favoredlist is Changed, saved automatically");
+    const { username, ssid } = user;
+    dispatch(reqUpdateVisit(username, ssid, visit, nextPath));
+  };
+
+  const onLeavingBrowser = (curPath: string, nextPath: string): boolean => {
+
+    if (isListChanged && nextPath !== "/favored/") {
+      if (!isLogin) {
+        _autoSaveOnError();
+        return true;
+      } else {
+        _autoSaveAndRedirectTo(nextPath);
+        return true;
+      }
+    }
+    return false;
+  };
+
   const onLeavingCollections = (curPath: string, nextPath: string): boolean => {
-    if (!isLogin) {
-      history.push({ pathname: "/login/" });
-      return true;
-    } else if (isListChanged) {
-      // 自動保存
-      console.log("The favoredlist is Changed, saved automatically");
-      const { username, ssid } = user;
-      dispatch(reqUpdateVisit(username, ssid, visit, nextPath));
-      return true;
+
+    if (isListChanged) {
+      if (!isLogin) {
+        _autoSaveOnError();
+        return true;
+      } else {
+        _autoSaveAndRedirectTo(nextPath);
+        return true;
+      }
     }
     return false;
   };
@@ -52,21 +91,22 @@ export default function NavButton(props: NavButtonProps) {
     // console.log("=====================================");
     switch (nextPath) {
       case "/login/":
-        return onEnterLogin(nextPath);
+        return onEnterLogin();
       case "/register/":
-        return onEnterRegister(nextPath);
+        return onEnterRegister();
       default:
         return false;
     }
   };
 
-  const onEnterRegister = (nextPath: string): boolean => {
+  const onEnterRegister = (): boolean => {
     return false;
   };
-  const onEnterLogin = (nextPath: string): boolean => {
+  
+  const onEnterLogin = (): boolean => {
     if (isLogin) {
       console.log("onEnterLogin");
-      dispatch(setMsg(`${user.username} 要登出嗎?`))
+      dispatch(setMsg(`${user.username} 要登出嗎?`));
       history.push({ pathname: "/logout/" });
       return true;
     }
@@ -126,7 +166,7 @@ const Wrap = styled.div`
         // NavUser-Backaground
         background-color: var(--menuText_Hover);
 
-        span{
+        span {
           // NavUser-UserName
           color: #fff;
         }

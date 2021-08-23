@@ -34,7 +34,7 @@ export type ChannelCardStore = {
   hasFetchChannels: boolean;
   clusters: ChannelCardProps[][];
   group: string[];
-  favoredList: FavoredItem[];
+  // list: FavoredItem[];
   tags: string[];
   current: ChannelCardProps | null;
 };

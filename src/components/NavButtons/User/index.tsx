@@ -30,7 +30,6 @@ const Status = styled.div<{ visible: boolean }>`
   line-height: 18px;
   position: absolute;
   color: #fff;
-  z-index: 2;
   top: 22px;
   right: 95px;
   font-size: 12px;
@@ -55,7 +54,7 @@ const Status = styled.div<{ visible: boolean }>`
       content: "";
       position: absolute;
       top: 2px;
-      left: 0px;
+      left: 2px;
       width: 6px;
       height: 6px;
       background-color: #54f542;
@@ -91,14 +90,14 @@ const Status = styled.div<{ visible: boolean }>`
       height: 14px;
 
       span:nth-child(1) {
-        top: 2px;
-        left: 2px;
-        width: 10px;
-        height: 10px;
+        top: 3px;
+        left: 3px;
+        width: 8px;
+        height: 8px;
       }
 
       span:nth-child(2) {
-        left: 0px;
+        left: -2px;
         width: 100px;
         font-size: 14px;
       }
@@ -126,7 +125,7 @@ const Status = styled.div<{ visible: boolean }>`
 
       span:nth-child(2) {
         top: 16px;
-        left: 0px;
+        left: -4px;
       }
     }
   }

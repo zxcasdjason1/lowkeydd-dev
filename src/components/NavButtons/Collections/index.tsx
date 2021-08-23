@@ -24,7 +24,6 @@ const Counter = styled.div<{ visible: boolean }>`
   line-height: 18px;
   position: absolute;
   color: #fff;
-  z-index: 2;
   top: 22px;
   right: 95px;
   font-size: 12px;
@@ -42,7 +41,6 @@ const Counter = styled.div<{ visible: boolean }>`
     color: white;
     background-color: red;
     border-radius: 50%;
-    z-index: -1;
   }
   @media screen and (max-width: 768px) and (min-width: 480px) {
     line-height: 18px;

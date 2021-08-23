@@ -16,7 +16,7 @@ const slice = createSlice({
   reducers,
 });
 
-export const {setMsg, setUserLogin, setUserRegister}= slice.actions;
+export const {setMsg, setUserLogin, setUserRegister, onErrorAndClearUser}= slice.actions;
 export default slice.reducer;
 
 

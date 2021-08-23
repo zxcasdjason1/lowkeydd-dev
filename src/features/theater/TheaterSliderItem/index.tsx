@@ -54,6 +54,7 @@ const Section = styled.div<{ index: number; isStopTrans: boolean }>`
 `;
 
 const SliderPreview = styled.div`
+  --navColor: #4c4a46;
   position: relative;
   display: flex;
   align-items: center;
@@ -83,7 +84,7 @@ const SliderPreview = styled.div`
     text-align: center;
     font-size: 18px;
     transition: top 0.5s;
-    z-index: 1;
+    z-index: 1; //讓提示訊息擋在Avatar前面
 
     min-width: 100%;
     border-radius: 70% 70% 0 0;
