@@ -2,11 +2,10 @@ import axios from "axios";
 import { history } from "../../..";
 import { API_SERVER_URL } from "../../../app/config";
 import { UserLoginResponse } from "../../../app/types";
-import { setMsg, setUserLogin } from "../slice";
+import { onErrorAndClearUser, setMsg, setUserLogin } from "../slice";
 
 export const reqLogout =
   (username: string, ssid: string) => (dispatch: any) => {
-
     // 產生登入的postform資料
     const postform = new FormData();
     postform.append("username", username);
@@ -19,19 +18,17 @@ export const reqLogout =
         const code: string = resp.data["code"];
         // const msg: string = resp.data["msg"];
         if (code === "success") {
-
           const userLoginRes: UserLoginResponse = {
-            username:"",
-            ssid:"",
+            username: "",
+            ssid: "",
             expiration: -1,
-            msg:`${username} 已登出`,
+            msg: `${username} 已登出`,
           };
           dispatch(setUserLogin(userLoginRes));
           history.push({ pathname: "/login/" });
-
         } else {
-          dispatch(setMsg(`${username} 登出失敗`));
-          history.push({ pathname: "/logout/" });
+          dispatch(onErrorAndClearUser({ msg: `${username} 已登出` }));
+          history.push({ pathname: "/login/" });
         }
       },
       (err) => {

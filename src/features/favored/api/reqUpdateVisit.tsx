@@ -59,11 +59,11 @@ export const reqUpdateVisit =
           }
         } else if (code === "failure") {
           console.log("code failure，重新導引到登入頁面:\n");
-          setFavoredList({
+          dispatch(setFavoredList({
             list: [],
             group: [VISITS_DEFAULT_GROUPNAME],
-          });
-          dispatch(onErrorAndClearUser("發生錯誤了，麻煩請重新登入"))
+          }));
+          dispatch(onErrorAndClearUser({msg:"發生錯誤了，麻煩請重新登入"}));
           history.push({ pathname: "/login" });
         }
       },

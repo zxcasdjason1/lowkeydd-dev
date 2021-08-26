@@ -43,7 +43,7 @@ export default function NavButton(props: NavButtonProps) {
      * 如果使用者離開時已經登入失效，要提醒重新登入。
      * (此時，異動的資料也會失效)
      */
-    dispatch(onErrorAndClearUser("發生錯誤了，麻煩請重新登入"));
+    dispatch(onErrorAndClearUser({msg:"發生錯誤了，麻煩請重新登入"}));
     history.push({ pathname: "/login" });
   };
 

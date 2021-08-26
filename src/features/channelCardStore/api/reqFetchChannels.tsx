@@ -11,10 +11,12 @@ import {
 import { ChannelProps, VisitItem } from "../../../app/types";
 import { createFavoredItem } from "../../favored/shares/createFavoredItem";
 import { setFavoredList } from "../../favored/slice";
+import { onFetchChannels } from "../../user/slice";
 import { setStore } from "../slice";
 
 export const reqFetchChannels =
   (username: string, ssid: string, tags: string[]) => (dispatch: any) => {
+    
     // 避免tags為空
     if (tags.length === 0) {
       console.error("tags不可為空，此動作已被撤回");
@@ -37,6 +39,17 @@ export const reqFetchChannels =
         const channels: ChannelProps[][] = response.data["channels"];
         const group: string[] = response.data["group"];
         const list: VisitItem[] = response.data["list"];
+        const authMsg: string = response.data["authMsg"];
+
+        /**
+         * User
+         * 
+         *  1) 設置使用者狀態。
+         */
+        if (authMsg){
+
+          dispatch(onFetchChannels({ authMsg }));
+        }
 
         /**
          * ChannelCards
@@ -78,10 +91,10 @@ export const reqFetchChannels =
         );
       },
       (error) => {
-        console.log("失敗了, 錯誤如下:\n", error);
+        console.log("[reqFetchChannels] 發生異常，3秒後自動重試:\n", error);
         setTimeout(() => {
           history.push({ pathname: "/channels/" });
-        }, 1000);
+        }, 3000);
       }
     );
   };

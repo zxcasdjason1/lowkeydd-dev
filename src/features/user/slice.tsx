@@ -16,10 +16,14 @@ const slice = createSlice({
   reducers,
 });
 
-export const {setMsg, setUserLogin, setUserRegister, onErrorAndClearUser}= slice.actions;
+export const {
+  setMsg,
+  setUserLogin,
+  setUserRegister,
+  onErrorAndClearUser,
+  onFetchChannels,
+} = slice.actions;
 export default slice.reducer;
-
-
 
 export const selectUser = (state: RootState) => state.user;
 export const selectMsg = createSelector([selectUser], (user) => {
